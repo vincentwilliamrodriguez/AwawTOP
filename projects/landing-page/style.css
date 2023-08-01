@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,300&display=swap');
 
 * {
   margin: 0;
@@ -31,7 +31,7 @@ a {
   align-items: center;
 }
 
-body > div {  /* applies to sections */
+body > div {
   padding: 48px 150px;
 }
 
@@ -95,6 +95,10 @@ body > div {  /* applies to sections */
   border-radius: 12px;
 }
 
+.information {
+  padding: 48px 150px 96px;
+}
+
 .information h1 {
   text-align: center;
   font-size: 36px;
@@ -130,4 +134,29 @@ body > div {  /* applies to sections */
   max-width: 150px;
   text-align: center;
   color: #5f6061;
+}
+
+.quote-section {
+  background-color: #E5E7EB;
+  padding: 144px 150px;
+}
+
+.quote-section .quote {
+  margin: 0px auto;
+  max-width: 700px;
+  gap: 8px;
+}
+
+.quote-section .quote p {
+  font-size: 36px;
+  font-weight: 300;
+  font-style: italic;
+  color: #1F2937;
+}
+
+.quote-section .quote .author {
+  align-self: flex-end;
+  font-size: 20px;
+  color: #1F2937;
+  font-weight: 900;
 }
