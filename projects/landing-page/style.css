@@ -32,16 +32,16 @@ a {
 }
 
 body > div {  /* applies to sections */
-  padding: 0 150px;
+  padding: 48px 150px;
 }
 
 .header {
   background-color: #1F2937;
+  padding: 24px 150px;
 }
 
 .header nav {
   justify-content: space-between;
-  padding: 24px 0;
 }
 
 .header nav .logo {
@@ -64,7 +64,7 @@ body > div {  /* applies to sections */
 .header .hero {
   gap: 32px;
   padding: 72px 0;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .header .hero img {
@@ -93,4 +93,41 @@ body > div {  /* applies to sections */
   padding: 12px 36px;
   font-weight: 800;
   border-radius: 12px;
+}
+
+.information h1 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: #1F2937;
+  margin-bottom: 36px;
+}
+
+.information .cards {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 48px;
+}
+
+.information .cards .card {
+  gap: 12px;
+}
+
+.information .cards .card .wrapper {
+  height: 150px;
+  width: 150px;
+}
+
+.information .cards .card .wrapper img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border: 4px solid #3882F6;
+  border-radius: 12px;
+}
+
+.information .cards .card .subtext {
+  max-width: 150px;
+  text-align: center;
+  color: #5f6061;
 }
