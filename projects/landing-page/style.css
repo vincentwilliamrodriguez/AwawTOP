@@ -55,7 +55,7 @@ body > div {
 }
 
 .header nav .nav-links a,
-.header .hero .text p,
+p,
 button {
   font-size: 18px;
   color: #E5E7EB;
@@ -184,8 +184,17 @@ button {
   font-weight: 900;
 }
 
+.cta-section .cta .cta-text p {
+  font-size: 16px;
+}
+
 .cta-section .cta button {
   font-size: 16px;
   border: 2px solid #F9FAF8;
   margin-left: 120px;
+}
+
+.footer {
+  background-color: #1F2937;
+  text-align: center;
 }
