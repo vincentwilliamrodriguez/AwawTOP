@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,900;1,300&display=swap');
 
 * {
   margin: 0;
@@ -56,7 +56,7 @@ body > div {
 
 .header nav .nav-links a,
 .header .hero .text p,
-.header .hero .text button {
+button {
   font-size: 18px;
   color: #E5E7EB;
 }
@@ -86,11 +86,12 @@ body > div {
   margin-bottom: -10px;
 }
 
-.header .hero .text button {
+.header .hero .text button,
+.cta-section .cta button {
   background-color: #3882F6;
   border: #3882F6;
   color: #F9FAF8;
-  padding: 12px 36px;
+  padding: 6px 32px;
   font-weight: 800;
   border-radius: 12px;
 }
@@ -159,4 +160,32 @@ body > div {
   font-size: 20px;
   color: #1F2937;
   font-weight: 900;
+}
+
+.cta-section {
+  padding: 96px 192px;
+}
+
+.cta-section .cta {
+  background-color: #3882F6;
+  border-radius: 12px;
+  padding: 48px 120px;
+}
+
+.cta-section .cta .cta-text {
+  align-items: flex-start;
+  flex: 1;
+  gap: 4px;
+  color: #F9FAF8;
+}
+
+.cta-section .cta .cta-text h3 {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.cta-section .cta button {
+  font-size: 16px;
+  border: 2px solid #F9FAF8;
+  margin-left: 120px;
 }
