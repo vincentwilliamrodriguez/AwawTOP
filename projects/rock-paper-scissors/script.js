@@ -45,13 +45,50 @@ const getComputerChoice = () =>
   choices[Math.floor(3 * Math.random())]
 
 function playRound(playerSelection, computerSelection)
-{
-  // Converts player selection to Proper case
-  playerSelection = playerSelection[0].toUpperCase() +
-                    playerSelection.slice(1).toLowerCase();
-  
+{  
   let playerIndex = choices.indexOf(playerSelection);
   let computerIndex = choices.indexOf(computerSelection);
 
   return makeBounded(playerIndex - computerIndex);
+}
+
+function game()
+{
+  let overallScore = 0;
+
+  for (let i = 0; i < 5; i++)
+  {
+    let playerSelection;
+    
+    while (!choices.includes(playerSelection))
+    {
+      playerSelection = prompt(`Round ${i + 1}: Enter Rock, Paper, or Scissors:`);
+      playerSelection = playerSelection[0].toUpperCase() +
+                        playerSelection.slice(1).toLowerCase();
+    }
+
+    let computerSelection = getComputerChoice();
+    let roundOutcome = playRound(playerSelection, computerSelection)
+
+    logOutcome(roundOutcome, playerSelection, computerSelection);
+    overallScore += roundOutcome;
+  }
+}
+
+function logOutcome(roundOutcome, playerSelection, computerSelection)
+{
+  switch (roundOutcome)
+  {
+    case -1:
+      console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+      break;
+    
+    case 0:
+      console.log(`Draw! ${computerSelection} draws with ${playerSelection}`);
+      break;
+
+    case 1:
+      console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
+      break;
+  }
 }
