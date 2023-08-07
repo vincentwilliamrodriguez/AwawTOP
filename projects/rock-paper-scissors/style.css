@@ -1,7 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&family=Roboto:ital,wght@0,400;0,900;1,300&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  font-family: Comfortaa, sans-serif;max-width: 100%;
+  overflow-x: hidden;
 }
 
 .row {
@@ -16,4 +23,46 @@
 img {
   max-height: auto;
   max-width: 100%;
+  min-width: 50px;
+}
+
+.header {
+  color: #fefef8;
+  background-color: #1a2431;
+  text-align: center;
+  padding: 24px 48px;
+}
+
+.main {
+  padding: 48px;
+  gap: 24px;
+  background-color: #fafafa;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.stats {
+  padding: 16px;
+  border: 2px solid rgb(78, 78, 78);
+  border-radius: 8px;
+  background-color: white;
+  row-gap: 12px;
+}
+
+.stats img {
+  width: 200px;
+}
+
+.options {
+}
+
+.info {
+  flex-shrink: 0;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.info img {
+  width: 100px;
 }
