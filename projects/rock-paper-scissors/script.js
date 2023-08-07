@@ -39,6 +39,8 @@ for (let i = 0; i < 3; i++) {
   });
 }
 
+restartButton.addEventListener("click", restartGame);
+
 function game(playerSelection)
 {
   if (!hasGameEnded) {
@@ -98,6 +100,11 @@ function updateDisplay(roundOutcome, playerSelection, botSelection)
       infoH2.textContent = `You Win!`;
       infoP.textContent = `${playerSelection} beats ${botSelection}.`;
       break;
+    
+    default:
+      infoH2.textContent = `Game On!`;
+      infoP.textContent = `Pick a Shape to Begin.`;
+      break;
   }
 
   for (let i = 0; i < 3; i++) {
@@ -115,5 +122,20 @@ function updateDisplay(roundOutcome, playerSelection, botSelection)
 }
 
 function restartGame() {
+  playerScore = 0;
+  botScore = 0;
+  hasGameEnded = false;
 
+  roundDisplay.style.display = "flex";
+  gameDisplay.style.display = "none";
+
+  updateDisplay(null, null, null);
+
+  for (let i = 0; i < 3; i++) {
+    playerOptions[i].style.opacity = "1.0";
+    botOptions[i].style.opacity = "1.0";
+  }
+
+  gameWin.style.display = "none";
+  gameLose.style.display = "none";
 }
