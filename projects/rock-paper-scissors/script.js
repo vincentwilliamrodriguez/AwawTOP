@@ -4,6 +4,7 @@ const playerOptions = document.querySelectorAll(".player .option");
 const botOptions = document.querySelectorAll(".bot .option");
 const infoH2 = document.querySelector(".info .round h2");
 const infoP = document.querySelector(".info .round p");
+const roundDisplay = document.querySelector(".info .round");
 const gameDisplay = document.querySelector(".info .game");
 const gameResult = document.querySelector(".info .game p");
 const gameWin = document.querySelector(".info .game #win");
@@ -12,6 +13,7 @@ const restartButton = document.querySelector(".info .game .restart");
 
 let playerScore = 0;
 let botScore = 0;
+let hasGameEnded = false;
 
 const choices = ["Rock", "Paper", "Scissors"];
 const makeBounded = (n) => {
@@ -39,22 +41,38 @@ for (let i = 0; i < 3; i++) {
 
 function game(playerSelection)
 {
-  let botSelection = getComputerChoice();
-  let roundOutcome = playRound(playerSelection, botSelection)
-  console.log("Awaw", playerSelection, botSelection)
+  if (!hasGameEnded) {
+    let botSelection = getComputerChoice();
+    let roundOutcome = playRound(playerSelection, botSelection)
+    console.log("Awaw", playerSelection, botSelection)
 
-  if (roundOutcome == 1)    playerScore++;
-  if (roundOutcome == -1)   botScore++;
+    if (roundOutcome == 1)    playerScore++;
+    if (roundOutcome == -1)   botScore++;
 
-  updateDisplay(roundOutcome, playerSelection, botSelection);
+    updateDisplay(roundOutcome, playerSelection, botSelection);
+  }
 
+  if (playerScore >= 5 || botScore >= 5) {
+    roundDisplay.style.display = "none";
+    gameDisplay.style.display = "flex";
+    hasGameEnded = true;
+
+    if (playerScore > botScore) {
+      gameResult.textContent = "Player Wins the Game!";
+      gameWin.style.display = "block";
+    }
+    else {
+      gameResult.textContent = "Computer Wins the Game!";
+      gameLose.style.display = "block";
+    }
+  }
   if (playerScore > botScore)
   {
-    console.log("Player Wins the Game!");
+    console.log();
   }
   else if (playerScore < botScore)
   {
-    console.log("Computer Wins the Game!");
+    console.log("");
   }
   else
   {

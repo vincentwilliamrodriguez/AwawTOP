@@ -90,6 +90,7 @@ body {
 
 .info .game {
   display: none;
+  gap: 12px;
 }
 
 .info .game img {
@@ -101,4 +102,9 @@ body {
   padding: 12px;
   border: 2px solid #1a2431;
   border-radius: 8px;
+}
+
+.info .game #win, 
+.info .game #lose {
+  display: none;
 }
