@@ -42,7 +42,7 @@ body {
 .main {
   flex: auto;
   padding: 48px;
-  gap: 36px;
+  gap: 2vw;
   background-color: #fafafa;
   justify-content: space-between;
   align-items: center;
@@ -70,7 +70,7 @@ body {
   gap: 12px;
 }
 
-.options > * {
+.option {
   padding: 12px;
   background-color: #f3fc79;
   border: 2px solid #8b5c22;
@@ -78,7 +78,7 @@ body {
 }
 
 .info {
-  flex-shrink: 0;
+  flex: 1 0 250px;
   margin: 0 auto;
 }
 

@@ -1,38 +1,17 @@
-/* 
-getComputerChoice()
-  - randomly returns "Rock", "Paper", or "Scissors"
+const playerScoreDisplay = document.querySelector(".player .score");
+const botScoreDisplay = document.querySelector(".bot .score");
+const playerOptions = document.querySelectorAll(".player .option");
+const botOptions = document.querySelectorAll(".bot .option");
+const infoH2 = document.querySelector(".info .round h2");
+const infoP = document.querySelector(".info .round p");
+const gameDisplay = document.querySelector(".info .game");
+const gameResult = document.querySelector(".info .game p");
+const gameWin = document.querySelector(".info .game #win");
+const gameLose = document.querySelector(".info .game #lose");
+const restartButton = document.querySelector(".info .game .restart");
 
-playRound(playerSelection, computerSelection)
-  - case insensitive
-  - returns the whole string (e.g., "You Lose! Paper beats Rock")
-
-game()
-  - calls playRound() 5 times to play a 5 round game
-    - uses prompt() to get user input
-    - keeps score
-    - console.log() result of each round
-  - reports winner or loser at the end
-    - console.log
-
-R (0)
-  R 0 draw
-  P -1 lose
-  S -2 win
-
-p (1)
-  R 1 win
-  P 0 draw
-  S -1 lose
-
-S (2)
-  R 2 lose
-  P 1 win
-  S 0 draw
-
-win -2, 1
-draw 0
-lose -1, 2
-*/
+let playerScore = 0;
+let botScore = 0;
 
 const choices = ["Rock", "Paper", "Scissors"];
 const makeBounded = (n) => {
@@ -44,44 +23,36 @@ const makeBounded = (n) => {
 const getComputerChoice = () => 
   choices[Math.floor(3 * Math.random())]
 
-function playRound(playerSelection, computerSelection)
+function playRound(playerSelection, botSelection)
 {  
   let playerIndex = choices.indexOf(playerSelection);
-  let computerIndex = choices.indexOf(computerSelection);
+  let botIndex = choices.indexOf(botSelection);
 
-  return makeBounded(playerIndex - computerIndex);
+  return makeBounded(playerIndex - botIndex);
 }
 
-function game()
+for (let i = 0; i < 3; i++) {
+  playerOptions[i].addEventListener("click", (e) => {
+    game(choices[i]);
+  });
+}
+
+function game(playerSelection)
 {
-  let playerScore = 0;
-  let computerScore = 0;
+  let botSelection = getComputerChoice();
+  let roundOutcome = playRound(playerSelection, botSelection)
+  console.log("Awaw", playerSelection, botSelection)
 
-  for (let i = 0; i < 5; i++)
-  {
-    let playerSelection;
-    
-    while (!choices.includes(playerSelection))
-    {
-      playerSelection = prompt(`Round ${i + 1}: Enter Rock, Paper, or Scissors:`, " ");
+  if (roundOutcome == 1)    playerScore++;
+  if (roundOutcome == -1)   botScore++;
 
-      playerSelection = playerSelection[0].toUpperCase() +
-                        playerSelection.slice(1).toLowerCase();
-    }
+  updateDisplay(roundOutcome, playerSelection, botSelection);
 
-    let computerSelection = getComputerChoice();
-    let roundOutcome = playRound(playerSelection, computerSelection)
-    if (roundOutcome == 1)    playerScore++;
-    if (roundOutcome == -1)   computerScore++;
-
-    logOutcome(roundOutcome, playerSelection, computerSelection);
-  }
-
-  if (playerScore > computerScore)
+  if (playerScore > botScore)
   {
     console.log("Player Wins the Game!");
   }
-  else if (playerScore < computerScore)
+  else if (playerScore < botScore)
   {
     console.log("Computer Wins the Game!");
   }
@@ -91,20 +62,40 @@ function game()
   }
 }
 
-function logOutcome(roundOutcome, playerSelection, computerSelection)
+function updateDisplay(roundOutcome, playerSelection, botSelection)
 {
   switch (roundOutcome)
   {
     case -1:
-      console.log(`You Lose! ${computerSelection} beats ${playerSelection}`);
+      infoH2.textContent = `You Lose!`;
+      infoP.textContent = `${playerSelection} is beaten by ${botSelection}.`;
       break;
     
     case 0:
-      console.log(`Draw! ${computerSelection} draws with ${playerSelection}`);
+      infoH2.textContent = `Draw!`;
+      infoP.textContent = `${playerSelection} draws with ${botSelection}.`;
       break;
 
     case 1:
-      console.log(`You Win! ${playerSelection} beats ${computerSelection}`);
+      infoH2.textContent = `You Win!`;
+      infoP.textContent = `${playerSelection} beats ${botSelection}.`;
       break;
   }
+
+  for (let i = 0; i < 3; i++) {
+    playerOptions[i].style.opacity = 
+      (choices[i] !== playerSelection) ? "0.3" : 
+                                          "1.0";
+  
+    botOptions[i].style.opacity = 
+      (choices[i] !== botSelection) ? "0.3" : 
+                                      "1.0";
+  }
+
+  playerScoreDisplay.innerHTML = `Player Score:<br>${playerScore}`;
+  botScoreDisplay.innerHTML = `Bot Score:<br>${botScore}`;
+}
+
+function restartGame() {
+
 }
