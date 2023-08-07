@@ -8,42 +8,47 @@
   <script src="script.js" defer></script>
 </head>
 
-<body>
+<body class="col">
   <div class="header">
     <h1>Awaw's Rock, Paper, Scissors!</h1>
   </div>
   
   <div class="main row">
-    <div class="player stats column">
+    <div class="player stats col">
       <img src="images/user.png">
-      <p class="score">Player Score: Awaw</p>
+      <p class="score">Player Score:<br>Awaw</p>
     </div>
 
-    <div class="player options column">
-      <div class="rock">
+    <div class="player options col">
+      <button class="rock">
         <img src="images/rock.png">
-      </div>
-      <div class="paper">
+      </button>
+      <button class="paper">
         <img src="images/paper.png">
-      </div>
-      <div class="scissors">
+      </button>
+      <button class="scissors">
         <img src="images/scissors.png">
-      </div>
-    </div>
-
-    <div class="info column">
-      <h2 class="round-h2">You Lose!</h2>
-      <p class="round-p">Rock is beaten by Paper.</p>
-      <p class="game-p">Computer Wins the Game!</p>
-      <div class="win"></div>
-      <img id="win" src="images/win.png">
-      <img id="lose" src="images/lose.png">
-      <button class="reset">
-        <img src="images/restart.png" class="restart">
       </button>
     </div>
 
-    <div class="bot options column">
+    <div class="info col">
+      <div class="round col">
+        <h2>You Lose!</h2>
+        <p>Rock is beaten by Paper.</p>
+      </div>
+
+      <div class="game col">
+        <p>Computer Wins the Game!</p>
+        <div class="win"></div>
+        <img id="win" src="images/win.png">
+        <img id="lose" src="images/lose.png">
+        <button class="reset">
+          <img src="images/restart.png" class="restart">
+        </button>
+      </div>
+    </div>
+
+    <div class="bot options col">
       <div class="rock">
         <img src="images/rock.png">
       </div>
@@ -55,9 +60,9 @@
       </div>
     </div>
 
-    <div class="bot stats column">
+    <div class="bot stats col">
       <img src="images/robot.png">
-      <p class="score">Bot Score: Awaw</p>
+      <p class="score">Bot Score:<br>Awaw</p>
     </div>
   </div>
 </body>
