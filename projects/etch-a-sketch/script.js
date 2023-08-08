@@ -3,10 +3,15 @@ const containerSize = container.offsetHeight;
 let pixels = [];
 
 const setSizeButton = document.querySelector("#set-size");
-const blackWhiteButton = document.querySelector("#black-white");
-const randomColorButton = document.querySelector("#random-color");
-const eraserButton = document.querySelector("#eraser");
+const brushButtons = document.querySelectorAll(".brush");
 const resetButton = document.querySelector("#reset");
+
+let currentBrush = 0;
+for (let i = 0; i < 3; i++) {
+  brushButtons[i].addEventListener("click", () => {
+    currentBrush = i;
+  });
+}
 
 let isMousePressed = false;
 window.addEventListener("mousedown", () => {
@@ -39,5 +44,20 @@ function generateGrid(gridSize = 16) {
 function modifyGrid() {
   if (!isMousePressed)  return;
 
-  this.style.backgroundColor = "black";
+  let newColor;
+  switch (currentBrush) {
+    case 0:
+      newColor = "black";
+      break;
+
+    case 1:
+      newColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      break;
+    
+    case 2:
+      newColor = "white";
+      break;
+  }
+
+  this.style.backgroundColor = newColor;
 }
