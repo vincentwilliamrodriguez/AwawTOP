@@ -1,30 +1,59 @@
 const container = document.querySelector(".container");
 const containerSize = container.offsetHeight;
-let pixels = [];
 
 const setSizeButton = document.querySelector("#set-size");
 const brushButtons = document.querySelectorAll(".brush");
 const resetButton = document.querySelector("#reset");
 
+let pixels = [];
+let isMousePressed = false;
 let currentBrush = 0;
-for (let i = 0; i < 3; i++) {
-  brushButtons[i].addEventListener("click", () => {
-    currentBrush = i;
+let currentSize = 16;
+
+initialize();
+generateGrid(currentSize);
+
+function initialize() {
+  window.addEventListener("mousedown", () => {
+    isMousePressed = true;
+  });
+  window.addEventListener("mouseup", () => {
+    isMousePressed = false;
+  });
+
+  for (let i = 0; i < 3; i++) {
+    brushButtons[i].addEventListener("click", () => {
+      currentBrush = i;
+    });
+  }
+
+  setSizeButton.addEventListener("click", () => {
+    let userInput;
+
+    do {
+      userInput = prompt("Please enter an integer no greater than 100:");
+      if (userInput == null || userInput == ""){
+        return;
+      }
+
+      userInput = parseInt(userInput, 10);
+
+    } while (isNaN(userInput) || userInput < 1 || userInput > 100);
+
+    currentSize = userInput;
+    generateGrid(userInput);
+  });
+
+  resetButton.addEventListener("click", () => {
+    generateGrid(currentSize);
   });
 }
 
-let isMousePressed = false;
-window.addEventListener("mousedown", () => {
-  isMousePressed = true;
-});
-window.addEventListener("mouseup", () => {
-  isMousePressed = false;
-});
 
-generateGrid();
-
-function generateGrid(gridSize = 16) {
+function generateGrid(gridSize) {
+  container.innerHTML = "";
   pixels = [];
+
   for (let i = 0; i < gridSize ** 2; i++) {
     let pixel = document.createElement("div");
     pixel.classList.add("pixel");
@@ -34,15 +63,18 @@ function generateGrid(gridSize = 16) {
     pixel.style.height = `${pixelSize}px`;
     pixel.style.backgroundColor = "white";
 
-    pixel.addEventListener("mouseover", modifyGrid);
+    for (const eventName of ["mousedown", "mouseover"]) {
+      pixel.addEventListener(eventName, (e) => modifyGrid(e));
+    }
+    
 
     pixels.push(pixel);
     container.appendChild(pixel);
   }
 }
 
-function modifyGrid() {
-  if (!isMousePressed)  return;
+function modifyGrid(e) {
+  if (e.type === "mouseover" && !isMousePressed)  return;
 
   let newColor;
   switch (currentBrush) {
@@ -59,5 +91,5 @@ function modifyGrid() {
       break;
   }
 
-  this.style.backgroundColor = newColor;
+  e.target.style.backgroundColor = newColor;
 }
