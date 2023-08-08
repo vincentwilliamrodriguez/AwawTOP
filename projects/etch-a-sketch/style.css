@@ -44,20 +44,16 @@ body {
   flex: none;
   justify-content: center;
   gap: 36px;
-  align-items: center;
   width: 630px;
   height: 470px;
   background-color: #e1defa;
   border: 2px solid #695dd17a;
   border-radius: 24px;
-  padding: 24px;
+  padding: 35px 24px;
 }
 
 .buttons {
-  flex-wrap: wrap;
-  justify-content: center;
   gap: 12px;
-  height: 450px;
 }
 
 .buttons button {
@@ -74,14 +70,25 @@ body {
   cursor: pointer;
 }
 
+.buttons .brush {
+  filter: brightness(60%);
+}
+
 #set-size {
   color: white;
   background-color: #384eac;
 }
 
-#black-white {
+#reset {
+  color: white;
+  background-color: #691c1c;
+  margin-bottom: auto;
+}
+
+#black {
   color: white;
   background-color: #2b2b2b;
+  filter: brightness(100%);
 }
 
 #random-color {
@@ -92,11 +99,6 @@ body {
 #eraser {
   color: white;
   background-color: #645656;
-}
-
-#reset {
-  color: white;
-  background-color: #691c1c;
 }
 
 .container {

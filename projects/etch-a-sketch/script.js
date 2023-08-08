@@ -23,7 +23,12 @@ function initialize() {
 
   for (let i = 0; i < 3; i++) {
     brushButtons[i].addEventListener("click", () => {
+      for (const brush of brushButtons) {
+        brush.style.filter = `brightness(60%)`;
+      }
+
       currentBrush = i;
+      brushButtons[i].style.filter = `brightness(100%)`;
     });
   }
 
