@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&family=Roboto:ital,wght@0,400;0,900;1,300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: Comfortaa, sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  height: 100vh;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background-color: #131331;
+  color: #f7fcfc;
+  text-align: center;
+  padding: 24px 48px;
+}
+
+.main {
+  flex: 1;
+  justify-content: center;
+  background-color: #fdfdfd;
+  padding: 24px 48px;
+}
+
+.wrapper {
+  flex: none;
+  align-items: center;
+  width: 700px;
+  height: 78vh;
+  background-color: #e1defa;
+  border: 2px solid #695dd17a;
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.buttons {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  height: 450px;
+}
+
+.buttons button {
+  font-size: 1.05em;
+  font-weight: 600;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  opacity: 95%;
+}
+
+.buttons button:hover {
+  opacity: 100%;
+  cursor: pointer;
+}
+
+#set-size {
+  color: white;
+  background-color: #384eac;
+}
+
+#black-white {
+  color: white;
+  background-color: #2b2b2b;
+}
+
+#random-color {
+  color: rgb(255, 255, 255);
+  background: rgb(102, 3, 133);
+}
+
+#erase {
+  color: white;
+  background-color: #645656;
+}
+
+#reset {
+  color: white;
+  background-color: #691c1c;
+}
