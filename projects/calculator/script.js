@@ -30,8 +30,17 @@ function initialize() {
   });
 
   // Point Button
+  pointBtn.addEventListener("click", (e) => {
+    display.textContent += ".";
+  });
 
   // Operation Buttons
+  for (const operationBtn of operationBtns) {
+    operationBtn.addEventListener("click", (e) => {
+      display.textContent += e.target.textContent;
+      // TODO: e.target.dataset.op
+    });
+  }
 }
 
 
@@ -44,7 +53,7 @@ function operate(first, operator, second) {
     case '+':   return add(first, second);
     case '-':   return subtract(first, second);
     case '*':   return multiply(first, second);
-    case '÷':   return divide(first, second);
+    case '/':   return divide(first, second);
     default:    return "N/A";
   }
 }

@@ -1,6 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400&display=swap');
-@import url('https://fonts.cdnfonts.com/css/seven-segment');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400&family=Roboto+Slab:wght@500&display=swap');
 
+@font-face{
+  font-family: seven segment;font-style: normal;font-weight:400;src: local('Seven Segment'),url('https://fonts.cdnfonts.com/s/71640/Seven Segment.woff') format('woff');
+  unicode-range: U+0030-0039, U+0041-005A;
+}
 
 * {
   margin: 0;
@@ -55,14 +58,16 @@ body {
 
 .display,
 .buttons button {
-  font-family: Seven Segment, monospace;
+  font-family: Seven Segment, Orbitron;
   font-size: 2.75em;
+  font-stretch: condensed;
 }
 
 .display {
   height: 1em;
   padding: 4px 8px;
   justify-content: right;
+  align-items: center;
   overflow: hidden;
   border: 1px solid rgba(0, 68, 0, 0.267);
   background-color: #a7cfa7;
