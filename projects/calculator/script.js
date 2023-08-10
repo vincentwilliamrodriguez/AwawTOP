@@ -3,6 +3,7 @@ const operationBtns = document.querySelectorAll(".operation");
 const clearBtn = document.querySelector(".clear");
 const deleteBtn = document.querySelector(".delete");
 const pointBtn = document.querySelector(".point");
+const equalsBtn = document.querySelector(".equals");
 const display = document.querySelector(".display");
 
 const add =       (a, b) => (a + b);
@@ -10,10 +11,9 @@ const subtract =  (a, b) => (a - b);
 const multiply =  (a, b) => (a * b);
 const divide =    (a, b) => (a / b);
 
-let curFlag = 0;
-let curFirst = 0;
+let curFirst = "0";
 let curOperation = "";
-let curSecond = 0;
+let curSecond = "0";
 
 initialize();
 
@@ -21,6 +21,10 @@ function initialize() {
   // Number Buttons
   for (const numberBtn of numberBtns) {
     numberBtn.addEventListener("click", (e) => {
+      if (getFocusedNumber() === "0") {
+        display.textContent = display.textContent.slice(0, -1);
+      }
+
       display.textContent += e.target.dataset.num;
       updateCur();
     });
@@ -34,11 +38,20 @@ function initialize() {
 
   deleteBtn.addEventListener("click", (e) => {
     display.textContent = display.textContent.slice(0, -1);
+    if (display.textContent === "") {
+      display.textContent = "0";
+    }
     updateCur();
   });
 
   // Point Button
   pointBtn.addEventListener("click", (e) => {
+    if (getFocusedNumber().includes('.')) {
+      return;
+    }
+    if (getFocusedNumber() === "") {
+      display.textContent += "0";
+    }
     display.textContent += ".";
     updateCur();
   });
@@ -51,15 +64,18 @@ function initialize() {
       updateCur();
     });
   }
-
 }
 
 function updateCur() {
   [curFirst, curSecond] = display.textContent.split(/[\+\-\×\÷]+/);
-  curOperation = /[\+\-\×\÷]+/.exec(display.textContent);
+  curOperation = /[\+\-\×\÷]/.exec(display.textContent);
   curOperation = (curOperation) ? curOperation[0] : curOperation
 
-  console.log(curFlag, "Awaw", curFirst, curOperation, curSecond);
+  console.log("Awaw", curFirst, curOperation, curSecond);
+}
+
+function getFocusedNumber() {
+  return (curOperation) ? curSecond : curFirst;
 }
 
 function operate(first, operator, second) {
