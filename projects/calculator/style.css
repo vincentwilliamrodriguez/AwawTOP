@@ -49,7 +49,7 @@ body {
   flex: none;
   border: 1px solid #a5a5a596;
   border-radius: 12px;
-  background-color: #dddddd;
+  background-color: #cecece;
   box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
   width: 275px;
   padding: 24px;
@@ -66,11 +66,12 @@ body {
 .display {
   height: 1em;
   padding: 4px 8px;
+  letter-spacing: 1px;
   justify-content: right;
   align-items: center;
   overflow: hidden;
   border: 1px solid rgba(0, 68, 0, 0.267);
-  background-color: #a7cfa7;
+  background-color: #aedaae;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
