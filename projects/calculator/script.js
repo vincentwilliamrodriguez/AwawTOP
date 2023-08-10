@@ -5,11 +5,14 @@ const deleteBtn = document.querySelector(".delete");
 const pointBtn = document.querySelector(".point");
 const equalsBtn = document.querySelector(".equals");
 const display = document.querySelector(".display");
+const OPERATION_REGEX = /[\+\-\×\÷]+/;
 
 const add =       (a, b) => (a + b);
 const subtract =  (a, b) => (a - b);
 const multiply =  (a, b) => (a * b);
 const divide =    (a, b) => (a / b);
+const roundOff =  (num) => Math.round((+num + Number.EPSILON) * 100) / 100
+
 
 let curFirst = "0";
 let curOperation = "";
@@ -56,19 +59,27 @@ function initialize() {
     updateCur();
   });
 
+  // Equals Button
+  equalsBtn.addEventListener("click", calculate);
+
   // Operation Buttons
   for (const operationBtn of operationBtns) {
     operationBtn.addEventListener("click", (e) => {
+      if (OPERATION_REGEX.test(display.textContent.slice(-1))) {
+        display.textContent = display.textContent.slice(0, -1);
+      }
+      else if (curOperation) {
+        calculate();
+      }
       display.textContent += e.target.textContent;
-      // TODO: e.target.dataset.op
       updateCur();
     });
   }
 }
 
 function updateCur() {
-  [curFirst, curSecond] = display.textContent.split(/[\+\-\×\÷]+/);
-  curOperation = /[\+\-\×\÷]/.exec(display.textContent);
+  [curFirst, curSecond] = display.textContent.split(OPERATION_REGEX);
+  curOperation = OPERATION_REGEX.exec(display.textContent);
   curOperation = (curOperation) ? curOperation[0] : curOperation
 
   console.log("Awaw", curFirst, curOperation, curSecond);
@@ -78,6 +89,15 @@ function getFocusedNumber() {
   return (curOperation) ? curSecond : curFirst;
 }
 
+function calculate() {
+  if (!(curFirst && curOperation && curSecond)) {
+    return;
+  }
+
+  display.textContent = roundOff(operate(curFirst, curOperation, curSecond));
+  updateCur();
+}
+
 function operate(first, operator, second) {
   first = +first;
   second = +second;
@@ -85,8 +105,8 @@ function operate(first, operator, second) {
   switch (operator) {
     case '+':   return add(first, second);
     case '-':   return subtract(first, second);
-    case '*':   return multiply(first, second);
-    case '/':   return divide(first, second);
+    case '×':   return multiply(first, second);
+    case '÷':   return divide(first, second);
     default:    return "N/A";
   }
 }
