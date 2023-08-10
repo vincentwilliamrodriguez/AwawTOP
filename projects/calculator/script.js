@@ -12,7 +12,7 @@ const subtract =  (a, b) => (a - b);
 const multiply =  (a, b) => (a * b);
 const divide =    (a, b) => (a / b);
 const roundOff =  (num) => Math.round((+num + Number.EPSILON) * 100) / 100
-
+const checkError = (num) => /[a-zA-Z]/.test(num);
 
 let curFirst = "0";
 let curOperation = "";
@@ -24,6 +24,8 @@ function initialize() {
   // Number Buttons
   for (const numberBtn of numberBtns) {
     numberBtn.addEventListener("click", (e) => {
+      clearError();
+
       if (getFocusedNumber() === "0") {
         display.textContent = display.textContent.slice(0, -1);
       }
@@ -40,6 +42,8 @@ function initialize() {
   });
 
   deleteBtn.addEventListener("click", (e) => {
+    clearError();
+
     display.textContent = display.textContent.slice(0, -1);
     if (display.textContent === "") {
       display.textContent = "0";
@@ -49,6 +53,8 @@ function initialize() {
 
   // Point Button
   pointBtn.addEventListener("click", (e) => {
+    clearError();
+
     if (getFocusedNumber().includes('.')) {
       return;
     }
@@ -65,11 +71,17 @@ function initialize() {
   // Operation Buttons
   for (const operationBtn of operationBtns) {
     operationBtn.addEventListener("click", (e) => {
+      clearError();
+      
       if (OPERATION_REGEX.test(display.textContent.slice(-1))) {
         display.textContent = display.textContent.slice(0, -1);
       }
       else if (curOperation) {
         calculate();
+
+        if (checkError(display.textContent)) {
+          return;
+        }
       }
       display.textContent += e.target.textContent;
       updateCur();
@@ -92,8 +104,6 @@ function updateCur() {
 
   curOperation = OPERATION_REGEX.exec(text);
   curOperation = (curOperation) ? curOperation[0] : curOperation
-
-  console.log("Awaw", curFirst, curOperation, curSecond);
 }
 
 function getFocusedNumber() {
@@ -105,7 +115,13 @@ function calculate() {
     return;
   }
 
-  display.textContent = roundOff(operate(curFirst, curOperation, curSecond));
+  let result = roundOff(operate(curFirst, curOperation, curSecond)).toString();
+
+  if (checkError(result)) {
+    result = "N/A";
+  }
+
+  display.textContent = result;
   updateCur();
 }
 
@@ -119,5 +135,12 @@ function operate(first, operator, second) {
     case '×':   return multiply(first, second);
     case '÷':   return divide(first, second);
     default:    return "N/A";
+  }
+}
+
+function clearError() {
+  if (checkError(display.textContent)) {
+    display.textContent = "0";
+    updateCur();
   }
 }
