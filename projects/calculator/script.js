@@ -78,8 +78,19 @@ function initialize() {
 }
 
 function updateCur() {
-  [curFirst, curSecond] = display.textContent.split(OPERATION_REGEX);
-  curOperation = OPERATION_REGEX.exec(display.textContent);
+  let text = display.textContent;
+  let isFirstNegative = text.slice(0, 1) === "-";
+
+  if (isFirstNegative) {
+    text = text.slice(1);
+  }
+
+  [curFirst, curSecond] = text.split(OPERATION_REGEX);
+  if (isFirstNegative) {
+    curFirst = "-" + curFirst;
+  }
+
+  curOperation = OPERATION_REGEX.exec(text);
   curOperation = (curOperation) ? curOperation[0] : curOperation
 
   console.log("Awaw", curFirst, curOperation, curSecond);
