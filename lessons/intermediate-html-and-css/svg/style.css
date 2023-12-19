@@ -1,0 +1,19 @@
+.container {
+  outline: black solid 1px;
+  max-width: 200px;
+}
+
+svg {
+  vertical-align: middle;
+}
+
+
+svg circle {
+  fill: green;
+}
+
+svg text {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+}
