@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"> -->
   <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
   <title>Awaw Sign-up</title>
 </head>
 
@@ -33,36 +34,37 @@
 
       <div class="pair">
         <label for="first-name">First Name</label>
-        <input type="text" name="first-name" id="first-name">
+        <input type="text" name="first-name" id="first-name" pattern="[a-zA-Z0-9]+" placeholder="Awaw">
       </div>
 
       <div class="pair">
         <label for="last-name">Last Name</label>
-        <input type="text" name="last-name" id="last-name">
+        <input type="text" name="last-name" id="last-name" pattern="[a-zA-Z0-9]+" placeholder="Doe">
       </div>
 
       <div class="break"></div>
 
       <div class="pair">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email">
+        <input type="email" name="email" id="email" placeholder="example@gmail.com">
       </div>
 
       <div class="pair">
         <label for="phone-number">Phone Number</label>
-        <input type="tel" name="phone-number" id="phone-number">
+        <input type="tel" name="phone-number" id="phone-number" pattern="\d{4}[\-]\d{3}[\-]\d{4}" placeholder="1234-567-8901">
       </div>
       
       <div class="break"></div>
 
       <div class="pair">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input type="password" name="password" id="password" minlength="8" placeholder="At least 8 characters...">
+        <p id="warning">* Passwords do not match</p>
       </div>
 
       <div class="pair">
         <label for="confirm">Confirm Password</label>
-        <input type="password" name="confirm" id="confirm">
+        <input type="password" name="confirm" id="confirm" placeholder="Confirm your password...">
       </div>
     </fieldset>
 
