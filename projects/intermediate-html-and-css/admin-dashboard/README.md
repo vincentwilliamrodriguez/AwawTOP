@@ -1,0 +1,2 @@
+# Description
+This project is about creating a somewhat complex admin dashboard using only HTML and CSS. It applies the curriculum's lessons regarding CSS grid, as well as the Intermediate HTML and CSS course in general. Credits to [Pictogrammers](https://pictogrammers.com/library/mdi/) and [Freepik](freepik.com) for the icons and avatars respectively.
