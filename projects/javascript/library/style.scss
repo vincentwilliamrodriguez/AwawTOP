@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+$clr-dark-blue: #013d8b;
+$clr-light-blue: #d7e9ff;
+$clr-dark-red: #cc2828de;
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+
+body {
+  font-family: Roboto, sans-serif;
+  height: 100vh;
+}
+
+.header {
+  @include flex-container(row, space-between);
+
+  height: 15vh;
+  padding: 36px 24px;
+  position: relative;
+  z-index: 1;
+
+  background: $clr-dark-blue;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.4);
+
+  &__logo{
+    @include flex-container;
+
+    gap: 5px;
+
+    color: white;
+    font-weight: 500;
+
+    img {
+      height: 50px;
+      filter: invert(1);
+    }
+  }
+
+  &__login_btn {
+    padding: 8px 12px;
+
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 4px;
+
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    
+    transition: all 0.5s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      color: $clr-dark-blue;
+      cursor: pointer;
+    }
+  }
+}
+
+.main {
+  @include flex-container(row, start, start);
+  flex: 0 0 300px;
+  flex-wrap: wrap;
+  align-content: start;
+  gap: 24px;
+
+  padding: 24px 24px;
+  min-height: 85vh;
+
+  background-color: $clr-light-blue;
+
+  .book {
+    @include flex-container(column, start);
+    position: relative;
+
+    width: 280px;
+    min-height: 180px;
+    padding: 12px 36px 0px 36px;
+
+    background-color: white;
+    border-radius: 18px;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+
+    text-align: center;
+
+    &__remove {
+      height: 24px;
+
+      position: absolute;
+      top: 8px;
+      right: 8px;
+
+      opacity: 60%;
+      cursor: pointer;
+
+      transition: opacity 0.5s ease;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &__title {
+      font-size: 1.5rem;
+      font-style: italic;
+      
+      word-break: break-all;
+    }
+    
+    &__author {
+      margin-top: 8px;
+      font-size: 1.2rem;
+    }
+
+    &__pages {
+      margin-top: auto;
+      font-size: 1rem;
+    }
+
+    &__read {
+      width: calc(100% + 2 * 36px);
+      margin-top: 6px;
+      padding: 8px;
+
+      color: white;
+      font-size: 1rem;
+
+      background-color: $clr-dark-red;
+      cursor: pointer;
+    }
+
+    &__title,
+    &__author__name,
+    &__pages__number {
+      color: $clr-dark-blue;
+    }
+  }
+}
