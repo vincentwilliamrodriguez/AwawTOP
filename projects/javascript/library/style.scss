@@ -3,6 +3,7 @@
 $clr-dark-blue: #013d8b;
 $clr-light-blue: #d7e9ff;
 $clr-dark-red: #cc2828de;
+$clr-dark-green: #296600de;
 
 @mixin flex-container($direction: row, $justify: center, $align: center) {
   display: flex;
@@ -82,72 +83,94 @@ body {
   min-height: 85vh;
 
   background-color: $clr-light-blue;
+}
 
-  .book {
-    @include flex-container(column, start);
-    position: relative;
 
-    width: 280px;
-    min-height: 180px;
-    padding: 12px 36px 0px 36px;
+#template {
+  display: none;
+}
 
-    background-color: white;
-    border-radius: 18px;
-    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+.book {
+  @include flex-container(column, start);
+  position: relative;
 
-    text-align: center;
+  width: 280px;
+  min-height: 120px;
+  padding: 12px 36px 0px 36px;
 
-    &__remove {
-      height: 24px;
+  background-color: white;
+  border-radius: 18px;
+  box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 
-      position: absolute;
-      top: 8px;
-      right: 8px;
+  text-align: center;
 
-      opacity: 60%;
-      cursor: pointer;
 
-      transition: opacity 0.5s ease;
+  &__remove {
+    height: 24px;
 
-      &:hover {
-        opacity: 1;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    opacity: 60%;
+    cursor: pointer;
+
+    transition: opacity 0.5s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-style: italic;
+    
+    // word-break: break-all;
+  }
+  
+  &__author {
+    margin-top: 8px;
+    font-size: 1.2rem;
+  }
+
+  &__pages {
+    margin-top: 18px;
+    font-size: 1rem;
+  }
+
+  &__read {
+    width: calc(100% + 2 * 36px);
+    margin: 0px -36px;
+    margin-top: 6px;
+    padding: 8px;
+
+    color: white;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    &--false {
+      background-color: $clr-dark-red;
+      
+      &::after {
+        content: 'Not Read Yet';
       }
     }
 
-    &__title {
-      font-size: 1.5rem;
-      font-style: italic;
-      
-      word-break: break-all;
-    }
-    
-    &__author {
-      margin-top: 8px;
-      font-size: 1.2rem;
-    }
+    &--true {
+      background-color: $clr-dark-green;
 
-    &__pages {
-      margin-top: auto;
-      font-size: 1rem;
+      &::after {
+        content: 'Done Reading';
+      }
     }
+  }
 
-    &__read {
-      width: calc(100% + 2 * 36px);
-      margin-top: 6px;
-      padding: 8px;
-
-      color: white;
-      font-size: 1rem;
-
-      background-color: $clr-dark-red;
-      cursor: pointer;
-    }
-
-    &__title,
-    &__author__name,
-    &__pages__number {
-      color: $clr-dark-blue;
-    }
+  &__title,
+  &__author__name,
+  &__pages__number {
+    color: $clr-dark-blue;
   }
 }

@@ -64,14 +64,19 @@ body {
   min-height: 85vh;
   background-color: #d7e9ff;
 }
-.main .book {
+
+#template {
+  display: none;
+}
+
+.book {
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
   position: relative;
   width: 280px;
-  min-height: 180px;
+  min-height: 120px;
   padding: 12px 36px 0px 36px;
   background-color: white;
   border-radius: 18px;
@@ -79,7 +84,7 @@ body {
   overflow: hidden;
   text-align: center;
 }
-.main .book__remove {
+.book__remove {
   height: 24px;
   position: absolute;
   top: 8px;
@@ -88,31 +93,42 @@ body {
   cursor: pointer;
   transition: opacity 0.5s ease;
 }
-.main .book__remove:hover {
+.book__remove:hover {
   opacity: 1;
 }
-.main .book__title {
+.book__title {
   font-size: 1.5rem;
   font-style: italic;
-  word-break: break-all;
 }
-.main .book__author {
+.book__author {
   margin-top: 8px;
   font-size: 1.2rem;
 }
-.main .book__pages {
-  margin-top: auto;
+.book__pages {
+  margin-top: 18px;
   font-size: 1rem;
 }
-.main .book__read {
+.book__read {
   width: calc(100% + 72px);
+  margin: 0px -36px;
   margin-top: 6px;
   padding: 8px;
   color: white;
   font-size: 1rem;
-  background-color: rgba(204, 40, 40, 0.8705882353);
   cursor: pointer;
 }
-.main .book__title, .main .book__author__name, .main .book__pages__number {
+.book__read--false {
+  background-color: rgba(204, 40, 40, 0.8705882353);
+}
+.book__read--false::after {
+  content: "Not Read Yet";
+}
+.book__read--true {
+  background-color: rgba(41, 102, 0, 0.8705882353);
+}
+.book__read--true::after {
+  content: "Done Reading";
+}
+.book__title, .book__author__name, .book__pages__number {
   color: #013d8b;
 }
