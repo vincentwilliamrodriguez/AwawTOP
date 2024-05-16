@@ -1,6 +1,11 @@
 const myLibrary = [];
 const bookTemplate = document.getElementById("template");
 const main = document.getElementsByClassName("main")[0];
+const newBookModal = document.getElementById("new-book-modal");
+const newBookBtn = document.getElementById("new-book-btn");
+const newBookSubmitBtn = document.getElementById("new-book-modal__submit-btn");
+const newBookClose = document.querySelector(".new-book-modal__close");
+const newBookForm = document.querySelector("#new-book-modal form");
 
 function Book(title, author, pages, read) {
   this.title = title;
@@ -37,7 +42,7 @@ function showLibrary() {
   let currentBooks = [...main.children];
 
   currentBooks.forEach(book => {
-    if (book.id != "template") {
+    if (book.classList.contains("book") && book.id != "template") {
       book.remove();
     }
   });
@@ -56,17 +61,40 @@ function showLibrary() {
 
     let closeBtn = newBook.getElementsByClassName("book__remove")[0];
     let readBtn = newBook.getElementsByClassName("book__read")[0];
-    console.log(readBtn)
+    
     closeBtn.addEventListener("click", removeBookFromLibrary);
     readBtn.addEventListener("click", toggleRead);
 
     main.appendChild(newBook);
   }
-
 }
 
-addBookToLibrary("Awaw", "Awsh", 50, true);
-addBookToLibrary("Lord Of The Rings", "J.R.R. Tolkien", 200, false);
-addBookToLibrary("How To Win Friends and Influence People", "Dale Carnegie", 300, true);
-addBookToLibrary("Learning How to Learn", "Barbara Oakley", 250, false);
+newBookBtn.addEventListener("click", e => {
+  newBookModal.showModal();
+});
+
+newBookClose.addEventListener("click", e => {
+  newBookModal.close();
+});
+
+newBookForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (newBookForm.checkValidity()) {
+    const title = document.getElementById('title').value;
+    const author = document.getElementById('author').value;
+    const pages = document.getElementById('pages').value;
+    const read = document.getElementById('done').checked;
+
+    addBookToLibrary(title, author, pages, read);
+    showLibrary();
+    newBookForm.reset();
+    newBookModal.close();
+  }
+});
+
+newBookSubmitBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  newBookForm.dispatchEvent(new Event('submit'));
+});
+
 showLibrary()

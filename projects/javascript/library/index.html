@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="css/style.min.css">
   <script src="script.js" defer></script>
   <title>Awaw Library</title>
-  
 </head>
 
 <body>
@@ -27,6 +26,43 @@
       <h2 class="book__pages"><span class="book__pages__number">%pages%</span> pages</h2>
       <div class="book__read book__read--false"></div>
     </div>
+
+    <div id="new-book-btn">
+      <img id="new-book-btn__icon" src="assets/plus.svg">
+      <p id="new-book-btn__text">Add Book</p>
+    </div>
   </div>
+
+  <dialog id="new-book-modal">
+    <img src="assets/cross.svg" alt="Remove Book" class="new-book-modal__close">
+
+    <form>
+      <h1 id="new-book-modal__heading">Add a book</h1>
+
+      <fieldset class="new-book-fieldset">
+        <div class="pair">
+          <label for="title">Book Title</label>
+          <input required type="text" name="title" id="title" placeholder="Nineteen Eighty-Four">
+        </div>
+
+        <div class="pair">
+          <label for="author">Author</label>
+          <input required type="text" name="author" id="author" placeholder="George Orwell">
+        </div>
+
+        <div class="pair">
+          <label for="pages">Number of Pages</label>
+          <input required type="number" name="pages" id="pages" min="1" max="10000" placeholder="328">
+        </div>
+
+        <div class="pair pair--done">
+          <label for="done">Are you done reading it?</label>
+          <input type="checkbox" name="done" id="done">
+        </div>
+      </fieldset>
+
+      <button type="submit" id="new-book-modal__submit-btn">Add</button>
+    </form>
+  </dialog>
 </body>
 </html>
