@@ -1,3 +1,5 @@
+console.log("Welcome to the console version of Awaw's Tic Tac Toe! To begin, make a move using the following:\ngame.playTurn(i, j)");
+
 function Cell() {
   let state = " ";
   const setState = (val) => {state = val};
@@ -161,4 +163,3 @@ const game = (function () {
 
 
 
-console.log("Welcome to the console version of Awaw's Tic Tac Toe! To begin, type the following:\ngame.restartGame()");

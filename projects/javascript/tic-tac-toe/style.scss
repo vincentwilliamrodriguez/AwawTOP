@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
 
 @mixin flex-container($direction: row, $justify: center, $align: center) {
   display: flex;
@@ -15,6 +15,103 @@
 
 
 body {
-  font-family: Roboto, sans-serif;
+  font-family: "Delicious Handrawn", cursive;
   height: 100vh;
+}
+
+.header {
+  @include flex-container(column);
+  height: 20vh;
+  padding: 24px 36px;
+
+  background-image: url(../assets/tic-tac-toe-background-1.png);
+  box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.7);
+  filter: brightness(-100);
+
+  position: relative;
+  z-index: 2;
+
+  .logo {
+    @include flex-container;
+    gap: 12px;
+
+    &__icon {
+      height: 50px;
+      filter: invert(1);
+    }
+
+    &__title {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 900;
+    }
+  }
+}
+
+.main {
+  @include flex-container(column, start);
+
+  height: 80vh;
+  padding: 24px 36px;
+
+  .top {
+    @include flex-container(row, space-between);
+    width: 358px;
+
+    .player {
+      @include flex-container;
+      gap: 12px;
+
+      background-color: rgb(231, 231, 231);
+      box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      font-size: 1.5rem;
+
+
+      img {
+        height: 1.5rem;
+      }
+
+      p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 95px;
+        cursor: pointer;
+      }
+
+      &--turn {
+        background-color: rgb(199, 231, 151);
+      }
+    }
+
+    .restart-btn {
+      width: 32px;
+      height: 32px;
+      transition: scale 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        scale: 1.1;
+      }
+    }
+  }
+
+  .board {
+    display: grid;
+
+    height: 318px;
+    width: 318px;
+
+    margin: 24px 0;
+
+    &__image {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  .label {
+    font-size: 1.5rem;
+  }
 }
