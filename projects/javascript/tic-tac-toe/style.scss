@@ -13,6 +13,14 @@
   box-sizing: border-box;
 }
 
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
 
 body {
   font-family: "Delicious Handrawn", cursive;
@@ -67,6 +75,8 @@ body {
       padding: 8px 12px;
       font-size: 1.5rem;
 
+      transition: background-color 0.3s ease;
+
 
       img {
         height: 1.5rem;
@@ -98,7 +108,10 @@ body {
   }
 
   .board {
+    position: relative;
     display: grid;
+    grid-template: 1fr 1fr 1fr /
+                   1fr 1fr 1fr;
 
     height: 318px;
     width: 318px;
@@ -106,8 +119,30 @@ body {
     margin: 24px 0;
 
     &__image {
-      position: relative;
+      position: absolute;
+      pointer-events: none;
       z-index: 1;
+    }
+
+    &__cell {
+      @include flex-container;
+      height: 106px;
+      width: 106px;
+      background-color: transparent;
+      cursor: pointer;
+      transition: background-color 0.5s ease;
+
+      &:hover:not(&--win) {
+        background-color: rgb(240, 240, 240);
+      }
+
+      &--template {
+        display: none;
+      }
+
+      &--win {
+        background-color: rgb(200, 233, 181);
+      }
     }
   }
 
