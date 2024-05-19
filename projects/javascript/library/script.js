@@ -7,11 +7,13 @@ const newBookSubmitBtn = document.getElementById("new-book-modal__submit-btn");
 const newBookClose = document.querySelector(".new-book-modal__close");
 const newBookForm = document.querySelector("#new-book-modal form");
 
-function Book(title, author, pages, read) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.read = read;
+class Book {
+  constructor(title, author, pages, read) {
+    this.title = title;
+    this.author = author;
+    this.pages = pages;
+    this.read = read;
+  }
 }
 
 function addBookToLibrary(title, author, pages, read) {
