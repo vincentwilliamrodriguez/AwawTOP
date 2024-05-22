@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  font-family: "Delicious Handrawn", cursive;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 20vh;
+  padding: 24px 36px;
+  background-image: url(../assets/tic-tac-toe-background-1.png);
+  box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.7);
+  filter: brightness(-100);
+  position: relative;
+  z-index: 2;
+}
+.header .logo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+.header .logo__icon {
+  height: 50px;
+  filter: invert(1);
+}
+.header .logo__title {
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 900;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  height: 80vh;
+  padding: 24px 36px;
+}
+.main .top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 358px;
+}
+.main .top .player {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  background-color: rgb(231, 231, 231);
+  box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.3);
+  padding: 8px 12px;
+  font-size: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+.main .top .player img {
+  height: 1.5rem;
+}
+.main .top .player p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95px;
+  cursor: pointer;
+}
+.main .top .player--turn {
+  background-color: rgb(199, 231, 151);
+}
+.main .top .restart-btn {
+  width: 32px;
+  height: 32px;
+  transition: scale 0.3s ease;
+  cursor: pointer;
+}
+.main .top .restart-btn:hover {
+  scale: 1.1;
+}
+.main .board {
+  position: relative;
+  display: grid;
+  grid-template: 1fr 1fr 1fr/1fr 1fr 1fr;
+  height: 318px;
+  width: 318px;
+  margin: 24px 0;
+}
+.main .board__image {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+.main .board__cell {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 106px;
+  width: 106px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+.main .board__cell:hover:not(.main .board__cell--win) {
+  background-color: rgb(240, 240, 240);
+}
+.main .board__cell--template {
+  display: none;
+}
+.main .board__cell--win {
+  background-color: rgb(200, 233, 181);
+}
+.main .label {
+  font-size: 1.5rem;
+}

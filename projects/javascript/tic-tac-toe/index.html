@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.min.css">
+  <script src="script.js" defer></script>
+  <title>Awaw Tic Tac Toe</title>
+</head>
+
+<body>
+  <div class="header">
+    <div class="logo">
+      <img class="logo__icon" src="assets/tic-tac-toe-icon.svg">
+      <h1 class="logo__title">TIC TAC TOE</h1>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="top">
+      <div class="player player--turn" data-mark="X">
+        <img src="assets/x.png">
+        <p contenteditable>Player 1</p>
+      </div>
+      
+      <img src="assets/restart-btn.svg" alt="" class="restart-btn">
+
+      <div class="player" data-mark="O">
+        <img src="assets/o.png">
+        <p contenteditable>Player 2</p>
+      </div>
+
+    </div>
+
+    <div class="board">
+      <img src="assets/board.png" class="board__image">
+      <div class="board__cell board__cell--template">
+        <img src="">
+      </div>
+    </div>
+
+    <p class="label">`Time for Awaw (X) to play!`</p>
+  </div>
+</body>

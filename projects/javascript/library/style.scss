@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+$clr-dark-blue: #013d8b;
+$clr-light-blue: #d7e9ff;
+$clr-dark-red: #cc2828de;
+$clr-dark-green: #296600de;
+$clr-transparent-black: #00000055;
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin main-item() {
+  width: 280px;
+  min-height: 120px;
+  padding: 12px 36px 0px 36px;
+
+  background-color: white;
+  border-radius: 18px;
+  box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  text-align: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: Roboto, sans-serif;
+  height: 100vh;
+}
+
+.header {
+  @include flex-container(row, space-between);
+
+  height: 15vh;
+  padding: 36px 24px;
+  position: relative;
+  z-index: 1;
+
+  background: $clr-dark-blue;
+  box-shadow: 0px 3px 7px 0px rgba(0, 0, 0, 0.4);
+
+  &__logo{
+    @include flex-container;
+
+    gap: 5px;
+
+    color: white;
+    font-weight: 500;
+
+    img {
+      height: 50px;
+      filter: invert(1);
+    }
+  }
+
+  &__login_btn {
+    padding: 8px 12px;
+
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 4px;
+
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    
+    transition: all 0.5s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 1);
+      color: $clr-dark-blue;
+      cursor: pointer;
+    }
+  }
+}
+
+.main {
+  @include flex-container(row, start, start);
+  flex: 0 0 300px;
+  flex-wrap: wrap;
+  align-content: start;
+  gap: 24px;
+
+  padding: 24px 24px;
+  min-height: 85vh;
+
+  background-color: $clr-light-blue;
+}
+
+
+#template {
+  display: none;
+}
+
+.book__remove,
+.new-book-modal__close {
+  height: 24px;
+
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  opacity: 60%;
+  cursor: pointer;
+
+  transition: opacity 0.5s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.book {
+  @include flex-container(column, start);
+  @include main-item;
+  position: relative;
+  
+
+  &__title {
+    font-size: 1.5rem;
+    font-style: italic;
+    
+    // word-break: break-all;
+  }
+  
+  &__author {
+    margin-top: 8px;
+    font-size: 1.2rem;
+  }
+
+  &__pages {
+    margin-top: 18px;
+    font-size: 1rem;
+  }
+
+  &__read {
+    width: calc(100% + 2 * 36px);
+    margin: 0px -36px;
+    margin-top: 6px;
+    padding: 8px;
+
+    color: white;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    &--false {
+      background-color: $clr-dark-red;
+      
+      &::after {
+        content: 'Not Read Yet';
+      }
+    }
+
+    &--true {
+      background-color: $clr-dark-green;
+
+      &::after {
+        content: 'Done Reading';
+      }
+    }
+  }
+
+  &__title,
+  &__author__name,
+  &__pages__number {
+    color: $clr-dark-blue;
+  }
+}
+
+#new-book-btn{
+  @include flex-container(column);
+  @include main-item;
+
+  order: 1;
+  gap: 8px;
+
+  height: 200px;
+  padding: 0;
+
+  background-color: transparent;
+  box-shadow: none;
+  border: $clr-transparent-black dashed 3px;
+
+  cursor: pointer;
+
+  &__icon,
+  &__text {
+    height: 32px;
+    font-weight: bold;
+    opacity: 60%;
+  }
+}
+
+#new-book-modal {
+  @include main-item;
+  
+  position: absolute;
+  margin: auto;
+  padding: 12px 24px;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+
+  width: 300px;
+  min-height: 290px;
+
+  background-color: #e2e4e3;
+  outline: none;
+  border: none;
+
+  &::backdrop {
+    background-color: black;
+    opacity: 30%;
+  }
+
+  &__heading {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  &__submit-btn {
+    padding: 8px 24px;
+    border-radius: 6px;
+
+    font-weight: bold;
+    border: none;
+    color: white;
+    margin-top: 12px;
+    background-color: #194379;
+    box-shadow: 1px 1px 3px rgb(0 0 0 / 0.3);
+    cursor: pointer;
+  }
+}
+
+.new-book-fieldset {
+  @include flex-container(column, start, stretch);
+
+  border: none;
+
+  .pair {
+    @include flex-container(column, start, start);
+
+    gap: 4px;
+    margin-bottom: 12px;
+
+    &.pair--done {
+      @include flex-container(row, space-between);
+
+      input {
+        appearance: checkbox;
+        height: 15px;
+        width: 15px;
+        cursor: pointer;
+      }
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
+      color: #555;
+      text-transform: uppercase;
+    }
+
+    input {
+      appearance: none;
+      font-size: 0.9rem;
+      padding: 4px 8px;
+      border: 1px solid #E5E7EB;
+      border-radius: 3px;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+        border: 1px solid blue;
+        box-shadow: 1px 1px 3px rgb(0 0 0 / 0.3);
+      }
+
+      &:invalid {
+        border: 1px solid #c80000;
+      }
+
+      &::placeholder {
+        color: #bbb;
+      }
+    }
+  }
+}
