@@ -8,74 +8,80 @@
 
 <body>
   <header class="header">
-    <nav class="header__home">Home</nav>
-    <nav class="header__menu">Menu</nav>
-    <nav class="header__contact">Contact</nav>
+    <img class="header__logo" src="<%=require('./header_logo_edited.png')%>">
+    <nav class="navbar">
+      <button type="button" class="navbar__btn navbar__btn--active">Home</button>
+      <button type="button" class="navbar__btn">Menu</button>
+      <button type="button" class="navbar__btn">Contact</button>
+    </nav>
   </header>
 
   <div id="content">
-    <img src="<%=require('./home/logo.png')%>" alt="logo">
-    <h2 class="tagline">Los Pollos Hermanos, where something delicious is always cooking.</h2>
-    <p class="description">The finest ingredients are brought together with love and care, then slow cooked to perfection. Yes, the old ways are still best at Los Pollos Hermanos. But don't take our word for it. One taste, and you'll know.</p>
-
-    <div class="option">
-      <img src="<%=require('./menu/pollos-style-chicken.jpg')%>" class="option__image">
-      <h1 class="option__name">Pollos-style Fried Chicken</h1>
-      <p class="option__description">Enjoy our original chicken cooked to perfection for your needs.</p>
+    <div class="home">
+      <img class="home__logo" src="<%=require('./home/logo.png')%>">
+      <h2 class="home__tagline">Los Pollos Hermanos, where something delicious is always cooking.</h2>
+      <p class="home__description">"The finest ingredients are brought together with love and care, then slow cooked to perfection. Yes, the old ways are still best at Los Pollos Hermanos. But don't take our word for it. One taste, and you'll know."</p>
     </div>
+    
 
-    <div class="option">
-      <img src="<%=require('./menu/curly-fries.jpg')%>" class="option__image">
-      <h1 class="option__name">Curly Fries</h1>
-      <p class="option__description">It may not be actually curly, but our fries contains a secret ingredient that will spice things up!</p>
-    </div>
+    <!-- <div class="menu">
+      <h1 class="menu__section">Food</h1>
+      <div class="option">
+        <img src="<%=require('./menu/pollos-style-chicken.jpg')%>" class="option__image">
+        <h1 class="option__name">Pollos-style Fried Chicken</h1>
+        <p class="option__description">Enjoy our original chicken cooked to perfection for your needs.</p>
+      </div>
+      <div class="option">
+        <img src="<%=require('./menu/curly-fries.jpg')%>" class="option__image">
+        <h1 class="option__name">Curly Fries</h1>
+        <p class="option__description">It may not be truly curly, but our fries contains a secret ingredient spices things up!</p>
+      </div>
+      <div class="option">
+        <img src="<%=require('./menu/egg-sandwich.jpg')%>" class="option__image">
+        <h1 class="option__name">Egg Sandwich</h1>
+        <p class="option__description">This sandwich made from fresh Pollos eggs is sure to tickle your taste buds.</p>
+      </div>
+      <div class="option">
+        <img src="<%=require('./menu/veggie-bacon-burger.jpg')%>" class="option__image">
+        <h1 class="option__name">Veggie Bacon Burger</h1>
+        <p class="option__description">Have a son that loves veggies for breakfast? Our Veggie Bacon Burger has you covered!</p>
+      </div>
+      <h1 class="menu__section">Drinks</h1>
+      <div class="option">
+        <img src="<%=require('./menu/homemade-iced-tea.jpg')%>" class="option__image">
+        <h1 class="option__name">Homemade Iced Tea</h1>
+        <p class="option__description">Sourced from the natural leaves of Mexico, this iced tea is deemed to be 99.1% pure!</p>
+      </div>
+      <div class="option">
+        <img src="<%=require('./menu/mug-root-beer.png')%>" class="option__image">
+        <h1 class="option__name">Mug Root Beer</h1>
+        <p class="option__description">Unleash your inner dog with this classic carbonated root beer by Pepsi.</p>
+      </div>
+    </div> -->
 
-    <div class="option">
-      <img src="<%=require('./menu/egg-sandwich.jpg')%>" class="option__image">
-      <h1 class="option__name"></h1>
-      <p class="option__description"></p>
-    </div>
+    <!-- <div class="contact">
+      <div class="field">
+        <img src="<%=require('./contact/email.svg')%>"" class="field__icon">
+        <p class="field__value">totally-real-email@pollos.org</p>
+      </div>
+      <div class="field">
+        <img src="<%=require('./contact/phone.svg')%>"" class="field__icon">
+        <p class="field__value">0123-456-7890</p>
+      </div>
+      <div class="field">
+        <img src="<%=require('./contact/location.svg')%>"" class="field__icon">
+        <p class="field__value">12100 Coors Rd SW, Albuquerque, New Mexico 87045</p>
+      </div>
 
-    <div class="option">
-      <img src="<%=require('./menu/veggie-bacon-burger.jpg')%>" class="option__image">
-      <h1 class="option__name"></h1>
-      <p class="option__description"></p>
-    </div>
-
-    <div class="option">
-      <img src="<%=require('./menu/homemade-iced-tea.jpg')%>" class="option__image">
-      <h1 class="option__name"></h1>
-      <p class="option__description"></p>
-    </div>
-
-    <div class="option">
-      <img src="<%=require('./menu/mug-root-beer.png')%>" class="option__image">
-      <h1 class="option__name"></h1>
-      <p class="option__description"></p>
-    </div>
-
-    <div class="contact">
-      <img src="<%=require('./contact/email.svg')%>"" class="contact__icon">
-      <p class="contact__value"></p>
-    </div>
-
-    <div class="contact">
-      <img src="<%=require('./contact/phone.svg')%>"" class="contact__icon">
-      <p class="contact__value"></p>
-    </div>
-
-    <div class="contact">
-      <img src="<%=require('./contact/location.svg')%>"" class="contact__icon">
-      <p class="contact__value"></p>
-    </div>
-
-    <img src="<%=require('./contact/front.jpg')%>" alt="Front image of Pollos" class="front">
-
-    <a href="https://www.thegrocer.co.uk/bogof/breaking-bads-chicken-shop-los-pollos-hermanos-wins-fictional-food-fight/599861.article">Credit</a>
+      
+      <a target="_blank" href="https://www.thegrocer.co.uk/bogof/breaking-bads-chicken-shop-los-pollos-hermanos-wins-fictional-food-fight/599861.article">
+        <img src="<%=require('./contact/front.jpg')%>" alt="Front image of Pollos" class="contact__front">
+      </a>
+    </div> -->
   </div>
 
   <footer class="footer">
-    This project is made for educational purposes only. "Los Pollos Hermanos" is wholly owned by <a href="https://www.amc.com">AMC</a>.
+    This project was made for educational purposes only. "Los Pollos Hermanos" is an intellectual property of <a href="https://www.amc.com" target="_blank">AMC</a>.
   </footer>
 </body>
 
