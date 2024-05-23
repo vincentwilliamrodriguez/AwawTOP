@@ -9,7 +9,7 @@ const DisplayManager = (function () {
   const contentElement = document.querySelector("#content");
 
   function init() {
-    contentElement.appendChild(HomeElement());
+    contentElement.appendChild(ContactElement());
   }
 
   return {

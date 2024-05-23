@@ -1,6 +1,9 @@
 export function makeElement(tagName, classes, textContent="", attributes={}) {
   const element = document.createElement(tagName);
-  element.classList.add(...classes.split(" "));
+
+  if (classes !== "") {
+    element.classList.add(...classes.split(" "));
+  }
 
   const node = document.createTextNode(textContent);
   element.appendChild(node);
