@@ -1,5 +1,20 @@
 import "./style.scss";
-import home from "./home/home.js";
-import menu from "./menu/menu.js";
-import contact from "./contact/contact.js";
+import HomeElement from "./home/home.js";
+import MenuElement from "./menu/menu.js";
+import ContactElement from "./contact/contact.js";
 
+
+
+const DisplayManager = (function () {
+  const contentElement = document.querySelector("#content");
+
+  function init() {
+    contentElement.appendChild(HomeElement());
+  }
+
+  return {
+    init,
+  };
+})();
+
+DisplayManager.init();
