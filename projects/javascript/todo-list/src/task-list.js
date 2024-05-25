@@ -17,6 +17,7 @@ class Task {
   constructor (options = {}){
     Object.assign(this, {
       title: "", 
+      project: "Default",
       description: "", 
       dueDate: new Date(), 
       priority: 1, 
@@ -31,14 +32,16 @@ class Task {
 export default class TaskListManager {
   #list = {};
 
-  getList(view = "all-tasks") {
+  getList(view = "all-tasks", project = null) {
 
     Object.filter = (obj, predicate) => 
       Object.keys(obj)
             .filter( key => predicate(obj[key]) )
             .reduce( (res, key) => (res[key] = obj[key], res), {} );
 
-    const result = Object.filter(this.#list, VIEW_FILTERS[view]);
+    let result = Object.filter(this.#list, VIEW_FILTERS[view]);
+    result = Object.filter(result, (task) => (!project || task.project === project)); // if project is not given, all tasks pass the filter
+    console.log("Awp:", project)
     return result;
   }
 
