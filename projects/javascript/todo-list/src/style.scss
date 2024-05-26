@@ -1,0 +1,151 @@
+$clr-primary: #1e1e58;
+$clr-secondary: #a8a8d4;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin box-shadow($color: #000000aa, $top: 0, $left: 0, $blur: 10px, $spread: 0px) {
+  box-shadow: $top $left $blur $spread $color;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  display: grid;
+  grid-template: 100px 1fr / 300px 1fr;
+
+  font-family: "Josefin Sans", sans-serif;
+  min-height: 100vh;
+}
+
+.header {
+  @include box-shadow(#00000077);
+  @include flex-container;
+  grid-column: span 2;
+
+  background-color: $clr-primary;
+  padding: 24px 36px;
+
+  position: relative;
+  z-index: 1;
+
+  .sidebar-btn {
+    @include flex-container;
+
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background-color: transparent;
+    scale: 1;
+
+    position: absolute;
+    left: 18px;
+
+    cursor: pointer;
+    transition: background-color, scale 0.2s ease;
+
+    &__icon {
+      height: 70%;
+    }
+
+    &:hover {
+      background-color: #00000033;
+    }
+
+    &:active {
+      scale: 0.9;
+    }
+  }
+
+  .logo {
+    @include flex-container;
+    gap: 12px;
+
+    &__icon {
+      height: 64px;
+    }
+
+    &__text {
+      color: white;
+      font-size: 2.1rem;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+.sidebar {
+  @include box-shadow(#00000055);
+  @include flex-container(column, start, start);
+
+  background-color: $clr-secondary;
+  padding: 24px 36px;
+
+  &--hidden {
+    display: none;
+  }
+
+  &__section-header {
+    color: $clr-primary;
+
+    width: 100%;
+    margin-bottom: 12px;
+    border-bottom: 2px solid $clr-primary;
+  }
+
+  &__section {
+    @include flex-container(column, start, start);
+    gap: 8px;
+    margin-bottom: 32px;
+    width: 100%;
+
+    cursor: pointer;
+
+    .filter {
+      @include flex-container(row, start);
+      gap: 8px;
+
+      width: 100%;
+      padding: 4px 8px;
+      margin-left: 8px;
+
+      &__icon {
+        height: 28px;
+      }
+
+      &__title {
+        font-size: 1.25rem;
+
+        transform: translateY(2px);
+      }
+
+      &--active {
+        background-color: #8686d8;
+        border-radius: 0px 8px 8px 0px;
+        border-left: $clr-primary 3px solid;
+      }
+    }
+  }
+}
+
+.main {
+  padding: 36px;
+}

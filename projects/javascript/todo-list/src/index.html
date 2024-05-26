@@ -7,6 +7,51 @@
 </head>
 
 <body>
-  
+  <header class="header">
+    <div class="sidebar-btn">
+      <img src="<%=require("./assets/images/sidebar.svg")%>" class="sidebar-btn__icon">
+    </div>
+    <div class="logo">
+      <img src="<%=require("./assets/images/icon.svg")%>" class="logo__icon">
+      <h1 class="logo__text">JustDoIt</h1>
+    </div>
+  </header>
+
+  <nav class="sidebar">
+    <h1 class="sidebar__section-header">Views</h1>
+    <div class="sidebar__section">
+      <div class="filter filter--active" data-filter="all-tasks">
+        <img src="<%=require("./assets/images/all-tasks.svg")%>" class="filter__icon">
+        <h2 class="filter__title">All Tasks</h2>
+      </div>
+      <div class="filter" data-filter="today">
+        <img src="<%=require("./assets/images/today.svg")%>" class="filter__icon">
+        <h2 class="filter__title">Today</h2>
+      </div>
+      <div class="filter" data-filter="this-week">
+        <img src="<%=require("./assets/images/week.svg")%>" class="filter__icon">
+        <h2 class="filter__title">This Week</h2>
+      </div>
+      <div class="filter" data-filter="high-alert">
+        <img src="<%=require("./assets/images/alert.svg")%>" class="filter__icon">
+        <h2 class="filter__title">High Alert</h2>
+      </div>
+    </div>
+
+    <h1 class="sidebar__section-header">Projects</h1>
+    <div class="sidebar__section">
+      <div class="filter" data-filter="high-alert">
+        <h2 class="filter__title">Default</h2>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <h1 class="main__header">All Tasks</h1>
+    <div class="task-list">
+      
+    </div>
+  </main>
+
 </body>
 </html>

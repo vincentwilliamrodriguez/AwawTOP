@@ -1,4 +1,5 @@
 import DisplayManager from "./display.js";
+import "./style.scss";
 
 const display = new DisplayManager();
 const taskList = display.taskList;
@@ -19,3 +20,5 @@ console.log("Awp change ", IDtesting);
 taskList.update(IDtesting, {title:"AWAWAWAW", projectID: projectTesting});
 
 display.printList("all-tasks");
+
+display.init();
