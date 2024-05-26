@@ -18,3 +18,29 @@ export function makeElement(tagName, classes, textContent="", attributes={}) {
 export function generateID() {
   return Math.floor(Math.random() * Math.pow(10, 15)).toString("16");
 }
+
+export class CRUD {
+  list = {}
+
+  constructor (itemClass) {
+    this.itemClass = itemClass;
+  }
+
+  create(options) {
+    const ID = generateID();
+    this.list[ID] = new this.itemClass(options);
+    return ID;
+  }
+
+  read(ID) {
+    return this.list[ID];
+  }
+
+  update(ID, options) {
+    Object.assign(this.list[ID], options);
+  }
+
+  delete(ID) {
+    delete this.list[ID];
+  }
+}

@@ -2,14 +2,20 @@ import DisplayManager from "./display.js";
 
 const display = new DisplayManager();
 const taskList = display.taskList;
-const IDtesting = taskList.createTask({title: "Awaw1", dueDate: new Date("2036-8-12")});
-taskList.createTask({title: "Awp2", dueDate: new Date(), priority: 4});
-taskList.createTask({title: "Awp3", project: "Awaw", dueDate: new Date("2024-5-12")});
-taskList.createTask({title: "Awaw4", dueDate: new Date("2024-6-1")});
+const projectList = taskList.projectList;
 
-display.printList();
+const projectTesting = projectList.create({title: "awaw"});
+console.log(projectTesting)
 
-console.log("Awp ", IDtesting);
-taskList.updateTask(IDtesting, {title:"AWAWAWAW"});
+const IDtesting = taskList.create({title: "Awaw1", dueDate: new Date("2036-8-12")});
+taskList.create({title: "Awp2", dueDate: new Date(), priority: 4});
+taskList.create({title: "Awp3", projectID: projectTesting, dueDate: new Date("2024-5-12")});
+taskList.create({title: "Awaw4", dueDate: new Date("2024-6-1")});
+taskList.create();
 
-display.printList("all-tasks", "Awaw");
+console.log(taskList.defaultProjectID);
+
+console.log("Awp change ", IDtesting);
+taskList.update(IDtesting, {title:"AWAWAWAW", projectID: projectTesting});
+
+display.printList("all-tasks");

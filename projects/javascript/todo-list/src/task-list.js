@@ -1,4 +1,5 @@
 import Checklist from "./checklist.js";
+import ProjectListManager from "./project-list.js";
 import * as Helper from "./helper.js";
 import * as Datefns from "date-fns";
 
@@ -17,7 +18,7 @@ class Task {
   constructor (options = {}){
     Object.assign(this, {
       title: "", 
-      project: "Default",
+      projectID: "",
       description: "", 
       dueDate: new Date(), 
       priority: 1, 
@@ -28,38 +29,27 @@ class Task {
   }
 }
 
+export default class TaskListManager extends Helper.CRUD {
+  projectList = new ProjectListManager();
 
-export default class TaskListManager {
-  #list = {};
+  constructor () {
+    super(Task);
+    this.defaultProjectID = this.projectList.create({title: "Awaw"});
+  }
 
-  getList(view = "all-tasks", project = null) {
-
+  getTaskList(view = "all-tasks", projectID = null) {
     Object.filter = (obj, predicate) => 
       Object.keys(obj)
             .filter( key => predicate(obj[key]) )
             .reduce( (res, key) => (res[key] = obj[key], res), {} );
 
-    let result = Object.filter(this.#list, VIEW_FILTERS[view]);
-    result = Object.filter(result, (task) => (!project || task.project === project)); // if project is not given, all tasks pass the filter
-    console.log("Awp:", project)
+    let result = Object.filter(this.list, VIEW_FILTERS[view]);
+    result = Object.filter(result, (task) => (!projectID || task.projectID === projectID)); // if project is not given, all tasks pass the filter
     return result;
   }
 
-  createTask(options = {}) {
-    const taskID = Helper.generateID();
-    this.#list[taskID] = new Task(options);
-    return taskID;
-  }
-
-  readTask(taskID) {
-    return this.#list[taskID];
-  }
-
-  updateTask(taskID, options = {}) {
-    Object.assign(this.#list[taskID], options);
-  }
-
-  deleteTask(taskID) {
-    delete this.#list[taskID];
+  create(options) {
+    const modifiedOptions = Object.assign({projectID: this.defaultProjectID}, options);
+    return super.create(modifiedOptions);
   }
 }
