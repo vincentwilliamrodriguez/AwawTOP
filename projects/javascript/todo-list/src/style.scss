@@ -2,6 +2,20 @@ $clr-primary: #1e1e58;
 $clr-secondary: #a8a8d4;
 
 
+$clr-alert: (
+  "clr-alert-1": #105710cc,
+  "clr-alert-2": #59681acc,
+  "clr-alert-3": #8e9627cc,
+  "clr-alert-4": #835417cc,
+  "clr-alert-5": #971010cc,
+);
+
+:export {
+  @each $key, $value in $clr-alert {
+    #{unquote($key)}: $value;
+  }
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
 @mixin flex-container($direction: row, $justify: center, $align: center) {
@@ -35,6 +49,25 @@ body {
 
   font-family: "Josefin Sans", sans-serif;
   min-height: 100vh;
+
+  overflow: hidden;
+
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #777;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgba($clr-primary, 0.6);
+    border-radius: 16px;
+  }
 }
 
 .header {
@@ -47,6 +80,8 @@ body {
 
   position: relative;
   z-index: 1;
+
+  user-select: none;
 
   .sidebar-btn {
     @include flex-container;
@@ -99,8 +134,14 @@ body {
   background-color: $clr-secondary;
   padding: 24px 36px;
 
+  user-select: none;
+
   &--hidden {
     display: none;
+  }
+
+  &--hidden + .main {
+    grid-column-start: 1;
   }
 
   &__section-header {
@@ -113,19 +154,25 @@ body {
 
   &__section {
     @include flex-container(column, start, start);
-    gap: 8px;
+    gap: 4px;
     margin-bottom: 32px;
     width: 100%;
 
-    cursor: pointer;
 
     .filter {
       @include flex-container(row, start);
       gap: 8px;
+      flex: none;
 
+      height: 40px;
       width: 100%;
-      padding: 4px 8px;
+      padding: 6px 8px;
       margin-left: 8px;
+      border-radius: 8px;
+
+      background-color: transparent;
+      transition: background-color 0.1s ease;
+      cursor: pointer;
 
       &__icon {
         height: 28px;
@@ -142,10 +189,151 @@ body {
         border-radius: 0px 8px 8px 0px;
         border-left: $clr-primary 3px solid;
       }
+
+      &:hover:not(&--active) {
+        background-color: darken($clr-secondary, 5%);
+      }
+    }
+
+
+    &--projects {
+      max-height: 180px;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      .filter {
+        padding-right: 16px;
+
+        &__title {
+          flex: 1 1 auto;
+        }
+
+        &__btn {
+          display: none;
+          width: 24px;
+          height: 24px;
+          opacity: 90%;
+
+          img {
+            height: 90%;
+          }
+
+          &:hover {
+            background-color: #00000015;
+          }
+        }
+
+        &:hover .filter__btn {
+          @include flex-container;
+        }
+      }
     }
   }
 }
 
 .main {
   padding: 36px;
+  grid-column-end: -1;
+  background-color: #fefefe;
+
+  &__header {
+    margin-bottom: 18px;
+    color: $clr-primary;
+    font-size: 2.2rem;
+  }
+
+  .task-list {
+    @include flex-container(column, start, center);
+    gap: 18px;
+    height: 380px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .task {
+      @include flex-container(row, start);
+      flex: none;
+      gap: 12px;
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px;
+
+      @include box-shadow(#00000033, 0, 0, 5px);
+      background-color: lighten($clr-secondary, 24%);
+      border-radius: 2px 8px 8px 2px;
+      border-left: 4px solid map-get($map: $clr-alert, $key: "clr-alert-1");
+
+      &__is-done {
+        width: 20px;
+        height: 20px;
+
+        border: 1px solid #000000dd;
+        background-color: white;
+        border-radius: 50%;
+        appearance: none;
+        cursor: pointer;
+
+
+        &:checked {
+          appearance: auto;
+          clip-path: circle(50% at 50% 50%);
+          accent-color: lighten($clr-primary, 20%);
+        }
+      }
+
+      &__is-done:checked ~ .task__title {
+        color: #777;
+        text-decoration: line-through;
+      }
+      
+      &__is-done:checked ~ .task__date-display {
+        color: #777;
+      }
+
+      &__title {
+        font-size: 1.2rem
+      }
+
+      &__expand-btn {
+        display: none;
+
+        width: 24px;
+        height: 24px;
+        margin-left: 2px;
+
+        @include box-shadow(#00000033, 0, 0, 4px);
+        border-radius: 6px;
+        background-color: #ffffff;
+        opacity: 80%;
+
+        cursor: pointer;
+        filter: brightness(100%);
+        transition: filter 0.3s ease;
+
+        img {
+          height: 60%;
+        }
+
+        &:hover {
+          filter: brightness(96%);
+        }
+      }
+
+      &__date-display {
+        margin-left: auto;
+
+        font-size: 1.1rem;
+        font-weight: normal;
+      }
+
+      &:hover {
+        background-color: lighten($clr-secondary, 15%);
+    
+        .task__expand-btn {
+          @include flex-container;
+        }
+      }
+    }
+  }
+
 }
