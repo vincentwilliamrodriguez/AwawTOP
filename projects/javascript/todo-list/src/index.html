@@ -40,7 +40,12 @@
 
     <h1 class="sidebar__section-header">Projects</h1>
     <div class="sidebar__section sidebar__section--projects">
+      <div class="sidebar__section--projects__new-btn">
+        <img src="<%=require("./assets/images/plus.svg")%>">
+        <p>Add project</p>
+      </div>
       <div class="filter template" data-filter="project" data-project-id="">
+        <img src="<%=require("./assets/images/project.svg")%>" class="filter__icon">
         <h2 class="filter__title">Default</h2>
         <div class="filter__btn filter__btn--edit">
           <img src="<%=require("./assets/images/edit.svg")%>">
@@ -56,6 +61,11 @@
     <h1 class="main__header">All Tasks</h1>
 
     <div class="task-list">
+      <div class="task-list__new-btn">
+        <img src="<%=require("./assets/images/plus.svg")%>">
+        <p>Add task</p>
+      </div>
+
       <div class="task template" data-task-id="">
         <input type="checkbox" name="is-done" class="task__is-done">
         <h3 class="task__title">Awaw awaw</h3>
@@ -95,6 +105,10 @@
         </div>
 
         <div class="checklist">
+          <div class="checklist__new-btn">
+            <img src="<%=require("./assets/images/plus.svg")%>">
+            <p>Add item</p>
+          </div>
           <div class="checklist-item">
             <input class="checklist-item__checkbox" type="checkbox" name="">
             <p class="checklist-item__label" contenteditable>Awaw</p>
@@ -122,7 +136,7 @@
         <div class="pair pair--priority">
           <label for="priority" class="pair__label">Priority</label>
           <div class="pair-wrapper">
-            <input type="radio" name="priority" value="1" id="1"><label for="1">1</label>
+            <input checked type="radio" name="priority" value="1" id="1"><label for="1">1</label>
             <input type="radio" name="priority" value="2" id="2"><label for="2">2</label>
             <input type="radio" name="priority" value="3" id="3"><label for="3">3</label>
             <input type="radio" name="priority" value="4" id="4"><label for="4">4</label>
