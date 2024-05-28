@@ -2,8 +2,11 @@ import TaskListManager from "./task-list.js";
 import * as Datefns from "date-fns";
 
 
-const sidebarElem = document.querySelector(".sidebar");
-const sidebarBtnElem = document.querySelector(".sidebar-btn");
+const query = document.querySelector.bind(document);
+const queryAll = document.querySelectorAll.bind(document);
+const sidebarElem = query(".sidebar");
+const sidebarBtnElem = query(".sidebar-btn");
+const taskInterfaceElem = query(".task-interface");
 
 export default class DisplayManager {
   taskList = new TaskListManager();
@@ -20,6 +23,27 @@ export default class DisplayManager {
     sidebarBtnElem.addEventListener("click", () => {
       sidebarElem.classList.toggle("sidebar--hidden");
     });
+
+    taskInterfaceElem.addEventListener("click", (e) => {
+      taskInterfaceElem.close();
+    });
+
+    query(".template .task__expand-btn").addEventListener("click", (e) => {
+      taskInterfaceElem.showModal();
+    });
+
+    query(".top-bar__btn--close").addEventListener("click", (e) => {
+      taskInterfaceElem.close();
+    });
+
+    query(".modal-children-wrapper").addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    taskInterfaceElem.showModal();
+
+    // add to new/expand button function
+    query("#due-date").setAttribute("value", Datefns.format(new Date(), "yyyy-MM-dd"));
   }
 }
 

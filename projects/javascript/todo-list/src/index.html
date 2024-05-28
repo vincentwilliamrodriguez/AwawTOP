@@ -40,12 +40,12 @@
 
     <h1 class="sidebar__section-header">Projects</h1>
     <div class="sidebar__section sidebar__section--projects">
-      <div class="filter template" data-filter="">
+      <div class="filter template" data-filter="project" data-project-id="">
         <h2 class="filter__title">Default</h2>
-        <div class="filter__btn filter__brn--edit">
+        <div class="filter__btn filter__btn--edit">
           <img src="<%=require("./assets/images/edit.svg")%>">
         </div>
-        <div class="filter__btn filter__brn--delete">
+        <div class="filter__btn filter__btn--delete">
           <img src="<%=require("./assets/images/delete.svg")%>">
         </div>
       </div>
@@ -56,65 +56,7 @@
     <h1 class="main__header">All Tasks</h1>
 
     <div class="task-list">
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-      <div class="task template">
-        <input type="checkbox" name="is-done" class="task__is-done">
-        <h3 class="task__title">Awaw awaw</h3>
-        <div class="task__expand-btn">
-          <img src="<%=require("./assets/images/expand.svg")%>">
-        </div>
-        <h3 class="task__date-display">August 12, 2036</h3>
-      </div>
-      <div class="task template">
+      <div class="task template" data-task-id="">
         <input type="checkbox" name="is-done" class="task__is-done">
         <h3 class="task__title">Awaw awaw</h3>
         <div class="task__expand-btn">
@@ -124,6 +66,72 @@
       </div>
     </div>
   </main>
+
+  <dialog class="task-interface">
+    <div class="modal-children-wrapper">
+      <div class="top-bar">
+        <div class="top-bar__btn top-bar__btn--delete">
+          <img src="<%=require("./assets/images/delete.svg")%>">
+        </div>
+        <div class="top-bar__btn top-bar__btn--close">
+          <img src="<%=require("./assets/images/close.svg")%>">
+        </div>
+      </div>
+
+      <div class="main-properties">
+        <div class="pair">
+          <input type="checkbox" name="is-done" id="is-done">
+          <input type="text" name="name" id="name" placeholder="Task Name">
+        </div>
+
+        <div class="pair">
+          <img src="<%=require("./assets/images/description.svg")%>" class="pair__icon">
+          <textarea name="description" id="description" placeholder="Your description..." rows="7" cols="30"></textarea>
+        </div>
+
+        <div class="pair pair--checklist">
+          <img src="<%=require("./assets/images/checklist.svg")%>" class="pair__icon">
+          <h1 class="pair__label">Checklist</h1>
+        </div>
+
+        <div class="checklist">
+          <div class="checklist-item">
+            <input class="checklist-item__checkbox" type="checkbox" name="">
+            <p class="checklist-item__label" contenteditable>Awaw</p>
+            <div class="checklist-item__delete-btn">
+              <img src="<%=require("./assets/images/delete.svg")%>">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="other-properties">
+        <div class="pair">
+          <label for="project" class="pair__label">Project</label>
+          <select name="project" id="project">
+            <option value="">Default</option>
+            <option value="">Awaw</option>
+          </select>
+        </div>
+
+        <div class="pair">
+          <label for="due-date" class="pair__label">Due Date</label>
+          <input type="date" name="due-date" id="due-date" value=""></input>
+        </div>
+
+        <div class="pair pair--priority">
+          <label for="priority" class="pair__label">Priority</label>
+          <div class="pair-wrapper">
+            <input type="radio" name="priority" value="1" id="1"><label for="1">1</label>
+            <input type="radio" name="priority" value="2" id="2"><label for="2">2</label>
+            <input type="radio" name="priority" value="3" id="3"><label for="3">3</label>
+            <input type="radio" name="priority" value="4" id="4"><label for="4">4</label>
+            <input type="radio" name="priority" value="5" id="5"><label for="5">5</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
 </body>
 </html>
