@@ -12,6 +12,7 @@ const VIEW_FILTERS = {
     return (task.dueDate <= oneWeek);
   },
   "high-alert": (task) => (task.priority >= 4),
+  "project": (task) => true,
 };
 
 class Task {
@@ -24,7 +25,7 @@ class Task {
       priority: 1, 
       notes: "",
       checklist: new Checklist(),
-      isDone: false
+      isDone: false,
     }, options);
   }
 }
@@ -34,7 +35,7 @@ export default class TaskListManager extends Helper.CRUD {
 
   constructor () {
     super(Task);
-    this.defaultProjectID = this.projectList.create({title: "Awaw"});
+    this.defaultProjectID = this.projectList.create({title: "Default"});
   }
 
   getTaskList(view = "all-tasks", projectID = null) {

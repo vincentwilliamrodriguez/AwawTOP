@@ -10,11 +10,6 @@ $clr-alert: (
   "clr-alert-5": #971010cc,
 );
 
-:export {
-  @each $key, $value in $clr-alert {
-    #{unquote($key)}: $value;
-  }
-}
 
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
@@ -125,6 +120,10 @@ img {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+}
+
+.template {
+  display: none !important;
 }
 
 body {
@@ -327,10 +326,10 @@ body {
       height: 40px;
       padding: 8px 12px;
 
-      @include box-shadow(#00000033, 0, 0, 5px);
+      @include box-shadow(#00000033, 1px, 1px, 5px);
       background-color: lighten($clr-secondary, 24%);
       border-radius: 2px 8px 8px 2px;
-      border-left: 4px solid map-get($map: $clr-alert, $key: "clr-alert-1");
+      // border-left: 4px solid map-get($map: $clr-alert, $key: "clr-alert-1");
 
       &__is-done {
         @include checkbox();
@@ -451,7 +450,7 @@ body {
         margin-top: 4px;
       }
 
-      #name,
+      #title,
       #description {
         flex: 1;
 
@@ -473,7 +472,7 @@ body {
         }
       }
 
-      #name {
+      #title {
         font-size: 1.5rem;
         white-space: nowrap;
         overflow: hidden;
@@ -522,18 +521,20 @@ body {
             @include box-shadow(#00000077, 0, 0, 2px, 0);
             padding: 8px 12px;
             border-radius: 4px;
+            scale: 1;
 
             color: white;
             font-size: 0.8rem;
 
             cursor: pointer;
             user-select: none;
-
-            &[for="1"] { background-color: map-get($clr-alert, "clr-alert-1") }
-            &[for="2"] { background-color: map-get($clr-alert, "clr-alert-2") }
-            &[for="3"] { background-color: map-get($clr-alert, "clr-alert-3") }
-            &[for="4"] { background-color: map-get($clr-alert, "clr-alert-4") }
-            &[for="5"] { background-color: map-get($clr-alert, "clr-alert-5") }
+            transition: scale 0.3s ease;
+            
+            @for $i from 1 through 5 {
+              &[for="priority-#{$i}"] { 
+                background-color: map-get($clr-alert, "clr-alert-#{$i}") 
+              }
+            }
           }
         }
       }

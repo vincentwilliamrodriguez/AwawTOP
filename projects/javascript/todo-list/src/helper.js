@@ -37,10 +37,17 @@ export class CRUD {
   }
 
   update(ID, options) {
+    if (!this.list[ID]) {
+      return;
+    }
+
     Object.assign(this.list[ID], options);
+    return this.list[ID];
   }
 
   delete(ID) {
+    const deletedItem = this.list[ID];
     delete this.list[ID];
+    return deletedItem;
   }
 }

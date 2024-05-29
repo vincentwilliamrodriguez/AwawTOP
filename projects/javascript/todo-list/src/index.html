@@ -91,7 +91,7 @@
       <div class="main-properties">
         <div class="pair">
           <input type="checkbox" name="is-done" id="is-done">
-          <input type="text" name="name" id="name" placeholder="Task Name">
+          <input type="text" name="title" id="title" placeholder="Task Name">
         </div>
 
         <div class="pair">
@@ -109,7 +109,7 @@
             <img src="<%=require("./assets/images/plus.svg")%>">
             <p>Add item</p>
           </div>
-          <div class="checklist-item">
+          <div class="checklist-item template">
             <input class="checklist-item__checkbox" type="checkbox" name="">
             <p class="checklist-item__label" contenteditable>Awaw</p>
             <div class="checklist-item__delete-btn">
@@ -123,8 +123,6 @@
         <div class="pair">
           <label for="project" class="pair__label">Project</label>
           <select name="project" id="project">
-            <option value="">Default</option>
-            <option value="">Awaw</option>
           </select>
         </div>
 
@@ -136,11 +134,11 @@
         <div class="pair pair--priority">
           <label for="priority" class="pair__label">Priority</label>
           <div class="pair-wrapper">
-            <input checked type="radio" name="priority" value="1" id="1"><label for="1">1</label>
-            <input type="radio" name="priority" value="2" id="2"><label for="2">2</label>
-            <input type="radio" name="priority" value="3" id="3"><label for="3">3</label>
-            <input type="radio" name="priority" value="4" id="4"><label for="4">4</label>
-            <input type="radio" name="priority" value="5" id="5"><label for="5">5</label>
+            <input checked type="radio" name="priority" value="priority-1" id="priority-1"><label for="priority-1">1</label>
+            <input type="radio" name="priority" value="priority-2" id="priority-2"><label for="priority-2">2</label>
+            <input type="radio" name="priority" value="priority-3" id="priority-3"><label for="priority-3">3</label>
+            <input type="radio" name="priority" value="priority-4" id="priority-4"><label for="priority-4">4</label>
+            <input type="radio" name="priority" value="priority-5" id="priority-5"><label for="priority-5">5</label>
           </div>
         </div>
       </div>
