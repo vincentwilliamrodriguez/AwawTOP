@@ -1,5 +1,5 @@
-import Checklist from "./checklist.js";
 import ProjectListManager from "./project-list.js";
+import Checklist from "./checklist.js";
 import * as Helper from "./helper.js";
 import * as Datefns from "date-fns";
 
@@ -59,7 +59,8 @@ export default class TaskListManager extends Helper.CRUD {
     sortedTasks.sort((itemA, itemB) => {
       return (+itemA[1].isDone - +itemB[1].isDone) ||    // incomplete tasks first
              (itemB[1].priority - itemA[1].priority) ||    // higher priority first 
-             (itemA[1].dueDate.getTime() - itemB[1].dueDate.getTime());    // earlier date first
+             (itemA[1].dueDate.getTime() - itemB[1].dueDate.getTime()) ||    // earlier date first
+             (itemA[1].title.localeCompare(itemB[1].title));    // alphabetical order finally
     });
 
     return sortedTasks;

@@ -24,6 +24,18 @@ export default class DisplayManager {
     "clr-alert-5": "#971010cc",
   };
 
+  getActiveTask = () => {
+    return this.taskList.read(this.activeTaskID);
+  };
+
+  focusOnProject(projectID) {
+    query(`.filter[data-project-id="${projectID}"] .filter__title`).focus();
+  }
+
+  focusOnChecklistItem(itemID) {
+    query(`.checklist-item[data-item-id="${itemID}"] .checklist-item__label`).focus();
+  }
+
   printList(view, project) {
     const list = this.taskList.getTaskList(view, project);
 
@@ -66,8 +78,11 @@ export default class DisplayManager {
       this.updateActiveFilter(null, newProjectElem);
     });
 
+    // Updates main heading initially
+    query(".main__header").innerHTML = query(".filter--active .filter__title").innerHTML;
+
     // New task button
-    const getDefaultOptions = () => {
+    const getDefaultTaskOptions = () => {
       if (this.activeView === "project") {
         return {projectID: this.activeProject};
       }
@@ -80,7 +95,7 @@ export default class DisplayManager {
     };
 
     query(".task-list__new-btn").addEventListener("click", (e) => {
-      const newTaskID = this.taskList.create( getDefaultOptions() );
+      const newTaskID = this.taskList.create( getDefaultTaskOptions() );
       this.activeTaskID = newTaskID;
       this.updateTaskDisplay();
       this.openTaskInterface();
@@ -110,7 +125,7 @@ export default class DisplayManager {
     const updateActiveTaskElement = () => {
 
       const activeTaskElement = query(`.task[data-task-id="${this.activeTaskID}"]`);
-      const activeTaskData = this.taskList.read(this.activeTaskID);
+      const activeTaskData = this.getActiveTask();
 
       this.updateTaskElement(activeTaskElement, activeTaskData);
     };
@@ -145,7 +160,12 @@ export default class DisplayManager {
       });
     }
 
-    // TODO: Checklist
+    // Add checklist item button
+    interfaceQuery(".checklist__new-btn").addEventListener("click", (e) => {
+      const newItemID = this.getActiveTask().checklist.create();
+      this.updateChecklistDisplay();
+      this.focusOnChecklistItem(newItemID)
+    });
 
     // Initially displays the tasks and projects
     this.updateTaskDisplay();
@@ -223,7 +243,7 @@ export default class DisplayManager {
   }
 
   openTaskInterface() {
-    const task = this.taskList.read(this.activeTaskID);
+    const task = this.getActiveTask();
 
     if (!task) {
       return;
@@ -236,7 +256,8 @@ export default class DisplayManager {
     interfaceQuery("#due-date").value = Datefns.format(task.dueDate, "yyyy-MM-dd");
     interfaceQuery(`#priority-${task.priority}`).checked = true;
 
-    // TODO: Checklist
+    // Updates checklist
+    this.updateChecklistDisplay();
 
     // Updates project dropdown value
     const projectDropdownElem = interfaceQuery("#project");
@@ -305,8 +326,45 @@ export default class DisplayManager {
     };
   }
 
-  focusOnProject(projectID) {
-    query(`.filter[data-project-id="${projectID}"] .filter__title`).focus();
+  updateChecklistDisplay() {
+    const checklist = this.getActiveTask().checklist;
+
+    const checklistElem = interfaceQuery(".checklist");
+    const templateItemElem = query(".checklist-item.template");
+
+    [...checklistElem.children].forEach((element) => {
+      if (element.classList.contains("checklist-item") && !element.classList.contains("template")) {
+        element.remove();
+        console.log("AWAW")
+      }
+    });
+    
+    for (const [itemID, item] of Object.entries(checklist.list)) {
+      const newItemElem = templateItemElem.cloneNode(true);
+      newItemElem.classList.remove("template");
+      newItemElem.setAttribute("data-item-id", itemID);
+      console.log(itemID);
+
+      const itemCheckboxElem = newItemElem.querySelector(".checklist-item__checkbox");
+      itemCheckboxElem.checked = item.isDone;
+      itemCheckboxElem.addEventListener("change", (e) => {
+        checklist.update(itemID, {isDone: e.currentTarget.checked});
+      });
+
+      const itemLabelElem = newItemElem.querySelector(".checklist-item__label");
+      itemLabelElem.innerHTML = item.title;
+      itemLabelElem.addEventListener("input", (e) => {
+        checklist.update(itemID, {title: e.currentTarget.innerHTML});
+        console.log("Awp", checklist.read(itemID));
+      });
+
+      newItemElem.querySelector(".checklist-item__delete-btn").addEventListener("click", (e) => {
+        checklist.delete(itemID);
+        this.updateChecklistDisplay();
+      });
+
+      checklistElem.appendChild(newItemElem);
+    };
   }
 }
 
