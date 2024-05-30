@@ -15,6 +15,7 @@ export default class DisplayManager {
   activeTaskID = "";
   activeView = "all-tasks";
   activeProject = null;
+  showCompletedTasks = true;
   priorityColors = {
     "clr-alert-1": "#0a2e46cc",
     "clr-alert-2": "#0a610acc",
@@ -26,7 +27,7 @@ export default class DisplayManager {
   printList(view, project) {
     const list = this.taskList.getTaskList(view, project);
 
-    for (const [taskID, task] of Object.entries(list)) {
+    for (const [taskID, task] of list) {
       console.log(`${task.title}, with project ID of ${task.projectID}`);
     };
   }
@@ -47,6 +48,12 @@ export default class DisplayManager {
       element.addEventListener("click", (e) => {
         this.updateActiveFilter(e);
       });
+    });
+
+    // Show completed tasks toggle
+    query(".completed-switch__checkbox").addEventListener("change", (e) => {
+      this.showCompletedTasks = e.currentTarget.checked;
+      this.updateTaskDisplay();
     });
 
     // New project button
@@ -173,7 +180,7 @@ export default class DisplayManager {
   }
 
   updateTaskDisplay() {
-    const list = this.taskList.getTaskList(this.activeView, this.activeProject);
+    const list = this.taskList.getTaskList(this.activeView, this.activeProject, this.showCompletedTasks);
 
     const taskListElem = query(".task-list");
     const templateTaskElem = query(".task.template");
@@ -183,8 +190,9 @@ export default class DisplayManager {
         element.remove();
       }
     });
+
     
-    for (const [taskID, task] of Object.entries(list)) {
+    for (const [taskID, task] of list) {
       const newTaskElem = templateTaskElem.cloneNode(true);
       newTaskElem.classList.remove("template");
       newTaskElem.setAttribute("data-task-id", taskID);
@@ -198,6 +206,7 @@ export default class DisplayManager {
       // Updates isDone when checkbox is clicked
       newTaskElem.querySelector(".task__is-done").addEventListener("click", (e) => {
         this.taskList.update(taskID, {isDone: e.currentTarget.checked});
+        this.updateTaskDisplay();
       });
 
       taskListElem.appendChild(newTaskElem);

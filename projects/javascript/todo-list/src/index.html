@@ -60,6 +60,14 @@
   <main class="main">
     <h1 class="main__header">All Tasks</h1>
 
+    <div class="completed-wrapper">
+      <p class="completed-switch-label">Show completed tasks</p>
+      <label class="completed-switch">
+        <input checked type="checkbox" class="completed-switch__checkbox">
+        <span class="completed-switch__slider"></span>
+      </label>
+    </div>
+
     <div class="task-list">
       <div class="task-list__new-btn">
         <img src="<%=require("./assets/images/plus.svg")%>">

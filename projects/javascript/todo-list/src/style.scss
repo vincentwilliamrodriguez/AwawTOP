@@ -307,17 +307,89 @@ body {
 }
 
 .main {
+  display: grid;
+  grid-template: max-content 1fr / 1fr 300px;
+
   padding: 36px;
   grid-column-end: -1;
   background-color: #fefefe;
 
   &__header {
     margin-bottom: 18px;
+    max-width: 800px;
+    overflow: hidden;
+    white-space: nowrap;
+
     color: $clr-primary;
     font-size: 2.2rem;
   }
 
+  .completed-wrapper {
+    justify-self: right;
+    align-self: start;
+
+    @include flex-container;
+    gap: 8px;
+  }
+
+  .completed-switch-label {
+    color: #555;
+  }
+
+  .completed-switch {
+    $height: 24px;
+    $width: 40px;
+
+    position: relative;
+
+    height: $height;
+    width: $width;
+
+    @include box-shadow(#00000055, 0, 0, 2px, 0);
+    border-radius: 32px;
+    overflow: hidden;
+
+    &__checkbox {
+      display: none;
+
+      &:checked + .completed-switch__slider {
+        background-color: rgba($clr-primary, 0.8);
+      }
+      
+      &:checked + .completed-switch__slider:before {
+        transform: translateX(calc($width - $height));
+      }
+    }
+
+    &__slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      
+      background-color: #aaa;
+      transition: 0.3s;
+      cursor: pointer;
+
+      &::before {
+        content: "";
+        position: absolute;
+        height: calc($height - 8px);
+        width: calc($height - 8px);
+        left: 4px;
+        bottom: 4px;
+
+        border-radius: 50%;
+        background-color: white;
+        transition: .4s;
+      }
+    }
+  }
+
   .task-list {
+    grid-column: 1 / -1;
+
     @include flex-container(column, start, center);
     gap: 12px;
     height: 380px;
@@ -346,15 +418,17 @@ body {
         @include checkbox();
       }
 
-      &__is-done:checked ~ .task__title {
+      &__is-done:checked ~ .task__title,
+      &__is-done:checked ~ .task__date-display {
         color: #777;
         text-decoration: line-through;
       }
-      
-      &__is-done:checked ~ .task__date-display {
-        color: #777;
-      }
 
+      &:has(.task__is-done:checked) {
+        filter: brightness(95%);
+        opacity: 50%;
+      }
+      
       &__title {
         font-size: 1.2rem;
         padding-top: 4px;
