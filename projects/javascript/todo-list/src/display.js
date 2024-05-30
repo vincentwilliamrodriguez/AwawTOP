@@ -32,6 +32,11 @@ export default class DisplayManager {
   }
 
   init() {
+    const closeTaskInterface = () => {
+      taskInterfaceElem.close();
+      this.updateTaskDisplay();
+    };
+
     // Sidebar toggle button
     sidebarBtnElem.addEventListener("click", () => {
       sidebarElem.classList.toggle("sidebar--hidden");
@@ -44,9 +49,31 @@ export default class DisplayManager {
       });
     });
 
+    // New project button
+    query(".sidebar__section--projects__new-btn").addEventListener("click", (e) => {
+      const newProjectID = this.taskList.projectList.create({title: "Project"});
+      this.updateProjectDisplay();
+      this.focusOnProject(newProjectID);
+
+      const newProjectElem = query(`.filter[data-project-id="${newProjectID}"]`)
+      this.updateActiveFilter(null, newProjectElem);
+    });
+
     // New task button
+    const getDefaultOptions = () => {
+      if (this.activeView === "project") {
+        return {projectID: this.activeProject};
+      }
+      else if (this.activeView === "high-alert") {
+        return {priority: 5};
+      }
+      else {
+        return {};
+      }
+    };
+
     query(".task-list__new-btn").addEventListener("click", (e) => {
-      const newTaskID = this.taskList.create();
+      const newTaskID = this.taskList.create( getDefaultOptions() );
       this.activeTaskID = newTaskID;
       this.updateTaskDisplay();
       this.openTaskInterface();
@@ -54,7 +81,7 @@ export default class DisplayManager {
 
     // Closes task interface when clicking outside
     taskInterfaceElem.addEventListener("click", (e) => {
-      taskInterfaceElem.close();
+      closeTaskInterface();
     });
 
     query(".modal-children-wrapper").addEventListener("click", (e) => {
@@ -63,14 +90,13 @@ export default class DisplayManager {
 
     // Closes task interface when clicking close button
     query(".top-bar__btn--close").addEventListener("click", (e) => {
-      taskInterfaceElem.close();
+      closeTaskInterface();
     });
 
     // Deletes task when user clicks delete button
     interfaceQuery(".top-bar__btn--delete").addEventListener("click", (e) => {
       this.taskList.delete(this.activeTaskID);
-      this.updateTaskDisplay();
-      taskInterfaceElem.close();
+      closeTaskInterface();
     });
 
     // Updates task data whenever task interface is edited
@@ -114,21 +140,35 @@ export default class DisplayManager {
 
     // TODO: Checklist
 
-    // Initially displays the tasks
+    // Initially displays the tasks and projects
     this.updateTaskDisplay();
+    this.updateProjectDisplay();
   }
 
-  updateActiveFilter(e) {
-    const targetFilterElem = e.currentTarget
+  updateActiveFilter(e, optionalElem = null) {
+    let targetFilterElem = (e) ? e.currentTarget : optionalElem;
     if (!targetFilterElem) { return; }
 
-    query(".filter--active").classList.remove("filter--active");
+    const queryString = (this.activeView === "project") ? 
+                          `.filter[data-project-id="${this.activeProject}"]` :
+                          `.filter[data-filter="${this.activeView}"]`
+    const activeFilterElem = query(queryString);
+    
+    if (activeFilterElem) {
+      activeFilterElem.classList.remove("filter--active");
+    }
+    else {
+      targetFilterElem = query(`.filter[data-filter="all-tasks"]`);
+    }
+
+
     targetFilterElem.classList.add("filter--active");
 
     this.activeView = targetFilterElem.getAttribute("data-filter");
     this.activeProject = (this.activeView === "project") ? 
                     targetFilterElem.getAttribute("data-project-id") : null;
 
+    query(".main__header").innerHTML = targetFilterElem.querySelector(".filter__title").innerHTML;
     this.updateTaskDisplay();
   }
 
@@ -204,6 +244,60 @@ export default class DisplayManager {
 
 
     taskInterfaceElem.showModal();
+  }
+
+  updateProjectDisplay() {
+    const list = this.taskList.projectList.list;
+
+    const projectListElem = query(".sidebar__section--projects");
+    const templateProjectElem = query(".filter.template");
+
+    [...projectListElem.children].forEach((element) => {
+      if (element.classList.contains("filter") && !element.classList.contains("template")) {
+        element.remove();
+      }
+    });
+    
+    for (const [projectID, project] of Object.entries(list)) {
+      const newProjectElem = templateProjectElem.cloneNode(true);
+      newProjectElem.classList.remove("template");
+      newProjectElem.setAttribute("data-project-id", projectID);
+
+      newProjectElem.addEventListener("click", (e) => {
+        this.updateActiveFilter(e);
+      });
+
+      // When project title is clicked/edited, prevents switching active filter, and updates data and main heading
+      const projectTitleElem = newProjectElem.querySelector(".filter__title");
+      projectTitleElem.innerHTML = project.title;
+      projectTitleElem.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+      projectTitleElem.addEventListener("input", (e) => {
+        this.taskList.projectList.update(projectID, {title: e.currentTarget.innerHTML});
+        query(".main__header").innerHTML = e.currentTarget.innerHTML;
+      });
+
+      newProjectElem.querySelector(".filter__btn--edit").addEventListener("click", (e) => {
+        this.focusOnProject(projectID);
+      });
+
+      const deleteBtnElem = newProjectElem.querySelector(".filter__btn--delete");
+      deleteBtnElem.addEventListener("click", (e) => {
+        this.taskList.projectList.delete(projectID);
+        this.updateProjectDisplay();
+      });
+
+      if (projectID === this.taskList.defaultProjectID) {
+        deleteBtnElem.style.display = "none"; // hides delete button of default project
+      }
+
+      projectListElem.appendChild(newProjectElem);
+    };
+  }
+
+  focusOnProject(projectID) {
+    query(`.filter[data-project-id="${projectID}"] .filter__title`).focus();
   }
 }
 

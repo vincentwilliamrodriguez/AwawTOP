@@ -274,12 +274,23 @@ body {
         padding-right: 16px;
 
         &__title {
-          flex: 1 1 auto;
+          max-width: 200px;
+          margin-right: auto;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: text;
+          
+          &:focus {
+            @include box-shadow(#00000077, 0, 0, 2px, 1px);
+            border: none;
+            outline: none;
+          }
         }
 
         &__btn {
           @include button(28px, 28px, 70%, #00000022);
           display: none;
+          flex: none;
           opacity: 90%;
 
           &--delete {

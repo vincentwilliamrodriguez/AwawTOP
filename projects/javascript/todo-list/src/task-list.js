@@ -5,12 +5,8 @@ import * as Datefns from "date-fns";
 
 const VIEW_FILTERS = {
   "all-tasks": (task) => true,
-  "today": (task) => Datefns.isSameDay(task.dueDate, new Date()),
-  "this-week": (task) => {
-    const oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate() + 7);
-    return (task.dueDate <= oneWeek);
-  },
+  "today": (task) => Datefns.isToday(task.dueDate),
+  "this-week": (task) => Datefns.isThisWeek(task.dueDate),
   "high-alert": (task) => (task.priority >= 4),
   "project": (task) => true,
 };
