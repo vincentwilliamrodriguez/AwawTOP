@@ -134,6 +134,12 @@ body {
   min-height: 100vh;
 
   overflow: hidden;
+  transition: grid-template-columns 0.7s ease;
+
+
+  &:has(.sidebar--hidden) {
+    grid-template: 100px 1fr / 0px 1fr;
+  }
 
 
   ::-webkit-scrollbar {
@@ -150,6 +156,7 @@ body {
   ::-webkit-scrollbar-thumb {
     background: rgba($clr-primary, 0.6);
     border-radius: 16px;
+    cursor: pointer;
   }
 }
 
@@ -197,14 +204,16 @@ body {
   padding: 24px 36px;
 
   user-select: none;
+  overflow: hidden;
 
-  &--hidden {
-    display: none;
+
+  * {
+    white-space: nowrap;
   }
 
-  &--hidden + .main {
-    grid-column-start: 1;
-  }
+  // &--hidden + .main {
+  //   // grid-column-start: 1;
+  // }
 
   &__section-header {
     color: $clr-primary;
@@ -233,7 +242,7 @@ body {
       border-radius: 8px;
 
       background-color: transparent;
-      transition: background-color 0.1s ease;
+      transition: background-color 0.3s ease;
       cursor: pointer;
 
       &__icon {
@@ -467,19 +476,32 @@ body {
   z-index: 2;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translate(-50%, -50%);
 
   width: 700px;
   height: 500px;
+  opacity: 1;
 
   @include box-shadow;
   border-radius: 16px;
   border: none;
   outline: none;
 
+  transition: opacity 0.2s ease;
+
   &::backdrop {
     background-color: black;
     opacity: 40%;
+
+    transition: opacity 0.2s ease;
+  }
+
+  &--hidden{
+    opacity: 0;
+
+    &::backdrop {
+      opacity: 0;
+    }
   }
 
   .modal-children-wrapper {
@@ -599,7 +621,7 @@ body {
 
           input[type="radio"]:checked + label {
             scale: 1.2;
-            @include box-shadow(#000000dd, 0, 0, 2px, 0);
+            filter: brightness(120%);
           }
 
           label {
@@ -607,13 +629,14 @@ body {
             padding: 8px 12px;
             border-radius: 4px;
             scale: 1;
+            filter: brightness(75%);
 
             color: white;
             font-size: 0.8rem;
 
             cursor: pointer;
             user-select: none;
-            transition: scale 0.3s ease;
+            transition: scale 0.3s ease, filter 0.3s ease;
             
             @for $i from 1 through 5 {
               &[for="priority-#{$i}"] { 

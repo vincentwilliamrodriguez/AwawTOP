@@ -46,8 +46,11 @@ export default class DisplayManager {
 
   init() {
     const closeTaskInterface = () => {
-      taskInterfaceElem.close();
       this.updateTaskDisplay();
+
+      taskInterfaceElem.classList.add("task-interface--hidden");
+      
+      taskInterfaceElem.addEventListener("transitionend", taskInterfaceElem.close, {once: true});
     };
 
     // Sidebar toggle button
@@ -215,6 +218,7 @@ export default class DisplayManager {
       modifyNewItemElem(newItemElem, itemID, item);
       listElem.appendChild(newItemElem);
     };
+
   }
 
   updateTaskDisplay() {
@@ -279,6 +283,7 @@ export default class DisplayManager {
 
 
     taskInterfaceElem.showModal();
+    taskInterfaceElem.classList.remove("task-interface--hidden");
   }
 
   updateProjectDisplay() {
@@ -300,7 +305,10 @@ export default class DisplayManager {
       });
       projectTitleElem.addEventListener("input", (e) => {
         this.taskList.projectList.update(projectID, {title: e.currentTarget.innerHTML});
-        query(".main__header").innerHTML = e.currentTarget.innerHTML;
+
+        if (this.activeProject === projectID) {
+          query(".main__header").innerHTML = e.currentTarget.innerHTML;
+        }
       });
 
       newProjectElem.querySelector(".filter__btn--edit").addEventListener("click", (e) => {
