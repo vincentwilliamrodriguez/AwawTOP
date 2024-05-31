@@ -34,6 +34,11 @@ export default class TaskListManager extends Helper.CRUD {
     this.defaultProjectID = this.projectList.create({title: "Default"});
   }
 
+  create(options) {
+    const modifiedOptions = Object.assign({projectID: this.defaultProjectID}, options);
+    return super.create(modifiedOptions);
+  }
+
   getTaskList(view = "all-tasks", projectID = null, showCompletedTasks = true) {
     Object.filter = (obj, predicate) => 
       Object.keys(obj)
@@ -66,8 +71,37 @@ export default class TaskListManager extends Helper.CRUD {
     return sortedTasks;
   }
 
-  create(options) {
-    const modifiedOptions = Object.assign({projectID: this.defaultProjectID}, options);
-    return super.create(modifiedOptions);
+  save() {
+    if (!Helper.isStorageAvailable("localStorage")) {
+      return;
+    }
+    
+    localStorage.setItem("taskListData", JSON.stringify(this.list));
+    localStorage.setItem("projectListData", JSON.stringify(this.projectList.list));
+  }
+
+  load() {
+    if (!Helper.isStorageAvailable("localStorage")) {
+      return;
+    }
+
+    const taskListData = localStorage.getItem("taskListData")
+    const projectListData = localStorage.getItem("projectListData")
+
+    if (taskListData) {
+      Object.keys(this.list).forEach((taskID) => { this.delete(taskID) });
+
+      this.projectList.list = JSON.parse(projectListData);
+      this.list = JSON.parse(taskListData);
+      
+      for (const [taskID, task] of Object.entries(this.list)) {
+        this.list[taskID].dueDate = new Date(task.dueDate);
+        
+        const checklist = new Checklist();
+        checklist.list = task.checklist.list;
+        this.list[taskID].checklist = checklist;
+      }
+
+    }
   }
 }

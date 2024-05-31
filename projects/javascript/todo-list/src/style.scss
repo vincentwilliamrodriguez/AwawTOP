@@ -154,9 +154,12 @@ body {
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgba($clr-primary, 0.6);
+    background-color: rgba($clr-primary, 0.6);
     border-radius: 16px;
-    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($clr-primary, 0.7);
+    }
   }
 }
 

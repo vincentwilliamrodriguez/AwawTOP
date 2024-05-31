@@ -2,6 +2,8 @@ import DisplayManager from "./display.js";
 import * as Datefns from "date-fns";
 import "./style.scss";
 
+// localStorage.clear();
+
 const display = new DisplayManager();
 
 const taskList = display.taskList;
@@ -104,6 +106,6 @@ debugChecklistItems.forEach((item) => {
 });
 
 
-
+taskList.load();
 display.printList("all-tasks");
 display.init();

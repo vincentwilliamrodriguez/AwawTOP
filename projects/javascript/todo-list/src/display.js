@@ -170,6 +170,11 @@ export default class DisplayManager {
       this.focusOnChecklistItem(newItemID)
     });
 
+    // Saves tasks and projects when user closes the app
+    window.addEventListener("beforeunload", () => {
+      this.taskList.save();
+    });
+
     // Initially displays the tasks and projects
     this.updateTaskDisplay();
     this.updateProjectDisplay();
@@ -222,6 +227,8 @@ export default class DisplayManager {
   }
 
   updateTaskDisplay() {
+    this.taskList.save();
+
     const list = this.taskList.getTaskList(this.activeView, this.activeProject, this.showCompletedTasks);
     const taskListElem = query(".task-list");
     const templateTaskElem = query(".task.template");
