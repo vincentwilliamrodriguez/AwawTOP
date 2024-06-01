@@ -2,7 +2,6 @@ import TaskListManager from "./task-list.js";
 import * as Helper from "./helper.js";
 import * as Datefns from "date-fns";
 
-
 const query = document.querySelector.bind(document);
 const queryAll = document.querySelectorAll.bind(document);
 const sidebarElem = query(".sidebar");
@@ -33,7 +32,9 @@ export default class DisplayManager {
   }
 
   focusOnChecklistItem(itemID) {
-    query(`.checklist-item[data-item-id="${itemID}"] .checklist-item__label`).focus();
+    query(
+      `.checklist-item[data-item-id="${itemID}"] .checklist-item__label`
+    ).focus();
   }
 
   printList(view, project) {
@@ -41,7 +42,7 @@ export default class DisplayManager {
 
     for (const [taskID, task] of list) {
       console.log(`${task.title}, with project ID of ${task.projectID}`);
-    };
+    }
   }
 
   init() {
@@ -49,8 +50,12 @@ export default class DisplayManager {
       this.updateTaskDisplay();
 
       taskInterfaceElem.classList.add("task-interface--hidden");
-      
-      taskInterfaceElem.addEventListener("transitionend", taskInterfaceElem.close, {once: true});
+
+      taskInterfaceElem.addEventListener(
+        "transitionend",
+        taskInterfaceElem.close,
+        { once: true }
+      );
     };
 
     // Sidebar toggle button
@@ -59,7 +64,7 @@ export default class DisplayManager {
     });
 
     // Sidebar filter buttons
-    queryAll(".filter").forEach(element => {
+    queryAll(".filter").forEach((element) => {
       element.addEventListener("click", (e) => {
         this.updateActiveFilter(e);
       });
@@ -72,40 +77,47 @@ export default class DisplayManager {
     });
 
     // New project button
-    query(".sidebar__section--projects__new-btn").addEventListener("click", (e) => {
-      const newProjectID = this.taskList.projectList.create({title: "Project"});
-      this.updateProjectDisplay();
-      this.focusOnProject(newProjectID);
+    query(".sidebar__section--projects__new-btn").addEventListener(
+      "click",
+      () => {
+        const newProjectID = this.taskList.projectList.create({
+          title: "Project",
+        });
+        this.updateProjectDisplay();
+        this.focusOnProject(newProjectID);
 
-      const newProjectElem = query(`.filter[data-project-id="${newProjectID}"]`)
-      this.updateActiveFilter(null, newProjectElem);
-    });
+        const newProjectElem = query(
+          `.filter[data-project-id="${newProjectID}"]`
+        );
+        this.updateActiveFilter(null, newProjectElem);
+      }
+    );
 
     // Updates main heading initially
-    query(".main__header").innerHTML = query(".filter--active .filter__title").innerHTML;
+    query(".main__header").innerHTML = query(
+      ".filter--active .filter__title"
+    ).innerHTML;
 
     // New task button
     const getDefaultTaskOptions = () => {
       if (this.activeView === "project") {
-        return {projectID: this.activeProject};
-      }
-      else if (this.activeView === "high-alert") {
-        return {priority: 5};
-      }
-      else {
+        return { projectID: this.activeProject };
+      } else if (this.activeView === "high-alert") {
+        return { priority: 5 };
+      } else {
         return {};
       }
     };
 
-    query(".task-list__new-btn").addEventListener("click", (e) => {
-      const newTaskID = this.taskList.create( getDefaultTaskOptions() );
+    query(".task-list__new-btn").addEventListener("click", () => {
+      const newTaskID = this.taskList.create(getDefaultTaskOptions());
       this.activeTaskID = newTaskID;
       this.updateTaskDisplay();
       this.openTaskInterface();
     });
 
     // Closes task interface when clicking outside
-    taskInterfaceElem.addEventListener("click", (e) => {
+    taskInterfaceElem.addEventListener("click", () => {
       closeTaskInterface();
     });
 
@@ -114,20 +126,21 @@ export default class DisplayManager {
     });
 
     // Closes task interface when clicking close button
-    query(".top-bar__btn--close").addEventListener("click", (e) => {
+    query(".top-bar__btn--close").addEventListener("click", () => {
       closeTaskInterface();
     });
 
     // Deletes task when user clicks delete button
-    interfaceQuery(".top-bar__btn--delete").addEventListener("click", (e) => {
+    interfaceQuery(".top-bar__btn--delete").addEventListener("click", () => {
       this.taskList.delete(this.activeTaskID);
       closeTaskInterface();
     });
 
     // Updates task data whenever task interface is edited
     const updateActiveTaskElement = () => {
-
-      const activeTaskElement = query(`.task[data-task-id="${this.activeTaskID}"]`);
+      const activeTaskElement = query(
+        `.task[data-task-id="${this.activeTaskID}"]`
+      );
       const activeTaskData = this.getActiveTask();
 
       this.updateTaskElement(activeTaskElement, activeTaskData);
@@ -137,37 +150,43 @@ export default class DisplayManager {
       "#title": "title",
       "#description": "description",
       "#project": "projectID",
-    }
+    };
 
     for (const [idName, propertyName] of Object.entries(propertyNamePairs)) {
       interfaceQuery(idName).addEventListener("input", (e) => {
-        this.taskList.update(this.activeTaskID, {[propertyName]: e.currentTarget.value});
+        this.taskList.update(this.activeTaskID, {
+          [propertyName]: e.currentTarget.value,
+        });
         updateActiveTaskElement();
       });
     }
 
     interfaceQuery("#is-done").addEventListener("input", (e) => {
-      this.taskList.update(this.activeTaskID, {isDone: e.currentTarget.checked});
+      this.taskList.update(this.activeTaskID, {
+        isDone: e.currentTarget.checked,
+      });
       updateActiveTaskElement();
     });
 
     interfaceQuery("#due-date").addEventListener("input", (e) => {
-      this.taskList.update(this.activeTaskID, {dueDate: e.currentTarget.valueAsDate});
+      this.taskList.update(this.activeTaskID, {
+        dueDate: e.currentTarget.valueAsDate,
+      });
       updateActiveTaskElement();
     });
-    
+
     for (let i = 1; i <= 5; i++) {
-      interfaceQuery(`#priority-${i}`).addEventListener("change", (e) => {
-        this.taskList.update(this.activeTaskID, {priority: i});
+      interfaceQuery(`#priority-${i}`).addEventListener("change", () => {
+        this.taskList.update(this.activeTaskID, { priority: i });
         updateActiveTaskElement();
       });
     }
 
     // Add checklist item button
-    interfaceQuery(".checklist__new-btn").addEventListener("click", (e) => {
+    interfaceQuery(".checklist__new-btn").addEventListener("click", () => {
       const newItemID = this.getActiveTask().checklist.create();
       this.updateChecklistDisplay();
-      this.focusOnChecklistItem(newItemID)
+      this.focusOnChecklistItem(newItemID);
     });
 
     // Saves tasks and projects when user closes the app
@@ -181,36 +200,49 @@ export default class DisplayManager {
   }
 
   updateActiveFilter(e, optionalElem = null) {
-    let targetFilterElem = (e) ? e.currentTarget : optionalElem;
-    if (!targetFilterElem) { return; }
+    let targetFilterElem = e ? e.currentTarget : optionalElem;
+    if (!targetFilterElem) {
+      return;
+    }
 
-    const queryString = (this.activeView === "project") ? 
-                          `.filter[data-project-id="${this.activeProject}"]` :
-                          `.filter[data-filter="${this.activeView}"]`
+    const queryString =
+      this.activeView === "project"
+        ? `.filter[data-project-id="${this.activeProject}"]`
+        : `.filter[data-filter="${this.activeView}"]`;
     const activeFilterElem = query(queryString);
-    
+
     if (activeFilterElem) {
       activeFilterElem.classList.remove("filter--active");
-    }
-    else {
+    } else {
       targetFilterElem = query(`.filter[data-filter="all-tasks"]`);
     }
-
 
     targetFilterElem.classList.add("filter--active");
 
     this.activeView = targetFilterElem.getAttribute("data-filter");
-    this.activeProject = (this.activeView === "project") ? 
-                    targetFilterElem.getAttribute("data-project-id") : null;
+    this.activeProject =
+      this.activeView === "project"
+        ? targetFilterElem.getAttribute("data-project-id")
+        : null;
 
-    query(".main__header").innerHTML = targetFilterElem.querySelector(".filter__title").innerHTML;
+    query(".main__header").innerHTML =
+      targetFilterElem.querySelector(".filter__title").innerHTML;
     this.updateTaskDisplay();
   }
 
-  updateListDisplay(className, dataName, list, listElem, templateItemElem, modifyNewItemElem) {
-
+  updateListDisplay(
+    className,
+    dataName,
+    list,
+    listElem,
+    templateItemElem,
+    modifyNewItemElem
+  ) {
     [...listElem.children].forEach((element) => {
-      if (element.classList.contains(className) && !element.classList.contains("template")) {
+      if (
+        element.classList.contains(className) &&
+        !element.classList.contains("template")
+      ) {
         element.remove();
       }
     });
@@ -222,40 +254,57 @@ export default class DisplayManager {
 
       modifyNewItemElem(newItemElem, itemID, item);
       listElem.appendChild(newItemElem);
-    };
-
+    }
   }
 
   updateTaskDisplay() {
     this.taskList.save();
 
-    const list = this.taskList.getTaskList(this.activeView, this.activeProject, this.showCompletedTasks);
+    const list = this.taskList.getTaskList(
+      this.activeView,
+      this.activeProject,
+      this.showCompletedTasks
+    );
     const taskListElem = query(".task-list");
     const templateTaskElem = query(".task.template");
 
-    this.updateListDisplay("task", "data-task-id", list, taskListElem, templateTaskElem, (newTaskElem, taskID, task) => {
+    this.updateListDisplay(
+      "task",
+      "data-task-id",
+      list,
+      taskListElem,
+      templateTaskElem,
+      (newTaskElem, taskID, task) => {
+        // Shows task interface when expand button is clicked
+        newTaskElem
+          .querySelector(".task_xpand-btn")
+          .addEventListener("click", () => {
+            this.activeTaskID = taskID;
+            this.openTaskInterface();
+          });
 
-      // Shows task interface when expand button is clicked
-      newTaskElem.querySelector(".task__expand-btn").addEventListener("click", (e) => {
-        this.activeTaskID = taskID;
-        this.openTaskInterface();
-      });
+        // Updates isDone when checkbox is clicked
+        newTaskElem
+          .querySelector(".task__is-done")
+          .addEventListener("click", (e) => {
+            this.taskList.update(taskID, { isDone: e.currentTarget.checked });
+            this.updateTaskDisplay();
+          });
 
-      // Updates isDone when checkbox is clicked
-      newTaskElem.querySelector(".task__is-done").addEventListener("click", (e) => {
-        this.taskList.update(taskID, {isDone: e.currentTarget.checked});
-        this.updateTaskDisplay();
-      });
-
-      this.updateTaskElement(newTaskElem, task);
-    });
+        this.updateTaskElement(newTaskElem, task);
+      }
+    );
   }
 
   updateTaskElement(taskElement, task) {
     taskElement.querySelector(".task__is-done").checked = task.isDone;
     taskElement.querySelector(".task__title").innerHTML = task.title;
-    taskElement.querySelector(".task__date-display").innerHTML = Datefns.format(task.dueDate, "MMMM d, yyyy");
-    taskElement.style.borderLeft = "5px solid " + this.priorityColors["clr-alert-" + task.priority];
+    taskElement.querySelector(".task__date-display").innerHTML = Datefns.format(
+      task.dueDate,
+      "MMMM d, yyyy"
+    );
+    taskElement.style.borderLeft =
+      "5px solid " + this.priorityColors["clr-alert-" + task.priority];
   }
 
   openTaskInterface() {
@@ -269,7 +318,10 @@ export default class DisplayManager {
     interfaceQuery("#is-done").checked = task.isDone;
     interfaceQuery("#title").value = task.title;
     interfaceQuery("#description").value = task.description;
-    interfaceQuery("#due-date").value = Datefns.format(task.dueDate, "yyyy-MM-dd");
+    interfaceQuery("#due-date").value = Datefns.format(
+      task.dueDate,
+      "yyyy-MM-dd"
+    );
     interfaceQuery(`#priority-${task.priority}`).checked = true;
 
     // Updates checklist
@@ -282,12 +334,13 @@ export default class DisplayManager {
     const projectList = this.taskList.projectList.list;
 
     for (const [projectID, project] of Object.entries(projectList)) {
-      const optionElem = Helper.makeElement("option", "", project.title, {value: projectID});
+      const optionElem = Helper.makeElement("option", "", project.title, {
+        value: projectID,
+      });
       projectDropdownElem.appendChild(optionElem);
-    };
+    }
 
     projectDropdownElem.value = task.projectID;
-
 
     taskInterfaceElem.showModal();
     taskInterfaceElem.classList.remove("task-interface--hidden");
@@ -298,40 +351,52 @@ export default class DisplayManager {
     const projectListElem = query(".sidebar__section--projects");
     const templateProjectElem = query(".filter.template");
 
-    this.updateListDisplay("filter", "data-project-id", list, projectListElem, templateProjectElem, (newProjectElem, projectID, project) => {
-      
-      newProjectElem.addEventListener("click", (e) => {
-        this.updateActiveFilter(e);
-      });
+    this.updateListDisplay(
+      "filter",
+      "data-project-id",
+      list,
+      projectListElem,
+      templateProjectElem,
+      (newProjectElem, projectID, project) => {
+        newProjectElem.addEventListener("click", (e) => {
+          this.updateActiveFilter(e);
+        });
 
-      // When project title is clicked/edited, prevents switching active filter, and updates data and main heading
-      const projectTitleElem = newProjectElem.querySelector(".filter__title");
-      projectTitleElem.innerHTML = project.title;
-      projectTitleElem.addEventListener("click", (e) => {
-        e.stopPropagation();
-      });
-      projectTitleElem.addEventListener("input", (e) => {
-        this.taskList.projectList.update(projectID, {title: e.currentTarget.innerHTML});
+        // When project title is clicked/edited, prevents switching active filter, and updates data and main heading
+        const projectTitleElem = newProjectElem.querySelector(".filter__title");
+        projectTitleElem.innerHTML = project.title;
+        projectTitleElem.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+        projectTitleElem.addEventListener("input", (e) => {
+          this.taskList.projectList.update(projectID, {
+            title: e.currentTarget.innerHTML,
+          });
 
-        if (this.activeProject === projectID) {
-          query(".main__header").innerHTML = e.currentTarget.innerHTML;
+          if (this.activeProject === projectID) {
+            query(".main__header").innerHTML = e.currentTarget.innerHTML;
+          }
+        });
+
+        newProjectElem
+          .querySelector(".filter__btn--edit")
+          .addEventListener("click", () => {
+            this.focusOnProject(projectID);
+          });
+
+        const deleteBtnElem = newProjectElem.querySelector(
+          ".filter__btn--delete"
+        );
+        deleteBtnElem.addEventListener("click", () => {
+          this.taskList.projectList.delete(projectID);
+          this.updateProjectDisplay();
+        });
+
+        if (projectID === this.taskList.defaultProjectID) {
+          deleteBtnElem.style.display = "none"; // hides delete button of default project
         }
-      });
-
-      newProjectElem.querySelector(".filter__btn--edit").addEventListener("click", (e) => {
-        this.focusOnProject(projectID);
-      });
-
-      const deleteBtnElem = newProjectElem.querySelector(".filter__btn--delete");
-      deleteBtnElem.addEventListener("click", (e) => {
-        this.taskList.projectList.delete(projectID);
-        this.updateProjectDisplay();
-      });
-
-      if (projectID === this.taskList.defaultProjectID) {
-        deleteBtnElem.style.display = "none"; // hides delete button of default project
       }
-    });
+    );
   }
 
   updateChecklistDisplay() {
@@ -339,27 +404,38 @@ export default class DisplayManager {
     const checklistElem = interfaceQuery(".checklist");
     const templateItemElem = query(".checklist-item.template");
 
-    this.updateListDisplay("checklist-item", "data-item-id", checklistList, checklistElem, templateItemElem, (newItemElem, itemID, item) => {
-      const checklist = this.getActiveTask().checklist;
+    this.updateListDisplay(
+      "checklist-item",
+      "data-item-id",
+      checklistList,
+      checklistElem,
+      templateItemElem,
+      (newItemElem, itemID, item) => {
+        const checklist = this.getActiveTask().checklist;
 
-      const itemCheckboxElem = newItemElem.querySelector(".checklist-item__checkbox");
-      itemCheckboxElem.checked = item.isDone;
-      itemCheckboxElem.addEventListener("change", (e) => {
-        checklist.update(itemID, {isDone: e.currentTarget.checked});
-      });
+        const itemCheckboxElem = newItemElem.querySelector(
+          ".checklist-item__checkbox"
+        );
+        itemCheckboxElem.checked = item.isDone;
+        itemCheckboxElem.addEventListener("change", (e) => {
+          checklist.update(itemID, { isDone: e.currentTarget.checked });
+        });
 
-      const itemLabelElem = newItemElem.querySelector(".checklist-item__label");
-      itemLabelElem.innerHTML = item.title;
-      itemLabelElem.addEventListener("input", (e) => {
-        checklist.update(itemID, {title: e.currentTarget.innerHTML});
-      });
+        const itemLabelElem = newItemElem.querySelector(
+          ".checklist-item__label"
+        );
+        itemLabelElem.innerHTML = item.title;
+        itemLabelElem.addEventListener("input", (e) => {
+          checklist.update(itemID, { title: e.currentTarget.innerHTML });
+        });
 
-      newItemElem.querySelector(".checklist-item__delete-btn").addEventListener("click", (e) => {
-        checklist.delete(itemID);
-        this.updateChecklistDisplay();
-      });
-    });
-
+        newItemElem
+          .querySelector(".checklist-item__delete-btn")
+          .addEventListener("click", () => {
+            checklist.delete(itemID);
+            this.updateChecklistDisplay();
+          });
+      }
+    );
   }
 }
-
