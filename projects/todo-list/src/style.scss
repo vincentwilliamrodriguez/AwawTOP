@@ -1,0 +1,740 @@
+$clr-primary: #1e1e58;
+$clr-secondary: #a8a8d4;
+
+
+$clr-alert: (
+  "clr-alert-1": #0a2e46cc,
+  "clr-alert-2": #0a610acc,
+  "clr-alert-3": #8e9627cc,
+  "clr-alert-4": #835417cc,
+  "clr-alert-5": #971010cc,
+);
+
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin box-shadow($color: #000000aa, $top: 0, $left: 0, $blur: 10px, $spread: 0px) {
+  box-shadow: $top $left $blur $spread $color;
+}
+
+@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033) {
+  @include flex-container;
+  width: $width;
+  height: $height;
+
+  border-radius: 8px;
+  background-color: transparent;
+  scale: 1;
+  transition: background-color 0.3s ease, scale 0.3s ease;
+  cursor: pointer;
+
+  img {
+    height: $image-size;
+  }
+
+  &:hover {
+    background-color: $hover-bg;
+  }
+
+  &:active {
+    scale: 0.9;
+  }
+}
+
+@mixin delete-button() {
+  :hover {
+    filter: invert(9%) sepia(94%) saturate(5163%) hue-rotate(2deg) brightness(92%) contrast(113%);
+  }
+}
+
+@mixin checkbox($size: 20px, $circle: true) {
+  width: $size;
+  height: $size;
+
+  @include box-shadow(#000000, 0px, 0px, 2px, 0.3px);
+  background-color: white;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+
+  &:checked {
+    appearance: auto;
+    accent-color: lighten($clr-primary, 20%);
+  }
+
+  @if $circle {
+    border-radius: 50%;
+
+    &:checked {
+      clip-path: circle(50% at 50% 50%);
+    }
+  }
+}
+
+@mixin new-button($hover-clr: #00000011) {
+  order: 1;
+
+  @include flex-container(row, start);
+  gap: 4px;
+  width: 100%;
+  padding: 6px 8px;
+  
+  border-radius: 8px;
+  opacity: 50%;
+
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+
+  img {
+    height: 20px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    font-weight: bold;
+    padding-top: 2px;
+  }
+
+  &:hover {
+    background-color: $hover-clr;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.template {
+  display: none !important;
+}
+
+body {
+  display: grid;
+  grid-template: 100px 1fr / 300px 1fr;
+
+  font-family: "Josefin Sans", sans-serif;
+  min-height: 100vh;
+
+  overflow: hidden;
+  transition: grid-template-columns 0.7s ease;
+
+
+  &:has(.sidebar--hidden) {
+    grid-template: 100px 1fr / 0px 1fr;
+  }
+
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #777;
+    border-radius: 10px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba($clr-primary, 0.6);
+    border-radius: 16px;
+
+    &:hover {
+      background-color: rgba($clr-primary, 0.7);
+    }
+  }
+}
+
+.header {
+  @include box-shadow(#00000077);
+  @include flex-container;
+  grid-column: span 2;
+
+  background-color: $clr-primary;
+  padding: 24px 36px;
+
+  position: relative;
+  z-index: 1;
+
+  user-select: none;
+
+  .sidebar-btn {
+    @include flex-container;
+    @include button(50px, 50px, 70%);
+    position: absolute;
+    left: 18px;
+  }
+
+  .logo {
+    @include flex-container;
+    gap: 12px;
+
+    &__icon {
+      height: 64px;
+    }
+
+    &__text {
+      color: white;
+      font-size: 2.1rem;
+      letter-spacing: 1px;
+    }
+  }
+}
+
+.sidebar {
+  @include box-shadow(#00000055);
+  @include flex-container(column, start, start);
+
+  background-color: $clr-secondary;
+  padding: 24px 36px;
+
+  user-select: none;
+  overflow: hidden;
+
+
+  * {
+    white-space: nowrap;
+  }
+
+  // &--hidden + .main {
+  //   // grid-column-start: 1;
+  // }
+
+  &__section-header {
+    color: $clr-primary;
+
+    width: 100%;
+    margin-bottom: 8px;
+    border-bottom: 2px solid $clr-primary;
+  }
+
+  &__section {
+    @include flex-container(column, start, start);
+    gap: 4px;
+    padding-left: 8px;
+    margin-bottom: 32px;
+    width: 100%;
+
+
+    .filter {
+      @include flex-container(row, start);
+      gap: 8px;
+      flex: none;
+
+      height: 40px;
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+
+      background-color: transparent;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+
+      &__icon {
+        height: 28px;
+      }
+
+      &__title {
+        font-size: 1.25rem;
+        padding-top: 4px;
+
+        transform: translateY(2px);
+      }
+
+      &--active {
+        background-color: #8686d8;
+        border-radius: 0px 8px 8px 0px;
+        border-left: $clr-primary 3px solid;
+      }
+
+      &:hover:not(&--active) {
+        background-color: darken($clr-secondary, 5%);
+      }
+    }
+
+
+    &--projects {
+      max-height: 180px;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      &__new-btn {
+        @include new-button(darken($clr-secondary, 5%));
+        height: 40px;
+        opacity: 60%;
+      }
+
+      .filter {
+        padding-right: 16px;
+
+        &__title {
+          max-width: 200px;
+          margin-right: auto;
+          white-space: nowrap;
+          overflow: hidden;
+          cursor: text;
+          
+          &:focus {
+            @include box-shadow(#00000077, 0, 0, 2px, 1px);
+            border: none;
+            outline: none;
+          }
+        }
+
+        &__btn {
+          @include button(28px, 28px, 70%, #00000022);
+          display: none;
+          flex: none;
+          opacity: 90%;
+
+          &--delete {
+            @include delete-button();
+          }
+        }
+
+        &:hover .filter__btn {
+          @include flex-container;
+        }
+      }
+    }
+  }
+}
+
+.main {
+  display: grid;
+  grid-template: max-content 1fr / 1fr 300px;
+
+  padding: 36px;
+  grid-column-end: -1;
+  background-color: #fefefe;
+
+  &__header {
+    margin-bottom: 18px;
+    max-width: 800px;
+    overflow: hidden;
+    white-space: nowrap;
+
+    color: $clr-primary;
+    font-size: 2.2rem;
+  }
+
+  .completed-wrapper {
+    justify-self: right;
+    align-self: start;
+
+    @include flex-container;
+    gap: 8px;
+  }
+
+  .completed-switch-label {
+    color: #555;
+  }
+
+  .completed-switch {
+    $height: 24px;
+    $width: 40px;
+
+    position: relative;
+
+    height: $height;
+    width: $width;
+
+    @include box-shadow(#00000055, 0, 0, 2px, 0);
+    border-radius: 32px;
+    overflow: hidden;
+
+    &__checkbox {
+      display: none;
+
+      &:checked + .completed-switch__slider {
+        background-color: rgba($clr-primary, 0.8);
+      }
+      
+      &:checked + .completed-switch__slider:before {
+        transform: translateX(calc($width - $height));
+      }
+    }
+
+    &__slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      
+      background-color: #aaa;
+      transition: 0.3s;
+      cursor: pointer;
+
+      &::before {
+        content: "";
+        position: absolute;
+        height: calc($height - 8px);
+        width: calc($height - 8px);
+        left: 4px;
+        bottom: 4px;
+
+        border-radius: 50%;
+        background-color: white;
+        transition: .4s;
+      }
+    }
+  }
+
+  .task-list {
+    grid-column: 1 / -1;
+
+    @include flex-container(column, start, center);
+    gap: 12px;
+    height: 380px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    &__new-btn {
+      @include new-button();
+    }
+
+    .task {
+      @include flex-container(row, start);
+      flex: none;
+      gap: 12px;
+      width: 100%;
+      height: 40px;
+      padding: 8px 12px;
+
+      @include box-shadow(#00000033, 1px, 1px, 5px);
+      background-color: lighten($clr-secondary, 24%);
+      border-radius: 2px 8px 8px 2px;
+      // border-left: 4px solid map-get($map: $clr-alert, $key: "clr-alert-1");
+
+      &__is-done {
+        @include checkbox();
+      }
+
+      &__is-done:checked ~ .task__title,
+      &__is-done:checked ~ .task__date-display {
+        color: #777;
+        text-decoration: line-through;
+      }
+
+      &:has(.task__is-done:checked) {
+        filter: brightness(95%);
+        opacity: 50%;
+      }
+      
+      &__title {
+        font-size: 1.2rem;
+        padding-top: 4px;
+      }
+
+      &__expand-btn {
+        @include button(24px, 24px, 60%, #eeeeee);
+        display: none;
+        margin-left: 2px;
+
+        @include box-shadow(#00000033, 0, 0, 4px);
+        background-color: #ffffff;
+        opacity: 80%;
+      }
+
+      &__date-display {
+        margin-left: auto;
+
+        font-size: 1.1rem;
+        font-weight: normal;
+      }
+
+      &:hover {
+        background-color: lighten($clr-secondary, 15%);
+    
+        .task__expand-btn {
+          @include flex-container;
+        }
+      }
+    }
+  }
+}
+
+.task-interface {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 700px;
+  height: 500px;
+  opacity: 1;
+
+  @include box-shadow;
+  border-radius: 16px;
+  border: none;
+  outline: none;
+
+  transition: opacity 0.2s ease;
+
+  &::backdrop {
+    background-color: black;
+    opacity: 40%;
+
+    transition: opacity 0.2s ease;
+  }
+
+  &--hidden{
+    opacity: 0;
+
+    &::backdrop {
+      opacity: 0;
+    }
+  }
+
+  .modal-children-wrapper {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    
+    display: grid;
+    grid-template: 40px 1fr / 2fr 1fr;
+
+    overflow: hidden;
+
+    & > * {
+      padding: 8px;
+  
+      @include box-shadow(#000000aa, 0px, 0px, 2px, 0px);
+    }
+
+    .top-bar {
+      grid-column: span 2;
+
+      @include flex-container(row, space-between);
+      background-color: lighten($clr-secondary, 15%);
+  
+      &__btn {
+        @include button(32px, 32px, 70%);
+  
+        &--delete {
+          @include delete-button();
+        }
+      }
+    }
+
+    .pair {
+      @include flex-container(row, start, start);
+      gap: 8px;
+      width: 100%;
+
+      &__label {
+        padding-top: 6px;
+        font-size: 1.2rem;
+        color: darken($clr-primary, 10%);
+      }
+
+      &__icon {
+        height: 24px;
+        opacity: 40%;
+      }
+
+      #is-done {
+        @include checkbox(24px);
+        margin-top: 4px;
+      }
+
+      #title,
+      #description {
+        flex: 1;
+
+        padding: 6px 8px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+
+        font-family: "Josefin Sans", sans-serif;
+
+        transition: background-color 0.2s ease;
+
+        &:focus {
+          @include box-shadow(black, 0px, 0px, 1px, 0px)
+        }
+
+        &:hover {
+          background-color: #00000005;
+        }
+      }
+
+      #title {
+        font-size: 1.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      #description {
+        font-size: 1rem;
+        resize: none;
+      }
+
+      &--checklist {
+        margin: 12px 0px -4px 0px;
+      }
+
+      #project,
+      #due-date {
+        @include box-shadow(#000000dd, 0, 0, 2px, 0);
+        padding: 6px 8px;
+        outline: none;
+        border: none;
+        border-radius: 6px;
+
+        font-family: "Josefin Sans", sans-serif;
+        font-size: 0.85rem;
+
+        cursor: pointer;
+        user-select: none;
+      }
+
+      &--priority {
+        .pair-wrapper {
+          @include flex-container(row, start);
+          gap: 8px;
+          width: 100%;
+
+          input[type="radio"] {
+            display: none;
+          }
+
+          input[type="radio"]:checked + label {
+            scale: 1.2;
+            filter: brightness(120%);
+          }
+
+          label {
+            @include box-shadow(#00000077, 0, 0, 2px, 0);
+            padding: 8px 12px;
+            border-radius: 4px;
+            scale: 1;
+            filter: brightness(75%);
+
+            color: white;
+            font-size: 0.8rem;
+
+            cursor: pointer;
+            user-select: none;
+            transition: scale 0.3s ease, filter 0.3s ease;
+            
+            @for $i from 1 through 5 {
+              &[for="priority-#{$i}"] { 
+                background-color: map-get($clr-alert, "clr-alert-#{$i}") 
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .checklist {
+      @include flex-container(column, start, start);
+      gap: 2px;
+      height: 200px;
+      width: 100%;
+
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 4px 8px 12px 16px;
+
+      &__new-btn {
+        @include new-button();
+      }
+
+      .checklist-item {
+        @include flex-container(row, start);
+        padding: 2px 8px;
+        width: 100%;
+        gap: 8px;
+
+        &__checkbox {
+          @include checkbox(12px, false);
+        }
+
+        &__label {
+          max-width: 340px;
+          padding: 4px 4px 2px 4px;
+          border: outline;
+          outline: none;
+
+          white-space: nowrap;
+          overflow: hidden;
+
+          transition: background-color 0.2s ease;
+
+          &:focus {
+            @include box-shadow(black, 0px, 0px, 1px, 0px)
+          }
+
+          br {
+            display: none;
+          }
+
+          * {
+            display: inline;
+            white-space: nowrap;
+          }
+        }
+
+        &__delete-btn {
+          @include button(20px, 20px, 90%, #00000011);
+          @include delete-button();
+          margin-left: 8px;
+          border-radius: 2px;
+          display: none;
+        }
+
+        &:hover .checklist-item__delete-btn {
+          display: flex;
+        }
+      }
+    }
+
+    .main-properties {
+      @include flex-container(column, start, start);
+      gap: 12px;
+
+      background-color: #fefefe;
+      padding: 16px;
+    }
+
+    .other-properties {
+      padding: 16px;
+      background-color: #eee;
+
+      .pair {
+        @include flex-container(column, start, start);
+        gap: 8px;
+        padding: 12px 8px 20px 8px;
+
+        &:not(:last-child) {
+          border-bottom: #00000055 1px solid;
+        }
+      }
+    }
+  }
+}
