@@ -1,11 +1,11 @@
-const myLibrary = [];
-const bookTemplate = document.getElementById("template");
-const main = document.getElementsByClassName("main")[0];
-const newBookModal = document.getElementById("new-book-modal");
-const newBookBtn = document.getElementById("new-book-btn");
-const newBookSubmitBtn = document.getElementById("new-book-modal__submit-btn");
-const newBookClose = document.querySelector(".new-book-modal__close");
-const newBookForm = document.querySelector("#new-book-modal form");
+let myLibrary = [];
+const bookTemplate = document.getElementById('template');
+const main = document.getElementsByClassName('main')[0];
+const newBookModal = document.getElementById('new-book-modal');
+const newBookBtn = document.getElementById('new-book-btn');
+const newBookSubmitBtn = document.getElementById('new-book-modal__submit-btn');
+const newBookClose = document.querySelector('.new-book-modal__close');
+const newBookForm = document.querySelector('#new-book-modal form');
 
 class Book {
   constructor(title, author, pages, read) {
@@ -23,7 +23,7 @@ function addBookToLibrary(title, author, pages, read) {
 
 function removeBookFromLibrary(e) {
   let book = e.target.parentElement;
-  let i = +book.getAttribute("data-index");
+  let i = +book.getAttribute('data-index');
 
   myLibrary.splice(i, 1);
   showLibrary();
@@ -31,20 +31,22 @@ function removeBookFromLibrary(e) {
 
 function toggleRead(e) {
   let read_display = e.target;
-  let i = +read_display.parentElement.getAttribute("data-index");
+  let i = +read_display.parentElement.getAttribute('data-index');
 
   myLibrary[i].read = !myLibrary[i].read; // flips the read boolean
 
   read_display.classList.remove('book__read--false');
   read_display.classList.remove('book__read--true');
   read_display.classList.add('book__read--' + myLibrary[i].read);
+
+  saveLibrary();
 }
 
 function showLibrary() {
   let currentBooks = [...main.children];
 
-  currentBooks.forEach(book => {
-    if (book.classList.contains("book") && book.id != "template") {
+  currentBooks.forEach((book) => {
+    if (book.classList.contains('book') && book.id != 'template') {
       book.remove();
     }
   });
@@ -53,29 +55,43 @@ function showLibrary() {
     let book = myLibrary[i];
     let newBook = bookTemplate.cloneNode(true);
 
-    newBook.innerHTML = newBook.innerHTML.replace("%title%", book.title)
-                                         .replace("%author%", book.author)
-                                         .replace("%pages%", book.pages)
-                                         .replace("book__read--false", "book__read--" + book.read);
-    newBook.style.display = "block";
-    newBook.removeAttribute("id");
-    newBook.setAttribute("data-index", i);
+    newBook.innerHTML = newBook.innerHTML
+      .replace('%title%', book.title)
+      .replace('%author%', book.author)
+      .replace('%pages%', book.pages)
+      .replace('book__read--false', 'book__read--' + book.read);
+    newBook.style.display = 'block';
+    newBook.removeAttribute('id');
+    newBook.setAttribute('data-index', i);
 
-    let closeBtn = newBook.getElementsByClassName("book__remove")[0];
-    let readBtn = newBook.getElementsByClassName("book__read")[0];
-    
-    closeBtn.addEventListener("click", removeBookFromLibrary);
-    readBtn.addEventListener("click", toggleRead);
+    let closeBtn = newBook.getElementsByClassName('book__remove')[0];
+    let readBtn = newBook.getElementsByClassName('book__read')[0];
+
+    closeBtn.addEventListener('click', removeBookFromLibrary);
+    readBtn.addEventListener('click', toggleRead);
 
     main.appendChild(newBook);
+    saveLibrary();
   }
 }
 
-newBookBtn.addEventListener("click", e => {
+function saveLibrary() {
+  localStorage.setItem('libraryData', JSON.stringify(myLibrary));
+}
+
+function loadLibrary() {
+  const data = localStorage.getItem('libraryData');
+  if (data) {
+    myLibrary = JSON.parse(data);
+    showLibrary();
+  }
+}
+
+newBookBtn.addEventListener('click', (e) => {
   newBookModal.showModal();
 });
 
-newBookClose.addEventListener("click", e => {
+newBookClose.addEventListener('click', (e) => {
   newBookModal.close();
 });
 
@@ -99,4 +115,5 @@ newBookSubmitBtn.addEventListener('click', (e) => {
   newBookForm.dispatchEvent(new Event('submit'));
 });
 
-showLibrary()
+loadLibrary();
+showLibrary();
