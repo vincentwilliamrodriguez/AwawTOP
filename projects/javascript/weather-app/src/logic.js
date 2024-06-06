@@ -94,4 +94,4 @@ endpoints.forecast().then((data) => {
   }
 });
 
-setTimeout(() => console.log(weatherData), 500);
+setTimeout(() => console.log(weatherData), 500); 
