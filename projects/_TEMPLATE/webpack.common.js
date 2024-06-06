@@ -7,20 +7,12 @@ const path = require('path');
    },
    plugins: [
      new HtmlWebpackPlugin({
-<<<<<<< HEAD
        template: './src/index.html',
        filename: 'index.html',
        inject: 'head',
        scriptLoading: 'defer',
        favicon: './favicon.ico',
      }),
-=======
-       template: "./src/index.html",
-       filename: "index.html",
-       inject: "head",
-       scriptLoading: "defer",
-     })
->>>>>>> origin/feature/library-validation
    ],
    module: {
      rules: [

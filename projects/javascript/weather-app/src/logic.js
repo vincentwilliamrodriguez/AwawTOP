@@ -1,9 +1,10 @@
 import * as Helper from './helper.js';
 import * as Datefns from 'date-fns';
+import _ from 'lodash';
 
 window.globals.key = '56782529b35f4a1293434013240406';
 window.globals.city = 'Cainta';
-window.globals.tempUnit = 'Celsius';
+window.globals.tempUnit = 'Fahrenheit';
 
 const endpoints = {
   forecast: () =>
@@ -21,7 +22,21 @@ const endpoints = {
     Helper.getData(
       `http://api.weatherapi.com/v1/current.json?key=${window.globals.key}&q=${window.globals.city}&aqi=no`
     ),
+
+  autocomplete: (inputText) =>
+    Helper.getData(
+      `http://api.weatherapi.com/v1/search.json?key=${window.globals.key}&q=${inputText}`
+    ),
 };
+
+function adjustTempUnit(tempInCelsius) {
+  const value =
+    window.globals.tempUnit === 'Celsius'
+      ? tempInCelsius
+      : 1.8 * tempInCelsius + 32;
+
+  return parseFloat(value.toFixed(1));
+}
 
 class Current {
   constructor(data) {
@@ -37,6 +52,13 @@ class Current {
         condition: { text: this.condition_text, icon: this.condition_icon },
       },
     } = data);
+  }
+
+  get temp() {
+    return adjustTempUnit(this._temp);
+  }
+  get feelslike() {
+    return adjustTempUnit(this._feelslike);
   }
 }
 
@@ -56,6 +78,10 @@ class Daily {
       this.hourly.push(new Hourly(hourData));
     }
   }
+
+  get avgtemp() {
+    return adjustTempUnit(this._avgtemp_c);
+  }
 }
 
 class Hourly {
@@ -67,31 +93,54 @@ class Hourly {
       condition: { icon: this.condition_icon },
     } = hourData);
   }
+
+  get temp() {
+    return adjustTempUnit(this._temp);
+  }
+  get feelslike() {
+    return adjustTempUnit(this._feelslike);
+  }
 }
 
 export const weatherData = {};
 
-// For current
-endpoints.current().then((data) => (weatherData.current = new Current(data)));
+export function update() {
+  for (const identifier in weatherData) {
+    delete weatherData[identifier];
+  }
 
-// For 2 to 1 days ago
-weatherData.daily = [];
-const today = new Date();
+  // For current
+  endpoints.current().then((data) => (weatherData.current = new Current(data)));
 
-for (const noOfDays of [-2, -1]) {
-  const date = Datefns.addDays(today, noOfDays);
-  endpoints.history(date).then((data) => {
-    const dayData = data.forecast.forecastday[0];
-    weatherData.daily.push(new Daily(dayData));
+  // For 2 to 1 days ago
+  weatherData.daily = [];
+  const today = new Date();
+
+  for (const noOfDays of [-2, -1]) {
+    const date = Datefns.addDays(today, noOfDays);
+    endpoints.history(date).then((data) => {
+      const dayData = data.forecast.forecastday[0];
+      weatherData.daily.push(new Daily(dayData));
+    });
+  }
+
+  // For today and 1 to 2 days from now
+  endpoints.forecast().then((data) => {
+    const daysData = data.forecast.forecastday;
+    for (const dayData of daysData) {
+      weatherData.daily.push(new Daily(dayData));
+    }
   });
 }
 
-// For today and 1 to 2 days from now
-endpoints.forecast().then((data) => {
-  const daysData = data.forecast.forecastday;
-  for (const dayData of daysData) {
-    weatherData.daily.push(new Daily(dayData));
-  }
-});
+export async function getAutocompleteList(inputText) {
+  let data = await endpoints.autocomplete(inputText);
+  data = data.map((city) => _.pick(city, ['name', 'country']));
 
-setTimeout(() => console.log(weatherData), 500); 
+  return data;
+}
+
+setTimeout(() => {
+  console.log(weatherData);
+  console.log(`AWAW ${weatherData.daily[0].hourly[0].temp} ${window.globals.tempUnit}`);
+}, 500);
