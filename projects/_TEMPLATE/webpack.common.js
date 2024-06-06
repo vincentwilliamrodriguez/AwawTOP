@@ -7,12 +7,20 @@ const path = require('path');
    },
    plugins: [
      new HtmlWebpackPlugin({
+<<<<<<< HEAD
        template: './src/index.html',
        filename: 'index.html',
        inject: 'head',
        scriptLoading: 'defer',
        favicon: './favicon.ico',
      }),
+=======
+       template: "./src/index.html",
+       filename: "index.html",
+       inject: "head",
+       scriptLoading: "defer",
+     })
+>>>>>>> origin/feature/library-validation
    ],
    module: {
      rules: [
@@ -20,11 +28,19 @@ const path = require('path');
          test: /\.s[ac]ss$/i,
          use: [
            // Creates `style` nodes from JS strings
+<<<<<<< HEAD
            'style-loader',
            // Translates CSS into CommonJS
            'css-loader',
            // Compiles Sass to CSS
            'sass-loader',
+=======
+           "style-loader",
+           // Translates CSS into CommonJS
+           "css-loader",
+           // Compiles Sass to CSS
+           "sass-loader",
+>>>>>>> origin/feature/library-validation
          ],
        },
        {
@@ -35,6 +51,7 @@ const path = require('path');
          test: /\.(woff|woff2|eot|ttf|otf)$/i,
          type: 'asset/resource',
        },
+<<<<<<< HEAD
        {
          test: /\.(?:js|mjs|cjs)$/,
          exclude: /node_modules/,
@@ -45,6 +62,8 @@ const path = require('path');
            },
          },
        },
+=======
+>>>>>>> origin/feature/library-validation
      ],
    },
    output: {
