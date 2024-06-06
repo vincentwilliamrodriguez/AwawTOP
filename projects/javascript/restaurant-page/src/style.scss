@@ -1,0 +1,209 @@
+$clr-primary: #442a08cc;
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin box-shadow($color: #000000aa, $top: 0, $left: 0, $blur: 10px, $spread: 0px) {
+  box-shadow: $top $left $blur $spread $color;
+}
+
+@font-face {
+  font-family: "Poetsen One";
+  src: url("./PoetsenOne-Regular.ttf");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  @include flex-container(column, start, center);
+  gap: 36px;
+
+  font-family: "Poetsen One", sans-serif;
+  background: url("./fried-chicken-seamless-dim.jpeg");
+  min-height: 100vh;
+}
+
+.header {
+  @include box-shadow;
+  background-color: $clr-primary;
+  width: 100%;
+  padding: 24px 36px;
+
+  text-align: center;
+  color: white;
+
+  &__logo {
+    height: 170px;
+    margin-bottom: 16px;
+    opacity: 0.9;
+  }
+
+  .navbar {
+    @include flex-container;
+    gap: 24px;
+  
+    &__btn {
+      padding: 8px 12px;
+      border: none;
+      background-color: transparent;
+      border-radius: 8px;
+  
+      color: white;
+      font-family: "Poetsen One", sans-serif;
+      font-size: 1.3rem;
+  
+      transition: background-color, color 0.5s ease;
+      transition: transform 0.3s ease;
+  
+      cursor: pointer;
+  
+      &--active {
+        background-color: white;
+        color: $clr-primary;
+      }
+  
+      &:hover {
+        transform: translateY(-0.3rem);
+      }
+    }
+  }
+}
+
+#content {
+
+  width: 60vw;
+  border-radius: 18px;
+  padding: 24px 36px;
+  background-color: rgba($color: white, $alpha: 0.7);
+  @include box-shadow(#00000055);
+
+  text-align: center;
+
+
+  .home {
+    @include flex-container(column, start);
+
+    &__logo {
+      height: 300px;
+    }
+
+    &__tagline {
+      max-width: 30ch;
+      margin-top: 4px;
+
+      color: #7c631f;
+      font-style: italic;
+      font-size: 1.5rem;
+      line-height: 1.4;
+    }
+
+    &__description {
+      margin-top: 16px;
+      max-width: 60ch;
+
+      color: #414141;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+  }
+
+  .menu {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr;
+
+    &__section {
+      color: #2b1a05;
+      grid-column: span 2;
+    }
+
+    .option {
+      @include box-shadow(#00000033);
+
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      grid-template-columns: 30% 1fr;
+
+      background-color: white;
+      padding: 12px 12px;
+      border-radius: 12px;
+
+      cursor: pointer;
+
+      &__image {
+        grid-row: span 2;
+        height: 100px;
+      }
+
+      &__name {
+        font-size: 1.2rem;
+        color: #442a08;
+      }
+
+      &__description {
+        font-size: 0.9rem;
+        color: #444;
+        align-self: start;
+      }
+
+      &:hover {
+        outline: #00000099 solid 2px;
+      }
+    }
+  }
+
+  .contact {
+    @include flex-container(column, start, start);
+
+    .field {
+      @include flex-container(row, start);
+      gap: 8px;
+
+      margin-bottom: 12px;
+
+      &__icon {
+        height: 32px;
+      }
+    }
+
+    &__front {
+      @include box-shadow(#00000055);
+      align-self: center;
+
+      margin-top: 18px;
+      width: 80%;
+      border-radius: 16px;
+    }
+  }
+}
+
+footer {
+  background-color: #272727;
+  width: 100%;
+  opacity: 0.8;
+  padding: 24px 36px;
+
+  text-align: center;
+  color: #8b8b8b;
+
+  a {
+    color: #8b8b8b;
+  }
+}

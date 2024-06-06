@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap');
+
+@mixin flex-container($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+
+body {
+  font-family: "Delicious Handrawn", cursive;
+  height: 100vh;
+}
+
+.header {
+  @include flex-container(column);
+  height: 20vh;
+  padding: 24px 36px;
+
+  background-image: url(../assets/tic-tac-toe-background-1.png);
+  box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.7);
+  filter: brightness(-100);
+
+  position: relative;
+  z-index: 2;
+
+  .logo {
+    @include flex-container;
+    gap: 12px;
+
+    &__icon {
+      height: 50px;
+      filter: invert(1);
+    }
+
+    &__title {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 900;
+    }
+  }
+}
+
+.main {
+  @include flex-container(column, start);
+
+  height: 80vh;
+  padding: 24px 36px;
+
+  .top {
+    @include flex-container(row, space-between);
+    width: 358px;
+
+    .player {
+      @include flex-container;
+      gap: 12px;
+
+      background-color: rgb(231, 231, 231);
+      box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      font-size: 1.5rem;
+
+      transition: background-color 0.3s ease;
+
+
+      img {
+        height: 1.5rem;
+      }
+
+      p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 95px;
+        cursor: pointer;
+      }
+
+      &--turn {
+        background-color: rgb(199, 231, 151);
+      }
+    }
+
+    .restart-btn {
+      width: 32px;
+      height: 32px;
+      transition: scale 0.3s ease;
+      cursor: pointer;
+
+      &:hover {
+        scale: 1.1;
+      }
+    }
+  }
+
+  .board {
+    position: relative;
+    display: grid;
+    grid-template: 1fr 1fr 1fr /
+                   1fr 1fr 1fr;
+
+    height: 318px;
+    width: 318px;
+
+    margin: 24px 0;
+
+    &__image {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    &__cell {
+      @include flex-container;
+      height: 106px;
+      width: 106px;
+      background-color: transparent;
+      cursor: pointer;
+      transition: background-color 0.5s ease;
+
+      &:hover:not(&--win) {
+        background-color: rgb(240, 240, 240);
+      }
+
+      &--template {
+        display: none;
+      }
+
+      &--win {
+        background-color: rgb(200, 233, 181);
+      }
+    }
+  }
+
+  .label {
+    font-size: 1.5rem;
+  }
+}

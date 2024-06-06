@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto&family=Roboto+Slab:wght@500&display=swap');
+
+@font-face {
+  font-family: AwCraft;
+  src: url(minecraft-font/MinecraftRegular-Bmg3.otf);
+}
+
+body {
+  padding: 0 20px;
+}
+
+.awaw {
+  font-family: AwCraft, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+  line-height: 1.5;
+  text-transform: capitalize;
+  text-shadow: 0px 0px 7px lightgrey;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

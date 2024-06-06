@@ -1,0 +1,2 @@
+# Description
+This project is about a simple sign-up form page created using HTML, CSS, and some JavaScript. It applies the concepts learned in creating and styling form elements, as well as CSS fonts and custom properties.

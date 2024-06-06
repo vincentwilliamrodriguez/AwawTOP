@@ -1,0 +1,117 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="main">
+      <form class="search">
+        <input class="search__box" type="text" value="dog" />
+        <button class="search__btn" type="submit">
+          <img src="search.svg" />
+        </button>
+      </form>
+
+      <img src="default.png" class="image" />
+
+      <button class="refresh-btn">
+        <img src="refresh.svg" />
+      </button>
+    </div>
+
+    <style>
+      body {
+        background-color: #111;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 24px;
+
+        background-color: #ffffff99;
+
+        min-width: 500px;
+        height: fit-content;
+      }
+
+      .image {
+        width: min-content;
+        height: 300px;
+        box-shadow: 0 0 5px 0 #00000044;
+        border-radius: 8px;
+      }
+
+      button {
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .search__box {
+          padding: 4px 6px;
+        }
+
+        .search__btn {
+          height: 32px;
+          width: 32px;
+        }
+      }
+    </style>
+
+    <script>
+      let isActive = false;
+      isActive = true;
+      const img = document.querySelector('.image');
+      const refreshBtn = document.querySelector('.refresh-btn');
+      const searchBtn = document.querySelector('.search__btn');
+      const searchBox = document.querySelector('.search__box');
+      const searchForm = document.querySelector('.search');
+
+      refreshBtn.onclick = updateGIF.bind(this);
+      searchForm.onsubmit = (e) => {
+        e.preventDefault();
+        updateGIF();
+      };
+
+      function updateGIF() {
+        if (!isActive) {
+          return;
+        }
+
+        const searchQuery = new URLSearchParams(searchBox.value).toString();
+        const URL = `https://api.giphy.com/v1/gifs/translate?api_key=slLJnPPLfuu7CM6PONPHdE7kVFNttJ4S&s=${searchQuery}`;
+
+        console.log(searchQuery);
+
+        fetch(URL, { mode: 'cors' })
+          .then((response) => {
+            return response.json();
+          })
+          .then((response) => {
+            img.src = response.data.images.original.url;
+          })
+          .catch(() => {
+            alert('Cannot fetch GIFs.');
+          });
+      }
+
+      updateGIF();
+    </script>
+  </body>
+</html>

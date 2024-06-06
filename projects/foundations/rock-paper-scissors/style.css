@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&family=Roboto:ital,wght@0,400;0,900;1,300&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: Comfortaa, sans-serif;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.row {
+  display: flex;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+img {
+  max-height: auto;
+  max-width: 100%;
+  min-width: 30px;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.header {
+  color: #fefef8;
+  background-color: #1a2431;
+  text-align: center;
+  letter-spacing: 1px;
+  padding: 24px 48px;
+}
+
+.main {
+  flex: auto;
+  padding: 48px;
+  gap: 2vw;
+  background-color: #fafafa;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.stats {
+  flex-shrink: 3;
+  padding: 16px;
+  border: 2px solid rgb(78, 78, 78);
+  border-radius: 16px;
+  background-color: #faf9bd;
+  row-gap: 12px;
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #212402;
+}
+
+.stats img {
+  width: 200px;
+}
+
+.options {
+  flex: 0 2 100px;
+  gap: 12px;
+}
+
+.option {
+  padding: 12px;
+  background-color: #f3fc79;
+  border: 2px solid #8b5c22;
+  border-radius: 12px;
+}
+
+.info {
+  flex: 1 0 250px;
+  margin: 0 auto;
+}
+
+.info > * {
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25em;
+}
+
+.info .game {
+  display: none;
+  gap: 12px;
+}
+
+.info .game img {
+  width: 100px;
+}
+
+.info .game button {
+  width: 75px;
+  padding: 12px;
+  border: 2px solid #1a2431;
+  border-radius: 8px;
+}
+
+.info .game #win, 
+.info .game #lose {
+  display: none;
+}
