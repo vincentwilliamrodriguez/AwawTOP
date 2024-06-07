@@ -33,7 +33,50 @@
       </label>
     </div>
 
-    <div class="current"></div>
+    <div class="current">
+      <p class="location">
+        <span class="location__city">London</span>
+        <span class="location__country">United Kingdom</span>
+      </p>
+      <div class="timedate">
+        <div class="timedate__time">11:39 PM</div>
+        <div class="timedate__time">June 7, 2024</div>
+      </div>
+      <div class="condition">
+        <img class="condition__icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
+        <p class="condition__text">Scattered Clouds</p>
+      </div>
+
+      <div class="info-container">
+        <div class="info info--temp">
+          <img class="info__icon" src="<%=require("./assets/images/temp.svg")%>">
+          <h2 class="info__label">Temperature</h2>
+          <p class="info__value">
+            <span class="info__temp">15 °C</span>
+            <span class="info__feelslike">(9 °C)</span>
+          </p>
+        </div>
+        <div class="info info--humidity">
+          <img class="info__icon" src="<%=require("./assets/images/humidity.svg")%>">
+          <h2 class="info__label">Humidity</h2>
+          <p class="info__value">74%</p>
+        </div>
+        <div class="info info--wind">
+          <img class="info__icon" src="<%=require("./assets/images/wind.svg")%>">
+          <h2 class="info__label">Wind</h2>
+          <p class="info__value">
+            <span class="info__wind-kph">14 kph</span>
+            <span class="info__wind-dir">E</span>
+          </p>
+        </div>
+        <div class="info info--uv">
+          <img class="info__icon" src="<%=require("./assets/images/uv.svg")%>">
+          <h2 class="info__label">UV Index</h2>
+          <p class="info__value">7</p>
+        </div>
+      </div>
+    </div>
+
 
     <div class="daily"></div>
     <div class="hourly"></div>

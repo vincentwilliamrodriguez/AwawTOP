@@ -138,10 +138,3 @@ export async function getAutocompleteList(inputText) {
 
   return data;
 }
-
-// setTimeout(() => {
-//   console.log(weatherData);
-//   console.log(
-//     `AWAW ${weatherData.daily[0].hourly[0].temp} ${window.globals.tempUnit}`
-//   );
-// }, 1000);

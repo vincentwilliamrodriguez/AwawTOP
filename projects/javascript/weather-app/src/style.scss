@@ -1,4 +1,4 @@
-$clr-primary: #3ed13e;
+$clr-primary: #0e550e;
 
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
@@ -54,6 +54,37 @@ $clr-primary: #3ed13e;
   }
 }
 
+@mixin tooltip($text, $font-size: 1rem, $width: 50px) {
+  position: relative;
+  display: inline-block;
+
+  &:after {
+    content: $text;
+    position: absolute;
+    opacity: 0%;
+
+    top: -20px;
+    right: 0;
+    left: 0;
+    text-align: center;
+
+    background-color: #000000cc;
+    border-radius: 4px;
+    padding: 2px;
+    margin: 0 auto;
+    width: $width;
+
+    font-size: $font-size;
+    color: #fff;
+
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover:after {
+    opacity: 80%;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -71,10 +102,11 @@ img {
 body {
   @include flex-container(column, start, stretch);
 
-  min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url('./assets/images/background.jpg');
-  background-size: cover;
+  height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('./assets/images/background.jpg') no-repeat top center;
+  background-size: calc(6853px / 4) calc(4579px / 4);
+  overflow: hidden;
 
   font-family: 'Josefin Sans', sans-serif;
 }
@@ -85,6 +117,7 @@ body {
     rgba($clr-primary, 0.3),
     rgba($clr-primary, 0)
   );
+  height: 15vh;
   padding: 24px;
 
   .logo {
@@ -106,7 +139,7 @@ body {
 .main {
   display: grid;
   flex: 1;
-  grid-template: 50px 1fr / 1fr 300px 300px;
+  grid-template: 50px 1fr / 1fr 350px 350px;
   grid-template-areas:
     'top-bar daily hourly'
     'current daily hourly';
@@ -233,15 +266,138 @@ body {
 
   .current {
     grid-area: current;
+
+    display: grid;
+    grid-template: 2rem 2.7rem 1fr / 1fr 1fr;
+    grid-template-areas: 
+      "location condition"
+      "timedate condition"
+      "info-container info-container";
+
+    min-width: 600px;
+    padding: 24px;
+
+    .location {
+      grid-area: location;
+
+      color: #eee;
+      font-size: 1.8rem;
+      text-wrap: nowrap;
+      user-select: none;
+
+      &__city::after{
+        content: ", ";
+      }
+
+      &__country {
+        color: #bbb;
+      }
+    }
+
+    .timedate {
+      grid-area: timedate;
+
+      @include flex-container(column, start, start, 2px);
+      margin-top: 4px;
+      color: #aaa;
+      font-size: 1.1rem;
+    }
+
+    .condition {
+      grid-area: condition;
+
+      @include flex-container(column, start);
+      opacity: 85%;
+      text-align: center;
+      margin-left: auto;
+
+      &__icon {
+        height: 100px;
+        margin: -24px 0 -16px 0;
+      }
+
+      &__text {
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: bold;
+        max-width: 20ch;
+      }
+    }
+
+    .info-container {
+      grid-area: info-container;
+
+      display: grid;
+      align-content: center;
+      justify-content: center;
+      justify-items: center;
+      grid-template-columns: min(50%, 250px) min(50%, 260px);
+    }
+
+    .info {
+      display: grid;
+      gap: 4px;
+      grid-template: 50px 50px / 64px 1fr;
+
+      height: 100px;
+      opacity: 90%;
+      
+      &__icon {
+        align-self: center;
+        justify-self: right;
+        grid-row: 1 / -1;
+
+        width: 50px;
+
+        opacity: 60%;
+        filter: invert(1);
+      }
+
+      &__label {
+        align-self: end;
+        color: #ccc;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+      }
+
+      &__value {
+        align-self: start;
+        color: #eee;
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+    }
+
+    .info--temp {
+      .info__icon {
+        margin-right: -12px;
+      }
+
+      .info__feelslike {
+        @include tooltip("Feels like", $width: 70px);
+        font-weight: normal;
+        color: #bbb;
+      }
+    }
+
+    .info--humidity .info__icon {
+      margin-right: 2px;
+    }
+
+    .info--wind .info__icon {
+      margin-right: 4px;
+    }
+
+    .info-uv .info__icon {
+      margin-right: 4px;
+    }
   }
 
   .daily {
     grid-area: daily;
-    margin: 24px 36px;
   }
 
   .hourly {
     grid-area: hourly;
-    margin: 24px 36px;
   }
 }
