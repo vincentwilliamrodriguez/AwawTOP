@@ -104,13 +104,14 @@ class Hourly {
 
 export const weatherData = {};
 
-export function update() {
+export async function update() {
   for (const identifier in weatherData) {
     delete weatherData[identifier];
   }
 
   // For current
-  endpoints.current().then((data) => (weatherData.current = new Current(data)));
+  const currentData = await endpoints.current();
+  weatherData.current = new Current(currentData);
 
   // For 2 to 1 days ago
   weatherData.daily = [];
@@ -118,19 +119,17 @@ export function update() {
 
   for (const noOfDays of [-2, -1]) {
     const date = Datefns.addDays(today, noOfDays);
-    endpoints.history(date).then((data) => {
-      const dayData = data.forecast.forecastday[0];
-      weatherData.daily.push(new Daily(dayData));
-    });
+    const historyData = await endpoints.history(date);
+    const dayData = historyData.forecast.forecastday[0];
+    weatherData.daily.push(new Daily(dayData));
   }
 
   // For today and 1 to 2 days from now
-  endpoints.forecast().then((data) => {
-    const daysData = data.forecast.forecastday;
-    for (const dayData of daysData) {
-      weatherData.daily.push(new Daily(dayData));
-    }
-  });
+  const forecastData = await endpoints.forecast();
+  const daysData = forecastData.forecast.forecastday;
+  for (const dayData of daysData) {
+    weatherData.daily.push(new Daily(dayData));
+  }
 }
 
 export async function getAutocompleteList(inputText) {
@@ -140,7 +139,9 @@ export async function getAutocompleteList(inputText) {
   return data;
 }
 
-setTimeout(() => {
-  console.log(weatherData);
-  console.log(`AWAW ${weatherData.daily[0].hourly[0].temp} ${window.globals.tempUnit}`);
-}, 500);
+// setTimeout(() => {
+//   console.log(weatherData);
+//   console.log(
+//     `AWAW ${weatherData.daily[0].hourly[0].temp} ${window.globals.tempUnit}`
+//   );
+// }, 1000);

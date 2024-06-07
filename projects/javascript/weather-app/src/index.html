@@ -7,6 +7,36 @@
 </head>
 
 <body>
- 
+  <header class="header">
+    <div class="logo">
+      <img src="<%=require("./assets/images/icon.png")%>" class="logo__icon">
+      <h1 class="logo__text">Weathr</h1>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="top-bar">
+      <form action="" class="search-box-wrapper">
+        <input type="text" name="search-box" id="search-box" list="cities" placeholder="Enter City...">
+        <button class="search-btn" type="submit">
+          <img src="<%=require("./assets/images/search.svg")%>">
+        </button>
+        <datalist id="cities">
+          <option value="Awaw"></option>
+        </datalist>
+      </form>
+
+      <label class="temp-switch">
+        <input type="checkbox" class="temp-switch__checkbox">
+        <span class="temp-switch__slider"></span>
+        <p class="temp-switch__label"></p>
+      </label>
+    </div>
+
+    <div class="current"></div>
+
+    <div class="daily"></div>
+    <div class="hourly"></div>
+  </main>
 </body>
 </html>

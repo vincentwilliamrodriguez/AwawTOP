@@ -1,6 +1,13 @@
+$clr-primary: #3ed13e;
+
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
-@mixin flex-container($direction: row, $justify: center, $align: center, $gap: 0px) {
+@mixin flex-container(
+  $direction: row,
+  $justify: center,
+  $align: center,
+  $gap: 0px
+) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
@@ -8,11 +15,22 @@
   gap: $gap;
 }
 
-@mixin box-shadow($color: #000000aa, $top: 0, $left: 0, $blur: 10px, $spread: 0px) {
+@mixin box-shadow(
+  $color: #000000aa,
+  $top: 0,
+  $left: 0,
+  $blur: 10px,
+  $spread: 0px
+) {
   box-shadow: $top $left $blur $spread $color;
 }
 
-@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033) {
+@mixin button(
+  $width: 24px,
+  $height: 24px,
+  $image-size: 80%,
+  $hover-bg: #00000033
+) {
   @include flex-container;
   width: $width;
   height: $height;
@@ -36,7 +54,6 @@
   }
 }
 
-
 * {
   margin: 0;
   padding: 0;
@@ -52,6 +69,179 @@ img {
 }
 
 body {
-  font-family: "Josefin Sans", sans-serif;
+  @include flex-container(column, start, stretch);
+
   min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url('./assets/images/background.jpg');
+  background-size: cover;
+
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.header {
+  @include flex-container();
+  background-image: linear-gradient(
+    rgba($clr-primary, 0.3),
+    rgba($clr-primary, 0)
+  );
+  padding: 24px;
+
+  .logo {
+    @include flex-container($gap: 8px);
+    opacity: 90%;
+
+    &__icon {
+      height: 48px;
+      filter: drop-shadow(0 0 2px #ffffff77);
+    }
+
+    &__text {
+      padding-top: 5.5%;
+      color: #fff;
+    }
+  }
+}
+
+.main {
+  display: grid;
+  flex: 1;
+  grid-template: 50px 1fr / 1fr 300px 300px;
+  grid-template-areas:
+    'top-bar daily hourly'
+    'current daily hourly';
+
+  & > * {
+    border: 1px solid red;
+  }
+
+  .top-bar {
+    grid-area: top-bar;
+
+    @include flex-container(row, start, center, 16px);
+    padding: 12px;
+
+    .search-box-wrapper {
+      @include flex-container(row, start, center, 4px);
+
+      #search-box {
+        padding: 6px 8px;
+
+        background-color: transparent;
+        opacity: 80%;
+        outline: none;
+        border: none;
+        border-bottom: 2px solid white;
+
+        color: white;
+
+        &::placeholder {
+          color: #ffffffcc;
+        }
+      }
+
+      .search-btn {
+        appearance: none;
+        outline: none;
+        border: none;
+        @include button(24px, 24px, 90%);
+
+
+        img {
+          filter: invert(0.9);
+        }
+      }
+    }
+
+  
+    .temp-switch {
+      $height: 24px;
+      $width: 48px;
+      $border-width: 2px;
+  
+      position: relative;
+  
+      height: $height;
+      width: $width;
+  
+      @include box-shadow(#00000055, 0, 0, 2px, 0);
+      border: $border-width solid #ffffffcc;
+      border-radius: 32px;
+      
+      cursor: pointer;
+      overflow: hidden;
+  
+      &__checkbox {
+        display: none;
+  
+        &:checked ~ .temp-switch__slider {
+          background-color: transparent;
+        }
+        
+        &:checked ~ .temp-switch__slider:before {
+          transform: translateX(calc($width - $height));
+        }
+
+        &:checked ~ p{
+          transform: translateX(calc(-1 * ($width - $height - 6px)));
+
+          &::before {
+            content: "°F";
+          }
+        }
+      }
+  
+      &__slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        
+        background-color: transparent;
+        transition: 0.3s;
+  
+        &::before {
+          content: "";
+          position: absolute;
+          height: calc($height - 8px);
+          width: calc($height - 8px);
+          left: 4px - $border-width;
+          bottom: 4px - $border-width;
+  
+          border-radius: 50%;
+          background-color: white;
+          transition: .4s;
+        }
+      }
+
+      &__label {
+        position: absolute;
+        right: 6px;
+        bottom: 1px;
+        transition: 0.3s;
+        
+        &::before {
+          content: "°C";
+          color: #ffffffdd;
+          font-size: 0.9rem;
+          font-weight: bolder;
+        }
+      }
+    }
+  }
+
+  .current {
+    grid-area: current;
+  }
+
+  .daily {
+    grid-area: daily;
+    margin: 24px 36px;
+  }
+
+  .hourly {
+    grid-area: hourly;
+    margin: 24px 36px;
+  }
 }
