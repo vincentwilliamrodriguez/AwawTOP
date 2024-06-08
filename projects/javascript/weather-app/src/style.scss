@@ -68,7 +68,7 @@ $clr-primary: #0e550e;
     left: 0;
     text-align: center;
 
-    background-color: #000000cc;
+    background-color: #000000dd;
     border-radius: 4px;
     padding: 2px;
     margin: 0 auto;
@@ -108,7 +108,7 @@ body {
 
   height: 100vh;
   background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url('./assets/images/background.jpg') no-repeat top center;
+    url('./assets/images/background-compressed.jpg') no-repeat top center;
   background-size: calc(6853px / 4) calc(4579px / 4);
   overflow: hidden;
 
@@ -426,6 +426,8 @@ body {
     padding: 24px;
 
     .list {
+      height: 400px;
+
       .item {
         cursor: auto;
 
@@ -452,7 +454,7 @@ body {
 
     border: #ffffff77 2px solid;
     width: 230px;
-    height: 460px;
+    height: fit-content;
     overflow-x: hidden;
     overflow-y: auto;
 
@@ -503,7 +505,7 @@ body {
       &--active {
         background-color: rgba(white, 0.7);
         color: #555;
-        opacity: 90%;
+        opacity: 95%;
 
         .item__date {
           color: #111;
@@ -543,8 +545,10 @@ body {
     pointer-events: none;
 
     line {
-      stroke: #e2e2e2;
-      stroke-width: 1;
+      stroke: #ffffff55;
+      stroke-width: 1.5;
+      stroke-dasharray: 10;
+      transition: 0.3s ease;
     }
   }
 }

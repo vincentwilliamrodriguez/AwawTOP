@@ -23,16 +23,12 @@ export function init() {
     const newItem = dailyTemplateElem.cloneNode(true);
     newItem.classList.remove('template');
 
-    if (i === 2) {
-      newItem.classList.add('item--active');
-    }
-
-    newItem.addEventListener('click', (e) => {
-      query('.daily .item--active').classList.remove('item--active');
-      e.currentTarget.classList.add('item--active');
-    });
-
+    newItem.addEventListener('click', () => updateActiveDay(newItem));
     dailyListElem.appendChild(newItem);
+
+    if (i === 2) {
+      updateActiveDay(newItem);
+    }
   }
 
   // For hourly overview
@@ -46,15 +42,42 @@ export function init() {
     hourlyListElem.appendChild(newItem);
   }
 
-  // For daily-hourly connectors
-  const getPos = (elem) => elem.getBoundingClientRect();
-  const mainElem = query('.main');
-  const line1 = query('.daily-hourly-connectors .line-1')
-  const line2 = query('.daily-hourly-connectors .line-2')
-
-  line1.setAttribute('x1', '50px')
+  // Updates connectors when window is resized
+  window.onresize = updateConnectors.bind(this);
 }
 
 export function updateDisplay() {
   console.log('AWAW');
+}
+
+function updateActiveDay(itemElem) {
+  const currentActive = query('.daily .item--active');
+  if (currentActive !== null) {
+    currentActive.classList.remove('item--active');
+  }
+
+  itemElem.classList.add('item--active');
+
+  updateConnectors();
+}
+
+function updateConnectors() {
+  const getPos = (selector) => query(selector).getBoundingClientRect();
+
+  const line1 = query('.daily-hourly-connectors .line-1');
+  const line2 = query('.daily-hourly-connectors .line-2');
+
+  const mainPos = getPos('.main');
+  const hourlyListPos = getPos('.hourly .list');
+  const itemPos = getPos('.daily .item--active');
+
+  line1.setAttribute('x1', `${itemPos.right}px`);
+  line1.setAttribute('y1', `${itemPos.top - mainPos.top}px`);
+  line1.setAttribute('x2', `${hourlyListPos.left}px`);
+  line1.setAttribute('y2', `${hourlyListPos.top - mainPos.top}px`);
+
+  line2.setAttribute('x1', `${itemPos.right}px`);
+  line2.setAttribute('y1', `${itemPos.bottom - mainPos.top}px`);
+  line2.setAttribute('x2', `${hourlyListPos.left}px`);
+  line2.setAttribute('y2', `${hourlyListPos.bottom - mainPos.top}px`);
 }
