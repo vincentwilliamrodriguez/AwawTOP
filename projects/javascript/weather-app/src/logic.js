@@ -90,6 +90,7 @@ class Hourly {
       time_epoch: this.time_epoch,
       temp_c: this._temp,
       feelslike_c: this._feelslike,
+      chance_of_rain: this.rain_chance,
       condition: { icon: this.condition_icon },
     } = hourData);
   }

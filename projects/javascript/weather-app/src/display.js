@@ -7,7 +7,7 @@ const query = document.querySelector.bind(document);
 //   updateDisplay();
 //   console.log(DataManager.weatherData);
 //   console.log(
-//     `AWAW ${DataManager.weatherData.current.condition_icon} ${window.globals.tempUnit}`
+//     `AWAW ${DataManager.weatherData.daily[0].hourly[0]} ${window.globals.tempUnit}`
 //   );
 // });
 // DataManager.getAutocompleteList('Awaw').then((results) => {
@@ -15,24 +15,44 @@ const query = document.querySelector.bind(document);
 // });
 
 export function init() {
-  const dailyList = query('.daily .list');
-  const templateItem = query('.daily .item.template');
+  // For daily overview
+  const dailyListElem = query('.daily .list');
+  const dailyTemplateElem = query('.daily .item.template');
 
   for (let i = 0; i < 5; i++) {
-    const newItem = templateItem.cloneNode(true);
+    const newItem = dailyTemplateElem.cloneNode(true);
     newItem.classList.remove('template');
 
     if (i === 2) {
       newItem.classList.add('item--active');
     }
 
-    newItem.addEventListener('click', () => {
+    newItem.addEventListener('click', (e) => {
       query('.daily .item--active').classList.remove('item--active');
-      newItem.classList.add('item--active');
+      e.currentTarget.classList.add('item--active');
     });
 
-    dailyList.appendChild(newItem);
+    dailyListElem.appendChild(newItem);
   }
+
+  // For hourly overview
+  const hourlyListElem = query('.hourly .list');
+  const hourlyTemplateElem = query('.hourly .item.template');
+
+  for (let i = 0; i < 24; i++) {
+    const newItem = hourlyTemplateElem.cloneNode(true);
+    newItem.classList.remove('template');
+
+    hourlyListElem.appendChild(newItem);
+  }
+
+  // For daily-hourly connectors
+  const getPos = (elem) => elem.getBoundingClientRect();
+  const mainElem = query('.main');
+  const line1 = query('.daily-hourly-connectors .line-1')
+  const line2 = query('.daily-hourly-connectors .line-2')
+
+  line1.setAttribute('x1', '50px')
 }
 
 export function updateDisplay() {

@@ -87,14 +87,38 @@
             <img class="pair__icon" src="<%=require("./assets/images/temp.svg")%>">
             <p class="pair__value">15 °C</p>
           </div>
-          <div class="pair pair--rain-chaince"">
+          <div class="pair pair--rain-chance"">
             <img class="pair__icon" src="<%=require("./assets/images/rain.svg")%>">
             <p class="pair__value">25%</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="hourly"></div>
+
+    <div class="hourly">
+      <div class="list">
+        <div class="item template" data-time-epoch="">
+          <p class="item__hour">12:00 A.M.</p>
+          <img class="item__condition-icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
+          <div class="pair pair--avgtemp">
+            <img class="pair__icon" src="<%=require("./assets/images/temp.svg")%>">
+            <p class="pair__value">
+              <span class="pair__temp">15 °C</sp>
+              <span class="info__feelslike">(10 °C)</span>
+            </p>
+          </div>
+          <div class="pair pair--rain-chance"">
+            <img class="pair__icon" src="<%=require("./assets/images/rain.svg")%>">
+            <p class="pair__value">25%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <svg class="daily-hourly-connectors">
+      <line class="line-1" x1='0' y1='0' x2='50px' y2='50px' />
+      <line class="line-2" x1='0' y1='0' x2='100%' y2='100%' />
+    </svg>
   </main>
 </body>
 </html>
