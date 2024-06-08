@@ -78,7 +78,22 @@
     </div>
 
 
-    <div class="daily"></div>
+    <div class="daily">
+      <div class="list">
+        <div class="item template" data-date-epoch="">
+          <p class="item__date">June 5, 2024</p>
+          <img class="item__condition-icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
+          <div class="pair pair--avgtemp">
+            <img class="pair__icon" src="<%=require("./assets/images/temp.svg")%>">
+            <p class="pair__value">15 °C</p>
+          </div>
+          <div class="pair pair--rain-chaince"">
+            <img class="pair__icon" src="<%=require("./assets/images/rain.svg")%>">
+            <p class="pair__value">25%</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="hourly"></div>
   </main>
 </body>
