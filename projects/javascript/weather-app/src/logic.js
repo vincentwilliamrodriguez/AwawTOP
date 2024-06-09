@@ -9,23 +9,23 @@ window.globals.tempUnit = 'Celsius';
 const endpoints = {
   forecast: () =>
     Helper.getData(
-      `http://api.weatherapi.com/v1/forecast.json?key=${window.globals.key}&q=${window.globals.city}&days=3&aqi=no&alerts=no`
+      `https://api.weatherapi.com/v1/forecast.json?key=${window.globals.key}&q=${window.globals.city}&days=3&aqi=no&alerts=no`
     ),
 
   history: (date) => {
     const dateString = Datefns.format(date, 'yyyy-MM-dd');
-    return Helper.getData(`http://api.weatherapi.com/v1/history.json?key=${window.globals.key}&q=${window.globals.city}&dt=${dateString}
+    return Helper.getData(`https://api.weatherapi.com/v1/history.json?key=${window.globals.key}&q=${window.globals.city}&dt=${dateString}
   `);
   },
 
   current: () =>
     Helper.getData(
-      `http://api.weatherapi.com/v1/current.json?key=${window.globals.key}&q=${window.globals.city}&aqi=no`
+      `https://api.weatherapi.com/v1/current.json?key=${window.globals.key}&q=${window.globals.city}&aqi=no`
     ),
 
   autocomplete: (inputText) =>
     Helper.getData(
-      `http://api.weatherapi.com/v1/search.json?key=${window.globals.key}&q=${inputText}`
+      `https://api.weatherapi.com/v1/search.json?key=${window.globals.key}&q=${inputText}`
     ),
 };
 
