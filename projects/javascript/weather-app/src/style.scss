@@ -177,10 +177,10 @@ body {
     .search-box-wrapper {
       @include flex-container(row, start, center, 4px);
 
-      #search-box {
+      .search-box {
         padding: 6px 8px;
 
-        background-color: transparent;
+        background-color: transparent !important;
         opacity: 80%;
         outline: none;
         border: none;
@@ -282,6 +282,81 @@ body {
           font-size: 0.9rem;
           font-weight: bolder;
         }
+      }
+    }
+
+
+    .lds-ellipsis,
+    .lds-ellipsis div {
+      box-sizing: border-box;
+    }
+
+    .lds-ellipsis {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      scale: 0.75;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      &--active {
+        opacity: 1;
+      }
+    }
+
+    .lds-ellipsis div {
+      position: absolute;
+      top: 33.33333px;
+      width: 13.33333px;
+      height: 13.33333px;
+      border-radius: 50%;
+      background: #ffffffcc;
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+
+    .lds-ellipsis div:nth-child(1) {
+      left: 8px;
+      animation: lds-ellipsis1 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(2) {
+      left: 8px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(3) {
+      left: 32px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+
+    .lds-ellipsis div:nth-child(4) {
+      left: 56px;
+      animation: lds-ellipsis3 0.6s infinite;
+    }
+
+    @keyframes lds-ellipsis1 {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes lds-ellipsis3 {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
+    }
+    @keyframes lds-ellipsis2 {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(24px, 0);
       }
     }
   }
@@ -426,6 +501,14 @@ body {
 
     @include flex-container();
     padding: 24px;
+
+    .item:not(.item--active) {
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #ffffff11;
+      }
+    }
   }
 
   .hourly {

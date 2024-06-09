@@ -11,7 +11,7 @@ const errorMessages = {
 export function init() {
   // For search box
   const formElem = query('form.search-box-wrapper');
-  const searchBoxElem = query('#search-box');
+  const searchBoxElem = query('.search-box');
   const autocompleteElem = query('#cities');
 
   searchBoxElem.oninput = () => {
@@ -38,7 +38,7 @@ export function init() {
     e.preventDefault();
 
     const formData = new FormData(formElem);
-    const searchValue = Object.fromEntries(formData)['search-box'];
+    const searchValue = query('.search-box').value;
 
     if (searchBoxElem.value === '') {
       searchBoxElem.setCustomValidity(errorMessages[1003]);
@@ -48,6 +48,7 @@ export function init() {
 
     window.globals.city = searchValue;
 
+    updateLoadingElem(true);
     DataManager.update()
       .then(() => {
         console.log('Awaw success', DataManager.weatherData);
@@ -61,6 +62,7 @@ export function init() {
 
         searchBoxElem.setCustomValidity(validityMessage);
         searchBoxElem.reportValidity();
+        updateLoadingElem(false);
       });
   });
 
@@ -104,8 +106,8 @@ export function init() {
   window.onresize = updateConnectors.bind(this);
 
   // Initial update
+  updateLoadingElem(true);
   DataManager.update().then(() => {
-    console.log('awp');
     updateDisplay();
   });
 }
@@ -152,6 +154,7 @@ export function updateDisplay() {
   updateText('.info--wind .info__value', `${currentData.wind_kph} kph ${currentData.wind_dir}`);
   updateText('.info--uv .info__value', currentData.uv);
 
+  // For daily overview
   DataManager.weatherData.daily.forEach((dayData, i) => {
     const dayElem = document.querySelectorAll('.daily .item:not(.template)')[i];
 
@@ -164,6 +167,7 @@ export function updateDisplay() {
 
   const activeDayHourly = DataManager.weatherData.daily[window.globals.activeDayIndex].hourly;
 
+  // For hourly overview
   activeDayHourly.forEach((hourData, i) => {
     const hourElem = document.querySelectorAll('.hourly .item:not(.template)')[i];
 
@@ -174,6 +178,9 @@ export function updateDisplay() {
     updateText('.pair__feelslike', `(${formatTemp(hourData.feelslike)})`, hourElem)
     updateText('.pair--rain-chance .pair__value', `${hourData.rain_chance}%`, hourElem)
   });
+
+  // For hiding loading element when done
+  updateLoadingElem(false);
 }
 
 function updateActiveDay(itemElem, i) {
@@ -208,4 +215,14 @@ function updateConnectors() {
   line2.setAttribute('y1', `${itemPos.bottom - mainPos.top}px`);
   line2.setAttribute('x2', `${hourlyListPos.left}px`);
   line2.setAttribute('y2', `${hourlyListPos.bottom - mainPos.top}px`);
+}
+
+function updateLoadingElem(isLoading) {
+  const loaderElem = query('.lds-ellipsis');
+
+  if (isLoading) {
+    loaderElem.classList.add('lds-ellipsis--active');
+  } else {
+    loaderElem.classList.remove('lds-ellipsis--active');
+  }
 }

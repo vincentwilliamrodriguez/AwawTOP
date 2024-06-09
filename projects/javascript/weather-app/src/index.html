@@ -17,7 +17,7 @@
   <main class="main">
     <div class="top-bar">
       <form action="" class="search-box-wrapper">
-        <input type="text" name="search-box" id="search-box" list="cities" placeholder="Enter City...">
+        <input type="text" class="search-box" list="cities" placeholder="Enter City..." autocomplete="off">
         <button class="search-btn" type="submit">
           <img src="<%=require("./assets/images/search.svg")%>">
         </button>
@@ -30,6 +30,13 @@
         <span class="temp-switch__slider"></span>
         <p class="temp-switch__label"></p>
       </label>
+
+      <div class="lds-ellipsis lds-ellipsis--active">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
 
     <div class="current">
