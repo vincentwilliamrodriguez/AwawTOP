@@ -3,7 +3,7 @@ import * as Datefns from 'date-fns';
 import _ from 'lodash';
 
 window.globals.key = '56782529b35f4a1293434013240406';
-window.globals.city = 'Cainta';
+window.globals.city = 'London';
 window.globals.tempUnit = 'Fahrenheit';
 
 const endpoints = {
@@ -106,6 +106,16 @@ class Hourly {
 export const weatherData = {};
 
 export async function update() {
+  // Test if city is valid
+  const testing = await endpoints.current();
+
+  if (testing.hasOwnProperty('error')) {
+    const error = new Error('Unable to fetch location.');
+    error.code = testing.error.code;
+    throw error;
+  }
+
+  // Empty weatherData
   for (const identifier in weatherData) {
     delete weatherData[identifier];
   }
@@ -135,7 +145,11 @@ export async function update() {
 
 export async function getAutocompleteList(inputText) {
   let data = await endpoints.autocomplete(inputText);
-  data = data.map((city) => _.pick(city, ['name', 'country']));
 
-  return data;
+  try {
+    data = data.map((city) => _.pick(city, ['name', 'country']));
+    return data;
+  } catch {
+    return [];
+  }
 }

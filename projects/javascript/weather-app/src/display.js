@@ -2,6 +2,10 @@ import * as Helper from './helper.js';
 import * as DataManager from './logic.js';
 
 const query = document.querySelector.bind(document);
+const errorMessages = {
+  1003: 'Please enter a location.',
+  1006: 'Location not found.',
+};
 
 // DataManager.update().then(() => {
 //   updateDisplay();
@@ -10,11 +14,62 @@ const query = document.querySelector.bind(document);
 //     `AWAW ${DataManager.weatherData.daily[0].hourly[0]} ${window.globals.tempUnit}`
 //   );
 // });
-// DataManager.getAutocompleteList('Awaw').then((results) => {
-//   console.log('Awp', results);
-// });
+
 
 export function init() {
+  // For search box
+  const formElem = query('form.search-box-wrapper');
+  const searchBoxElem = query('#search-box');
+  const autocompleteElem = query('#cities');
+
+  searchBoxElem.oninput = () => {
+    searchBoxElem.setCustomValidity('');
+
+    // Updates autocomplete list
+    DataManager.getAutocompleteList(searchBoxElem.value).then((results) => {
+      autocompleteElem.innerHTML = '';
+
+      results.forEach((location) => {
+        const cityName = `${location.name}, ${location.country}`;
+
+        const locationElem = Helper.makeElement('option', '', '', {
+          value: cityName,
+        });
+
+        autocompleteElem.appendChild(locationElem);
+      });
+    });
+  };
+
+  formElem.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(formElem);
+    const searchValue = Object.fromEntries(formData)['search-box'];
+
+    if (searchBoxElem.value === '') {
+      searchBoxElem.setCustomValidity(errorMessages[1003]);
+      searchBoxElem.reportValidity();
+      return;
+    }
+
+    window.globals.city = searchValue;
+
+    DataManager.update()
+      .then(() => {
+        console.log('Awaw success', DataManager.weatherData);
+      })
+      .catch((error) => {
+        console.log(error.code, error);
+
+        const validityMessage =
+          errorMessages[error.code] || 'Cannot get location.';
+
+        searchBoxElem.setCustomValidity(validityMessage);
+        searchBoxElem.reportValidity();
+      });
+  });
+
   // For daily overview
   const dailyListElem = query('.daily .list');
   const dailyTemplateElem = query('.daily .item.template');

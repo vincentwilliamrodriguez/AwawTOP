@@ -193,6 +193,10 @@ body {
         }
       }
 
+      datalist option {
+        cursor: pointer;
+      }
+
       .search-btn {
         appearance: none;
         outline: none;
