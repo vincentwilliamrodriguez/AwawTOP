@@ -1,20 +1,12 @@
 import * as Helper from './helper.js';
 import * as DataManager from './logic.js';
+import * as Datefns from 'date-fns';
 
 const query = document.querySelector.bind(document);
 const errorMessages = {
   1003: 'Please enter a location.',
   1006: 'Location not found.',
 };
-
-// DataManager.update().then(() => {
-//   updateDisplay();
-//   console.log(DataManager.weatherData);
-//   console.log(
-//     `AWAW ${DataManager.weatherData.daily[0].hourly[0]} ${window.globals.tempUnit}`
-//   );
-// });
-
 
 export function init() {
   // For search box
@@ -41,6 +33,7 @@ export function init() {
     });
   };
 
+  // Form validity
   formElem.addEventListener('submit', (e) => {
     e.preventDefault();
 
@@ -58,6 +51,7 @@ export function init() {
     DataManager.update()
       .then(() => {
         console.log('Awaw success', DataManager.weatherData);
+        updateDisplay();
       })
       .catch((error) => {
         console.log(error.code, error);
@@ -70,19 +64,28 @@ export function init() {
       });
   });
 
+  // Temperature switch
+  query('.temp-switch__checkbox').onchange = (e) => {
+    window.globals.tempUnit = e.currentTarget.checked
+      ? 'Fahrenheit'
+      : 'Celsius';
+    updateDisplay();
+  };
+
   // For daily overview
   const dailyListElem = query('.daily .list');
   const dailyTemplateElem = query('.daily .item.template');
+  window.globals.activeDayIndex = 2;
 
   for (let i = 0; i < 5; i++) {
     const newItem = dailyTemplateElem.cloneNode(true);
     newItem.classList.remove('template');
 
-    newItem.addEventListener('click', () => updateActiveDay(newItem));
+    newItem.addEventListener('click', () => updateActiveDay(newItem, i));
     dailyListElem.appendChild(newItem);
 
-    if (i === 2) {
-      updateActiveDay(newItem);
+    if (i === window.globals.activeDayIndex) {
+      updateActiveDay(newItem, i);
     }
   }
 
@@ -99,13 +102,81 @@ export function init() {
 
   // Updates connectors when window is resized
   window.onresize = updateConnectors.bind(this);
+
+  // Initial update
+  DataManager.update().then(() => {
+    console.log('awp');
+    updateDisplay();
+  });
 }
 
 export function updateDisplay() {
-  console.log('AWAW');
+  updateConnectors();
+
+  if (DataManager.weatherData.daily === undefined) {
+    return;
+  }
+
+  const updateText = (selector, value, base = document) => {
+    base.querySelector(selector).textContent = value;
+  };
+  const updateProperty = (selector, property, base = document) => {
+    Object.assign(base.querySelector(selector), property);
+  };
+  const convertTZ = (epoch) => {
+    return new Date(epoch * 1000).toLocaleString('en-US', {
+      timeZone: window.globals.timeZone,
+    });
+  };
+  const formatTemp = (value) => `${value} °${window.globals.tempUnit[0]}`;
+
+  // For current overview
+  const currentData = DataManager.weatherData.current;
+
+  updateText('.location__city', currentData.city);
+  updateText('.location__country', currentData.country);
+
+  const currentDate = convertTZ(currentData.localtime_epoch);
+  updateText('.timedate__time', Datefns.format(currentDate, 'h:mm a'));
+  updateText('.timedate__date', Datefns.format(currentDate, 'MMMM d, yyyy'));
+
+  updateProperty('.condition__icon', { src: currentData.condition_icon });
+  updateText('.condition__text', currentData.condition_text);
+
+  updateText('.info--temp .info__temp', formatTemp(currentData.temp));
+  updateText(
+    '.info--temp .info__feelslike',
+    `(${formatTemp(currentData.feelslike)})`
+  );
+  updateText('.info--humidity .info__value', `${currentData.humidity}%`);
+  updateText('.info--wind .info__value', `${currentData.wind_kph} kph ${currentData.wind_dir}`);
+  updateText('.info--uv .info__value', currentData.uv);
+
+  DataManager.weatherData.daily.forEach((dayData, i) => {
+    const dayElem = document.querySelectorAll('.daily .item:not(.template)')[i];
+
+    const dayDate = convertTZ(dayData.date_epoch);
+    updateText('.item__date', Datefns.format(dayDate, 'MMMM d (E)'), dayElem)
+    updateProperty('.item__condition-icon', {src: dayData.condition_icon}, dayElem);
+    updateText('.pair--avgtemp .pair__value', formatTemp(dayData.avgtemp), dayElem)
+    updateText('.pair--rain-chance .pair__value', `${dayData.rain_chance}%`, dayElem)
+  });
+
+  const activeDayHourly = DataManager.weatherData.daily[window.globals.activeDayIndex].hourly;
+
+  activeDayHourly.forEach((hourData, i) => {
+    const hourElem = document.querySelectorAll('.hourly .item:not(.template)')[i];
+
+    const hourDate = convertTZ(hourData.time_epoch);
+    updateText('.item__hour', Datefns.format(hourDate, 'h:mm a'), hourElem)
+    updateProperty('.item__condition-icon', {src: hourData.condition_icon}, hourElem);
+    updateText('.pair__temp', formatTemp(hourData.temp), hourElem)
+    updateText('.pair__feelslike', `(${formatTemp(hourData.feelslike)})`, hourElem)
+    updateText('.pair--rain-chance .pair__value', `${hourData.rain_chance}%`, hourElem)
+  });
 }
 
-function updateActiveDay(itemElem) {
+function updateActiveDay(itemElem, i) {
   const currentActive = query('.daily .item--active');
   if (currentActive !== null) {
     currentActive.classList.remove('item--active');
@@ -113,7 +184,9 @@ function updateActiveDay(itemElem) {
 
   itemElem.classList.add('item--active');
 
-  updateConnectors();
+  window.globals.activeDayIndex = i;
+
+  updateDisplay();
 }
 
 function updateConnectors() {

@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 window.globals.key = '56782529b35f4a1293434013240406';
 window.globals.city = 'London';
-window.globals.tempUnit = 'Fahrenheit';
+window.globals.tempUnit = 'Celsius';
 
 const endpoints = {
   forecast: () =>
@@ -41,14 +41,19 @@ function adjustTempUnit(tempInCelsius) {
 class Current {
   constructor(data) {
     ({
-      location: { name: this.city, country: this.country },
+      location: {
+        name: this.city,
+        country: this.country,
+        localtime_epoch: this.localtime_epoch,
+        tz_id: window.globals.timeZone,
+      },
       current: {
-        last_updated_epoch: this.last_updated_epoch,
         temp_c: this._temp,
         feelslike_c: this._feelslike,
         humidity: this.humidity,
         wind_kph: this.wind_kph,
         wind_dir: this.wind_dir,
+        uv: this.uv,
         condition: { text: this.condition_text, icon: this.condition_icon },
       },
     } = data);

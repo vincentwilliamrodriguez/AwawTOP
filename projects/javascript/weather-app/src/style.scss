@@ -290,7 +290,7 @@ body {
     grid-area: current;
 
     display: grid;
-    grid-template: 2rem 2.7rem 1fr / 1fr 1fr;
+    grid-template: 2rem 4rem 1fr / 1fr 1fr;
     grid-template-areas:
       'location condition'
       'timedate condition'
@@ -334,7 +334,7 @@ body {
 
       &__icon {
         height: 100px;
-        margin: -24px 0 -16px 0;
+        // margin: -24px 0 -4px 0;
         opacity: 85%;
         filter: drop-shadow(0 0 3px #ffffff33);
       }
@@ -353,8 +353,12 @@ body {
       display: grid;
       align-content: center;
       justify-content: center;
-      justify-items: center;
-      grid-template-columns: min(50%, 250px) min(50%, 260px);
+      justify-items: left;
+      row-gap: 4px;
+      column-gap: 16px;
+      grid-template-columns: min(50%, 300px) min(50%, 300px);
+
+      padding-left: 13%;
     }
 
     .info {
@@ -388,12 +392,13 @@ body {
         color: #eee;
         font-size: 1.5rem;
         font-weight: bold;
+        text-wrap: nowrap;
       }
     }
 
     .info--temp {
       .info__icon {
-        margin-right: -12px;
+        margin-right: -10px;
       }
 
       .info__feelslike {

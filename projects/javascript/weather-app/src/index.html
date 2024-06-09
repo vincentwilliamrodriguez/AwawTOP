@@ -34,16 +34,16 @@
 
     <div class="current">
       <p class="location">
-        <span class="location__city">London</span>
-        <span class="location__country">United Kingdom</span>
+        <span class="location__city">-</span>
+        <span class="location__country">-</span>
       </p>
       <div class="timedate">
-        <div class="timedate__time">11:39 PM</div>
-        <div class="timedate__time">June 7, 2024</div>
+        <div class="timedate__time">--:-- --</div>
+        <div class="timedate__date">---- --, ----</div>
       </div>
       <div class="condition">
         <img class="condition__icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
-        <p class="condition__text">Scattered Clouds</p>
+        <p class="condition__text">-</p>
       </div>
 
       <div class="info-container">
@@ -51,27 +51,27 @@
           <img class="info__icon" src="<%=require("./assets/images/temp.svg")%>">
           <h2 class="info__label">Temperature</h2>
           <p class="info__value">
-            <span class="info__temp">15 °C</span>
-            <span class="info__feelslike">(9 °C)</span>
+            <span class="info__temp">- °C</span>
+            <span class="info__feelslike">(- °C)</span>
           </p>
         </div>
         <div class="info info--humidity">
           <img class="info__icon" src="<%=require("./assets/images/humidity.svg")%>">
           <h2 class="info__label">Humidity</h2>
-          <p class="info__value">74%</p>
+          <p class="info__value">--%</p>
         </div>
         <div class="info info--wind">
           <img class="info__icon" src="<%=require("./assets/images/wind.svg")%>">
           <h2 class="info__label">Wind</h2>
           <p class="info__value">
-            <span class="info__wind-kph">14 kph</span>
-            <span class="info__wind-dir">E</span>
+            <span class="info__wind-kph">- kph</span>
+            <span class="info__wind-dir">-</span>
           </p>
         </div>
         <div class="info info--uv">
           <img class="info__icon" src="<%=require("./assets/images/uv.svg")%>">
           <h2 class="info__label">UV Index</h2>
-          <p class="info__value">7</p>
+          <p class="info__value">-</p>
         </div>
       </div>
     </div>
@@ -79,16 +79,16 @@
 
     <div class="daily">
       <div class="list">
-        <div class="item template" data-date-epoch="">
-          <p class="item__date">June 5, 2024</p>
+        <div class="item template">
+          <p class="item__date">---- --, ---- (-)</p>
           <img class="item__condition-icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
           <div class="pair pair--avgtemp">
             <img class="pair__icon" src="<%=require("./assets/images/temp.svg")%>">
-            <p class="pair__value">15 °C</p>
+            <p class="pair__value">- °C</p>
           </div>
           <div class="pair pair--rain-chance"">
             <img class="pair__icon" src="<%=require("./assets/images/rain.svg")%>">
-            <p class="pair__value">25%</p>
+            <p class="pair__value">-%</p>
           </div>
         </div>
       </div>
@@ -97,18 +97,18 @@
     <div class="hourly">
       <div class="list">
         <div class="item template" data-time-epoch="">
-          <p class="item__hour">12:00 A.M.</p>
+          <p class="item__hour">--:-- --</p>
           <img class="item__condition-icon" src="//cdn.weatherapi.com/weather/64x64/day/116.png">
           <div class="pair pair--avgtemp">
             <img class="pair__icon" src="<%=require("./assets/images/temp.svg")%>">
             <p class="pair__value">
-              <span class="pair__temp">15 °C</sp>
-              <span class="info__feelslike">(10 °C)</span>
+              <span class="pair__temp">- °C</span>
+              <span class="pair__feelslike">(- °C)</span>
             </p>
           </div>
           <div class="pair pair--rain-chance"">
             <img class="pair__icon" src="<%=require("./assets/images/rain.svg")%>">
-            <p class="pair__value">25%</p>
+            <p class="pair__value">--%</p>
           </div>
         </div>
       </div>
