@@ -20,19 +20,11 @@ const path = require('path');
          test: /\.s[ac]ss$/i,
          use: [
            // Creates `style` nodes from JS strings
-<<<<<<< HEAD
            'style-loader',
            // Translates CSS into CommonJS
            'css-loader',
            // Compiles Sass to CSS
            'sass-loader',
-=======
-           "style-loader",
-           // Translates CSS into CommonJS
-           "css-loader",
-           // Compiles Sass to CSS
-           "sass-loader",
->>>>>>> origin/feature/library-validation
          ],
        },
        {
@@ -43,7 +35,6 @@ const path = require('path');
          test: /\.(woff|woff2|eot|ttf|otf)$/i,
          type: 'asset/resource',
        },
-<<<<<<< HEAD
        {
          test: /\.(?:js|mjs|cjs)$/,
          exclude: /node_modules/,
@@ -54,8 +45,6 @@ const path = require('path');
            },
          },
        },
-=======
->>>>>>> origin/feature/library-validation
      ],
    },
    output: {

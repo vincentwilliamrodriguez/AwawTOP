@@ -1,6 +1,6 @@
-import "./style.scss";
-<<<<<<< HEAD
+window.globals = {};
 
-console.log(`Awaw`)
-=======
->>>>>>> origin/feature/library-validation
+import './style.scss';
+import * as Helper from './helper.mjs';
+
+
