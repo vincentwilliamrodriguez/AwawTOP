@@ -108,8 +108,17 @@ export default class LinkedList {
     let res = '';
     let cur = this.head;
 
+    const blue = '\x1b[34m'
+    const green = '\x1b[32m';
+    const reset = '\x1b[0m'
+
     while (cur !== null) {
-      res += `( ${cur.data.key}: ${cur.data.value} ) -> `
+      if (cur.data.value === null) {
+        res += `( ${green}${cur.data.key}${reset} ) -> `
+      } else {
+        res += `( ${green}${cur.data.key}${reset}: ${blue}${cur.data.value}${reset} ) -> `
+      }
+      
       cur = cur.nextNode;
     }
 

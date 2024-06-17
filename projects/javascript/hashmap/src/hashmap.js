@@ -144,22 +144,56 @@ class HashMap {
   }
 }
 
+class HashSet extends HashMap {
+  set(key) {
+    super.set(key, null);
+  }
+
+  get() {
+    return;
+  }
+
+  values() {
+    return this.keys();
+  }
+}
+
 const awawMap = new HashMap();
-awawMap.set('0', 123);
-awawMap.set('11', 456);
-awawMap.set('12', 'awaw');
-awawMap.set('123', 'awaw');
-awawMap.set('awaw', true);
+awawMap.set('Spain', 'Madrid');
+awawMap.set('United States', 'Washington D.C.');
+awawMap.set('Australia', 'Canberra');
+awawMap.set('Japan', 'Tokyo');
+awawMap.set('Hotel', 'Trivago');
+awawMap.set('Number', 1234);
+awawMap.set('isHuman', false);
+awawMap.set('isHuman', true);
+awawMap.set('84293', 'what');
+awawMap.set('0', 'Collision');
+awawMap.set('11', 'Collision');
+awawMap.set('12', 'Number 11');
+awawMap.set('13', 'Almost expanding');
+awawMap.set('13', 'Wait for it...');
+
+console.log('\nFor HashMap:\n')
+console.log(awawMap.toString());
+awawMap.set('14', 'BOOM!');
+console.log('\nNow, Expand!\n\n')
+console.log(awawMap.toString());
 
 
-awawMap.set('1', 123);
-awawMap.set('13', 456);
-awawMap.set('14', 'awawawaawawawaawwa');
-awawMap.set('15', 'awaw');
-awawMap.set('16', 'awaw');
-awawMap.set('17', 'awaw');
-awawMap.set('18', 'awaw');
-console.log(awawMap.toString());
-awawMap.set('awawp', true);
-console.log(awawMap.toString());
+const awawSet = new HashSet();
+awawSet.set('Paul')
+awawSet.set('Stilgar')
+awawSet.set('Baron')
+awawSet.set('Jessica')
+awawSet.set('Duncan')
+awawSet.set('Stilgar')
+awawSet.set('Jessica')
+awawSet.set('Leto')
+awawSet.set('Leto')
+awawSet.set('Gurney')
+
+console.log('\nFor HashSet:\n')
+console.log(awawSet.toString())
+console.log('Le Keys: ', awawSet.keys())
 
