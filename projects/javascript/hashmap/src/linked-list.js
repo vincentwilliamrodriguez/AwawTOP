@@ -2,22 +2,22 @@ export default class LinkedList {
   #head = null;
 
   static Node = class {
-    constructor(value = null, nextNode = null) {
-      this.value = value;
+    constructor(data = null, nextNode = null) {
+      this.data = data;
       this.nextNode = nextNode;
     }
   };
 
-  append(value) {
+  append(data) {
     if (this.head === null) {
-      this.prepend(value);
+      this.prepend(data);
     } else {
-      this.tail.nextNode = new LinkedList.Node(value, null);
+      this.tail.nextNode = new LinkedList.Node(data, null);
     }
   }
 
-  prepend(value) {
-    this.head = new LinkedList.Node(value, this.head);
+  prepend(data) {
+    this.head = new LinkedList.Node(data, this.head);
   }
 
   get size() {
@@ -72,36 +72,44 @@ export default class LinkedList {
     return this.removeAt(this.size - 1);
   }
 
-  contains(value) {
-    return this.find(value) !== null;
+  clear() {
+    this.head = null;
   }
 
-  find(value) {
+  contains(key) {
+    return this.find(key).index !== null;
+  }
+
+  find(key) {
+    const res = {index: null, data: null};
+
     if (this.head === null) {
-      return null;
+      return res;
     }
 
     let cur = this.head;
     let curIndex = 0;
 
     while (cur !== null) {
-      if (cur.value === value) {
-        return curIndex;
+      if ((cur.data.key === key)) {
+        res.index = curIndex;
+        res.data = cur.data;
+        break;
       }
 
       cur = cur.nextNode;
       curIndex++;
     }
 
-    return null;
+    return res;
   }
 
-  toString(value) {
+  toString() {
     let res = '';
     let cur = this.head;
 
     while (cur !== null) {
-      res += `( ${cur.value} ) -> `
+      res += `( ${cur.data.key}: ${cur.data.value} ) -> `
       cur = cur.nextNode;
     }
 
@@ -109,8 +117,20 @@ export default class LinkedList {
     return res;
   }
 
-  insertAt(value, index) {
-    const newNode = new LinkedList.Node(value, null);
+  entries() {
+    let res = [];
+    let cur = this.head;
+
+    while (cur !== null) {
+      res.push([cur.data.key, cur.data.value]);
+      cur = cur.nextNode;
+    }
+
+    return res;
+  }
+
+  insertAt(data, index) {
+    const newNode = new LinkedList.Node(data, null);
 
     if (index < 0) {
       index = index + this.size + 1;
