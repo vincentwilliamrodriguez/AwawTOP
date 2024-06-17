@@ -16,6 +16,7 @@ class Pair {
 
 class HashMap {
   #buckets = [];
+  #length = 0;
 
   capacity = 16;
   loadFactor = 0.8;
@@ -35,6 +36,7 @@ class HashMap {
   growBuckets(newSize) {
     const oldEntries = this.entries();
     this.capacity = newSize;
+    this.#length = 0;
     this.#buckets = [];
     this.updateProxy();
 
@@ -80,11 +82,11 @@ class HashMap {
 
     if (index === null) {
       bucket.append(newData);
+      this.#length++;
 
-      if (this.length() >= this.capacity * this.loadFactor) {
+      if (this.#length >= this.capacity * this.loadFactor) {
         this.growBuckets(this.capacity * 2);
       }
-      
     } else {
       oldData.value = newData.value;
     }
@@ -111,6 +113,7 @@ class HashMap {
 
     if (index !== null) {
       bucket.removeAt(index);
+      this.#length--;
       return true;
     } else {
       return false;
@@ -118,9 +121,7 @@ class HashMap {
   }
 
   length() {
-    return this.buckets.reduce((totalItems, curBucket) => {
-      return totalItems + curBucket.size;
-    }, 0);
+    return this.#length;
   }
 
   clear() {
@@ -174,26 +175,30 @@ awawMap.set('12', 'Number 11');
 awawMap.set('13', 'Almost expanding');
 awawMap.set('13', 'Wait for it...');
 
-console.log('\nFor HashMap:\n')
+console.log('\nFor HashMap:\n');
+console.log('Number of Entries:', awawMap.length());
 console.log(awawMap.toString());
 awawMap.set('14', 'BOOM!');
-console.log('\nNow, Expand!\n\n')
+console.log('\nNow, Expand!\n\n');
+console.log('Number of Entries:', awawMap.length());
 console.log(awawMap.toString());
 
-
 const awawSet = new HashSet();
-awawSet.set('Paul')
-awawSet.set('Stilgar')
-awawSet.set('Baron')
-awawSet.set('Jessica')
-awawSet.set('Duncan')
-awawSet.set('Stilgar')
-awawSet.set('Jessica')
-awawSet.set('Leto')
-awawSet.set('Leto')
-awawSet.set('Gurney')
+awawSet.set('Paul');
+awawSet.set('Stilgar');
+awawSet.set('Baron');
+awawSet.set('Jessica');
+awawSet.set('Duncan');
+awawSet.set('Stilgar');
+awawSet.set('Jessica');
+awawSet.set('Leto');
+awawSet.set('Leto');
+awawSet.set('Gurney');
+awawSet.set('Shaddam');
+awawSet.remove('Shaddam');
+awawSet.remove('Shaddam');
 
-console.log('\nFor HashSet:\n')
-console.log(awawSet.toString())
-console.log('Le Keys: ', awawSet.keys())
-
+console.log('\nFor HashSet:\n');
+console.log('Number of Entries:', awawSet.length());
+console.log(awawSet.toString());
+console.log('Le Keys: ', awawSet.keys());
