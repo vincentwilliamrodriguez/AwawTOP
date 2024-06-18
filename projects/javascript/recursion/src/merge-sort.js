@@ -7,7 +7,8 @@ function mergeSort(array) {
   const left = mergeSort(array.slice(0, half));
   const right = mergeSort(array.slice(half));
   const res = [];
-  let i = (j = 0);
+  let i = 0;
+  let j = 0;
 
   while (i + j < array.length) {
     const a = i < left.length ? left[i] : Infinity;
