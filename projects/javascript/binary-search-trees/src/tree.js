@@ -12,25 +12,19 @@ export default class Tree {
   root = null;
 
   constructor(array) {
-    this.root = this.buildTree(array);
+    this.rebalance(array);
   }
 
-  buildTree(array) {
-    const sortedArray = mergeSort(array);
-    const root = buildTreeRec(sortedArray, 0, sortedArray.length - 1);
-    return root;
-
-    function buildTreeRec(array, start, end) {
-      if (start > end) {
-        return null;
-      }
-
-      const mid = parseInt((start + end) / 2);
-      const leftNode = buildTreeRec(array, start, mid - 1);
-      const rightNode = buildTreeRec(array, mid + 1, end);
-
-      return new Node(array[mid], leftNode, rightNode);
+  buildTree(array, start = 0, end = array.length-1) {
+    if (start > end) {
+      return null;
     }
+
+    const mid = parseInt((start + end) / 2);
+    const leftNode = this.buildTree(array, start, mid - 1);
+    const rightNode = this.buildTree(array, mid + 1, end);
+
+    return new Node(array[mid], leftNode, rightNode);
   }
 
   insert(value, node = this.root) {
@@ -194,7 +188,23 @@ export default class Tree {
     }
   }
 
-  isBalanced() {}
+  isBalanced() {
+    if (this.root === null) {
+      return false;
+    }
 
-  rebalance() {}
+    const leftHeight = this.height(this.root.left);
+    const rightHeight = this.height(this.root.right);
+    return Math.abs(leftHeight - rightHeight) <= 1;
+  }
+
+  rebalance(array = null) {
+
+    const sortedArray = (array === null)
+                          ? this.inOrder()
+                          : mergeSort(array);
+    
+    this.root = this.buildTree(sortedArray);
+
+  }
 }
