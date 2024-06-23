@@ -7,6 +7,17 @@ import {
 } from './index.js';
 
 
+function runTests(tests, func, isInputMultiple = false) {
+  for (const { input, expected } of tests) {
+    if (isInputMultiple) {
+      expect(func(...input)).toStrictEqual(expected);
+    } else {
+      expect(func(input)).toStrictEqual(expected);
+    }
+  }
+}
+
+
 describe('capitalize', () => {
   it('should accept empty input', () => {
     expect(capitalize()).toBe('');
@@ -22,9 +33,7 @@ describe('capitalize', () => {
       { input: '!!avAScript', expected: '!!avAScript' },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(capitalize(input)).toStrictEqual(expected);
-    }
+    runTests(tests, capitalize);
   });
 });
 
@@ -42,9 +51,7 @@ describe('reverseString', () => {
       { input: 'javAScript', expected: 'tpircSAvaj' },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(reverseString(input)).toStrictEqual(expected);
-    }
+    runTests(tests, reverseString);
   });
 });
 
@@ -66,9 +73,7 @@ describe('calculator', () => {
       { input: [-9, 10.7], expected: 1.7 },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(calculator.add(...input)).toStrictEqual(expected);
-    }
+    runTests(tests, calculator.add, true);
   });
 
   it('should subtract correctly', () => {
@@ -78,9 +83,7 @@ describe('calculator', () => {
       { input: [-9, 10.7], expected: -19.7 },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(calculator.subtract(...input)).toStrictEqual(expected);
-    }
+    runTests(tests, calculator.subtract, true);
   });
 
   it('should multiply correctly', () => {
@@ -90,9 +93,7 @@ describe('calculator', () => {
       { input: [-9, 10.7], expected: -96.3 },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(calculator.multiply(...input)).toStrictEqual(expected);
-    }
+    runTests(tests, calculator.multiply, true);
   });
 
   it('should divide correctly', () => {
@@ -102,8 +103,45 @@ describe('calculator', () => {
       { input: [-9, 10.7], expected: -9/10.7 },
     ];
 
-    for (const { input, expected } of tests) {
-      expect(calculator.divide(...input)).toStrictEqual(expected);
-    }
+    runTests(tests, calculator.divide, true);
   });
 });
+
+describe('caesarCipher', () => {
+  it('should accept empty input', () => {
+    expect(caesarCipher()).toBe('');
+    expect(caesarCipher('')).toBe('');
+    expect(caesarCipher('awaw')).toBe('awaw');
+  });
+
+  it('should wrap letters', () => {
+    const tests = [
+      { input: ['zz', 1], expected: 'aa' },
+      { input: ['zab', 3], expected: 'cde' }
+
+    ];
+
+    runTests(tests, caesarCipher, true);
+  });
+
+  it('should preserve case', () => {
+    const tests = [
+      { input: ['awAw', 3], expected: 'dzDz' },
+      { input: ['HeLLo', 3], expected: 'KhOOr' }
+
+    ];
+
+    runTests(tests, caesarCipher, true);
+  });
+
+  it('should preserve non-letters', () => {
+    const tests = [
+      { input: ['aw aw!!!. ', 3], expected: 'dz dz!!!. ' },
+      { input: ['Hello, World!', 3], expected: 'Khoor, Zruog!' }
+
+    ];
+
+    runTests(tests, caesarCipher, true);
+  });
+});
+

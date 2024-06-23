@@ -52,6 +52,37 @@ export const calculator = (() => {
   };
 })();
 
-export function caesarCipher() {}
+export function caesarCipher(inp = '', key = 0) {
+  const ranges = {
+    uppercase: [65, 90],
+    lowercase: [97, 122],
+  };
+
+  function shiftCode(code) {
+    for (const [low, high] of Object.values(ranges)) {
+      if (low <= code && code <= high) {
+        let newCode = code + key;
+
+        // wraps letter
+        if (newCode > high) {
+          newCode -= high - low + 1;
+        }
+
+        return newCode;
+      }
+    }
+
+    return code;
+  }
+
+  const res = inp.split('').map((char) => {
+    const curCode = char.charCodeAt(0);
+    const newCode = shiftCode(curCode);
+    console.log(inp, curCode, newCode);
+    return String.fromCharCode(newCode);
+  });
+
+  return res.join('');
+}
 
 export function analyzeArray() {}
