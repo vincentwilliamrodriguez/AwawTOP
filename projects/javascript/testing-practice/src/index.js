@@ -1,6 +1,7 @@
+import { Exception } from 'sass';
+
 export function capitalize(input = '') {
-  return input.slice(0, 1).toUpperCase() + 
-         input.slice(1);
+  return input.slice(0, 1).toUpperCase() + input.slice(1);
 }
 
 export function reverseString(input = '') {
@@ -20,7 +21,7 @@ export const calculator = (() => {
   }
 
   function round(n) {
-    return Math.round(1000000 * n) / 1000000
+    return Math.round(1000000 * n) / 1000000;
   }
 
   function add(a, b) {
@@ -32,7 +33,6 @@ export const calculator = (() => {
     checkInputs(a, b);
     return round(a - b);
   }
-
 
   function multiply(a, b) {
     checkInputs(a, b);
@@ -78,11 +78,36 @@ export function caesarCipher(inp = '', key = 0) {
   const res = inp.split('').map((char) => {
     const curCode = char.charCodeAt(0);
     const newCode = shiftCode(curCode);
-    console.log(inp, curCode, newCode);
     return String.fromCharCode(newCode);
   });
 
   return res.join('');
 }
 
-export function analyzeArray() {}
+export function analyzeArray(array = []) {
+  if (!Array.isArray(array)) {
+    throw new Error('Please enter an array.');
+  }
+
+  if (array.length === 0) {
+    return {
+      average: null,
+      min: null,
+      max: null,
+      length: 0,
+    };
+  }
+
+  if (array.some((value) => typeof value !== 'number')) {
+    throw new Error('Please enter an array of numbers.');
+  }
+
+  const totalSum = array.reduce((total, value) => total + value, 0);
+
+  return {
+    average: totalSum / array.length,
+    min: Math.min(...array),
+    max: Math.max(...array),
+    length: array.length,
+  };
+}

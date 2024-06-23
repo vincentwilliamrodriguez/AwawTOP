@@ -145,3 +145,43 @@ describe('caesarCipher', () => {
   });
 });
 
+describe('analyzeArray', () => {
+  it('should accept empty input', () => {
+    const emptyResult = {
+      average: null,
+      min: null,
+      max: null,
+      length: 0,
+    };
+
+    expect(analyzeArray()).toStrictEqual(emptyResult);
+    expect(analyzeArray([])).toStrictEqual(emptyResult);
+  });
+
+  it('should accept an array', () => {
+    expect(() => analyzeArray(1)).toThrow('Please enter an array.');
+    expect(() => analyzeArray('awp')).toThrow('Please enter an array.');
+  });
+
+  it('should accept only an array of numbers', () => {
+    expect(() => analyzeArray([null, 1])).toThrow('Please enter an array of numbers.');
+    expect(() => analyzeArray(['aw'])).toThrow('Please enter an array of numbers.');
+  });
+
+
+  it('should properly return values', () => {
+    const tests = [
+      {
+        input: [1, 8, 3, 4, 2, 6],
+        expected: {
+          average: 4,
+          min: 1,
+          max: 8,
+          length: 6,
+        },
+      },
+    ];
+
+    runTests(tests, analyzeArray);
+  });
+});
