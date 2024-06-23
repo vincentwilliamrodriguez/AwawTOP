@@ -3,16 +3,46 @@ export function capitalize(input = '') {
          input.slice(1);
 }
 
-export function reverseString() {}
+export function reverseString(input = '') {
+  const arr = input.split('');
+  arr.reverse();
+
+  return arr.join('');
+}
 
 export const calculator = (() => {
-  function add() {}
+  function checkInputs(a, b) {
+    const isValid = typeof a === 'number' && typeof b === 'number';
 
-  function subtract() {}
+    if (!isValid) {
+      throw new Error('Please input two numbers.');
+    }
+  }
 
-  function divide() {}
+  function round(n) {
+    return Math.round(1000000 * n) / 1000000
+  }
 
-  function multiply() {}
+  function add(a, b) {
+    checkInputs(a, b);
+    return round(a + b);
+  }
+
+  function subtract(a, b) {
+    checkInputs(a, b);
+    return round(a - b);
+  }
+
+
+  function multiply(a, b) {
+    checkInputs(a, b);
+    return a * b;
+  }
+
+  function divide(a, b) {
+    checkInputs(a, b);
+    return a / b;
+  }
 
   return {
     add,
