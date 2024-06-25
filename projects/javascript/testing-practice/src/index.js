@@ -61,12 +61,11 @@ export function caesarCipher(inp = '', key = 0) {
   function shiftCode(code) {
     for (const [low, high] of Object.values(ranges)) {
       if (low <= code && code <= high) {
-        let newCode = code + key;
+        let newCode = (code + key) - low;
 
         // wraps letter
-        if (newCode > high) {
-          newCode -= high - low + 1;
-        }
+        newCode = ((newCode % 26) + 26) % 26;
+        newCode += low;
 
         return newCode;
       }

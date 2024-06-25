@@ -143,6 +143,16 @@ describe('caesarCipher', () => {
 
     runTests(tests, caesarCipher, true);
   });
+
+  it('can take large keys', () => {
+    expect(caesarCipher('awaw', 53)).toStrictEqual('bxbx');
+  });
+
+  it('can take negative keys', () => {
+    expect(caesarCipher('awaw', -1)).toStrictEqual('zvzv');
+    expect(caesarCipher('awaw', -27)).toStrictEqual('zvzv');
+    expect(caesarCipher('awaw', -52)).toStrictEqual('awaw');
+  });
 });
 
 describe('analyzeArray', () => {
