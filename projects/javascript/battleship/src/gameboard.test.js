@@ -2,10 +2,10 @@ import Gameboard from './gameboard';
 import * as Helper from './helper.mjs';
 
 describe('Gameboard', () => {
-  const testGameboard = new Gameboard();
+  const gameboard = new Gameboard();
 
-  describe('getShipLocations', () => {
-    Helper.runEqualityTests(testGameboard.getShipLocations, [
+  describe('getShipLocations()', () => {
+    Helper.runEqualityTests(gameboard.getShipLocations.bind(gameboard), [
       {
         it: 'should correctly locate horizontal ships',
         inputs: ['Patrol Boat', [0, 0], false],
@@ -64,14 +64,41 @@ describe('Gameboard', () => {
     ]);
   });
 
-  describe('placeShip', () => {
-    it('should place horizontal ships properly', () => {
-      const placeRes = testGameboard.placeShip('Patrol Boat');
+  describe('areShipCoordsLegal()', () => {
+    gameboard.ships[0][2] = 1;
 
-      // expect(placeRes).toBeTruthy();
-      // expect(testGameboard.ships[0][0]).not.toBe(null);
-      // expect(testGameboard.ships[0][1]).not.toBe(null);
-      // expect(testGameboard.ships[0][2]).not.toBe(null);
+    Helper.runEqualityTests(gameboard.areShipCoordsLegal.bind(gameboard), [
+      {
+        it: 'should recognize out-of-bounds',
+        inputs: [
+          [
+            [-1, 0],
+            [0, 0],
+          ],
+        ],
+        expected: false,
+      },
+      {
+        it: 'should recognize overlapping',
+        inputs: [
+          [
+            [0, 1],
+            [0, 2],
+          ],
+        ],
+        expected: false,
+      },
+    ]);
+  });
+
+  describe.skip('placeShip()', () => {
+    it('should place horizontal ships properly', () => {
+      const placeRes = gameboard.placeShip('Patrol Boat');
+
+      expect(placeRes).toBeTruthy();
+      expect(gameboard.ships[0][0]).not.toBe(null);
+      expect(gameboard.ships[0][1]).not.toBe(null);
+      expect(gameboard.ships[0][2]).not.toBe(null);
     });
   });
 });

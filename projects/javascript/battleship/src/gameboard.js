@@ -41,4 +41,21 @@ export default class Gameboard {
 
     return res;
   }
+
+  areShipCoordsLegal(shipCoords) {
+    for (const [row, col] of shipCoords) {
+      // checks if out-of-bounds
+      if (row < 0 || row > 10 ||
+          col < 0 || col > 10) {
+        return false;
+      }
+
+      // checks if overlapping
+      if (this.ships[row][col] !== null) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
