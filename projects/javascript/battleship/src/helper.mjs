@@ -106,3 +106,11 @@ export function connectToElem(
     ...Object.getOwnPropertyDescriptors(newData),
   });
 }
+
+export function runEqualityTests(func, tests) {
+  for (const test of tests) {
+    it(test.it, () => {
+      expect(func(...test.inputs)).toStrictEqual(test.expected);
+    })
+  }
+}
