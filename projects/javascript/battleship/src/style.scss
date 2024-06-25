@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+
+@mixin flex-container($direction: row, $justify: center, $align: center, $gap: 0px) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+}
+
+@mixin box-shadow($color: #000000aa, $top: 0, $left: 0, $blur: 10px, $spread: 0px) {
+  box-shadow: $top $left $blur $spread $color;
+}
+
+@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033) {
+  @include flex-container;
+  width: $width;
+  height: $height;
+
+  border-radius: 8px;
+  background-color: transparent;
+  scale: 1;
+  transition: background-color 0.3s ease, scale 0.3s ease;
+  cursor: pointer;
+
+  img {
+    height: $image-size;
+  }
+
+  &:hover {
+    background-color: $hover-bg;
+  }
+
+  &:active {
+    scale: 0.9;
+  }
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  font-family: "Josefin Sans", sans-serif;
+  min-height: 100vh;
+}
