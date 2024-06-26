@@ -79,11 +79,12 @@ export default class Gameboard {
   }
 
   receiveAttack([row, col]) {
-    this.shots[row][col] = true;
-
+    const shotBefore = this.shots[row][col];
     const target = this.shipMap[row][col];
 
-    if (target instanceof Ship) {
+    this.shots[row][col] = true;
+
+    if (target instanceof Ship && !shotBefore) {
       target.hit();
       return true;
     }
@@ -111,7 +112,7 @@ export default class Gameboard {
 
     for (let row = 0; row < 10; row++) {
       for (let col = 0; col < 10; col++) {
-        const char = this.shots[row][col] ? ' x ' : '   ';
+        const char = this.shots[row][col] ? ' x' : '  ';
         res +=
           this.shipMap[row][col] === null
             ? `${BLUEBG}${char}`

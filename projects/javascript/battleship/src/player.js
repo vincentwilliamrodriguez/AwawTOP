@@ -2,12 +2,14 @@ import Gameboard from './gameboard';
 
 export default class Player {
   constructor(options) {
+    this.gameboard = new Gameboard();
+    this.gameboard.randomlyPlaceShips();
+
     Object.assign(
       this,
       {
         name: 'Awaw',
         isAI: false,
-        gameboard: new Gameboard(),
       },
       options
     );
