@@ -69,9 +69,9 @@ describe('Gameboard', () => {
       gameboard.shipMap[0][2] = 1;
     });
 
-    // afterAll(() => {
-    //   gameboard.shipMap[0][2] = null;
-    // });
+    afterAll(() => {
+      gameboard.shipMap[0][2] = null;
+    });
 
     Helper.runEqualityTests(gameboard.areShipCoordsLegal.bind(gameboard), [
       {
