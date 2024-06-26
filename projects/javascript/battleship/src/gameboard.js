@@ -96,4 +96,27 @@ export default class Gameboard {
 
     return true;
   }
+
+  textDisplay() {
+    let res = ''
+
+    const RESET = "\u001b[00m";
+    const RED = "\u001b[31m";
+    const BLACKBG = "\u001b[40m";
+    const BLUEBG = "\u001b[44m";
+
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        const char = this.shots[row][col] ? ' x ' : '   '
+        res += (this.shipMap[row][col] === null)
+                  ? `${BLUEBG}${char}`
+                  : `${BLACKBG}${RED}${char}`
+      }
+
+      res += `${RESET}\n`
+    }
+    
+    res += RESET;
+    return res;
+  }
 }

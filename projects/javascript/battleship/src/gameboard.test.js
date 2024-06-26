@@ -194,4 +194,13 @@ describe('Gameboard', () => {
       expect(gameboard.haveAllShipsSunk()).toBeTruthy();
     });
   });
+
+  describe('textDisplay()', () => {
+    it('should return', () => {
+      const res = gameboard.textDisplay();
+      expect(res).toBeTruthy();
+
+      console.log(res, 'awaw');
+    });
+  });
 });
