@@ -114,3 +114,11 @@ export function runEqualityTests(func, tests) {
     })
   }
 }
+
+export function runGeneralTests(func, tests) {
+  for (const test of tests) {
+    it(test.it, () => {
+      func(test);
+    })
+  }
+}
