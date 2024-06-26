@@ -199,8 +199,14 @@ describe('Gameboard', () => {
     it('should return', () => {
       const res = gameboard.textDisplay();
       expect(res).toBeTruthy();
-
-      console.log(res, 'awaw');
     });
   });
+
+  describe('randomlyPlaceShips()', () => {
+    it('should place all ships', () => {
+      gameboard.randomlyPlaceShips();
+      expect(gameboard.ships.length).toBe(5)
+    });
+  });
+  
 });

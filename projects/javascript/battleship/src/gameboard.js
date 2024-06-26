@@ -2,9 +2,13 @@ import Ship from './ship.js';
 
 export default class Gameboard {
   constructor() {
+    this.init();
+  }
+
+  init() {
     // Initializes 10x10 arrays
-    this.shipMap = Array.from({ length: 10 }, (e) => Array(10).fill(null));
     this.shots = Array.from({ length: 10 }, (e) => Array(10).fill(false));
+    this.shipMap = Array.from({ length: 10 }, (e) => Array(10).fill(null));
 
     this.ships = [];
   }
@@ -98,25 +102,49 @@ export default class Gameboard {
   }
 
   textDisplay() {
-    let res = ''
+    let res = '';
 
-    const RESET = "\u001b[00m";
-    const RED = "\u001b[31m";
-    const BLACKBG = "\u001b[40m";
-    const BLUEBG = "\u001b[44m";
+    const RESET = '\u001b[00m';
+    const RED = '\u001b[31m';
+    const BLACKBG = '\u001b[40m';
+    const BLUEBG = '\u001b[44m';
 
     for (let row = 0; row < 10; row++) {
       for (let col = 0; col < 10; col++) {
-        const char = this.shots[row][col] ? ' x ' : '   '
-        res += (this.shipMap[row][col] === null)
-                  ? `${BLUEBG}${char}`
-                  : `${BLACKBG}${RED}${char}`
+        const char = this.shots[row][col] ? ' x ' : '   ';
+        res +=
+          this.shipMap[row][col] === null
+            ? `${BLUEBG}${char}`
+            : `${BLACKBG}${RED}${char}`;
       }
 
-      res += `${RESET}\n`
+      res += `${RESET}\n`;
     }
-    
+
     res += RESET;
     return res;
+  }
+
+  randomlyPlaceShips() {
+    this.init();
+
+    const shipNames = [
+      'Carrier',
+      'Battleship',
+      'Destroyer',
+      'Submarine',
+      'Patrol Boat',
+    ];
+
+    for (const shipName of shipNames) {
+      let placeRes = false;
+
+      while (!placeRes) {
+        const randRow = parseInt(Math.random() * 10);
+        const randCol = parseInt(Math.random() * 10);
+        const randDir = Math.random() > 0.5;
+        placeRes = this.placeShip(shipName, [randRow, randCol], randDir);
+      }
+    }
   }
 }
