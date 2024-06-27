@@ -8,7 +8,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "build": "webpack --config webpack.prod.cjs",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --config webpack.dev.cjs",
     "start": "webpack serve --open --config webpack.dev.cjs"
   },
   "keywords": [],

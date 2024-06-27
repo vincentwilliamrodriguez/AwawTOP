@@ -1,47 +1,61 @@
-import Player from './player';
+import Player from './player.js';
 
 class Game {
-  constructor() {
+  init({playersData, autoStart = true, thinkingAI = false}) {
     this.turn = 0;
     this.status = -1;
     this.message = '';
-  }
-
-  initiatePlayers(...playersData) {
     this.players = [];
 
     for (const playerData of playersData) {
       this.players.push(new Player(playerData));
     }
-  }
 
-  makeMove(coor, mockAImove = null) {
-    if (this.status !== -1) {
-      return false;
+    // If both players are AI, the first AI makes a move
+    if (autoStart && this.players.every((player) => player.isAI)) {
+      this.makeMove(1, this.players[0].getAImove());
     }
 
+    this.thinkingAI = thinkingAI;
+  }
+
+  async makeMove(targetInd, coor, mockAImove = null) {
     const enemyGameboard = this.oppPlayer.gameboard;
+    const [row, col] = coor
+
+    const isGameOver = this.status !== -1;
+    const isTargetWrong = this.turn !== 1 - targetInd
+    const isAttackDuplicate = enemyGameboard.shots[row][col]
+
+    if (isGameOver || isTargetWrong || isAttackDuplicate) {
+      return Promise.resolve(false);
+    }
+
     const attackRes = enemyGameboard.receiveAttack(coor);
 
+
     if (!attackRes) {
-      const prevPlayer = this.curPlayer
       this.turn ^= 1;
-
-      if (prevPlayer.isAI) {
-        return true;
-      }
-
     } else if (enemyGameboard.haveAllShipsSunk()) {
       this.status = this.turn;
-      return true;
+      return Promise.resolve(true);
     }
 
     if (this.curPlayer.isAI) {
       const AImove = mockAImove
-                      ? mockAImove(enemyGameboard)
-                      : this.curPlayer.getAImove();
+        ? mockAImove(enemyGameboard)
+        : this.curPlayer.getAImove();
 
-      this.makeMove(AImove, mockAImove);
+      // Wait for amount of time before AI makes a move
+      const time = this.thinkingAI ? 1000 : 0
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          this.makeMove(1 - this.turn, AImove, mockAImove).then(resolve);
+        }, time);
+      });
+    } else {
+      return Promise.resolve(true);
     }
   }
 
