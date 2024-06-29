@@ -49,6 +49,10 @@ img {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+
+  &[src*=svg] {
+    height: 50px;
+  }
 }
 
 body {

@@ -8,5 +8,6 @@ module.exports = merge(common, {
     static: './dist',
     watchFiles: ['src/**/index.html'],
     hot: true,
+    // host: '0.0.0.0',
   },
 });
