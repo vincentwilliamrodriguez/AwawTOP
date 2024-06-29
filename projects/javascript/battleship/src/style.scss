@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
 
+@font-face {
+  font-family: 'Old Stamper';
+  src: url('./assets/fonts/old_stamper.ttf');
+}
+
+@font-face {
+  font-family: 'D Day Stencil';
+  src: url('./assets/fonts/D Day Stencil.ttf');
+}
+
 @mixin flex-container($direction: row, $justify: center, $align: center, $gap: 0px) {
   display: flex;
   flex-direction: $direction;
@@ -12,15 +22,16 @@
   box-shadow: $top $left $blur $spread $color;
 }
 
-@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033) {
+@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033, $start-opacity: 100%) {
   @include flex-container;
   width: $width;
   height: $height;
 
   border-radius: 8px;
   background-color: transparent;
+  opacity: $start-opacity;
   scale: 1;
-  transition: background-color 0.3s ease, scale 0.3s ease;
+  transition: background-color 0.3s ease, scale 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
 
   img {
@@ -29,6 +40,7 @@
 
   &:hover {
     background-color: $hover-bg;
+    opacity: 100%;
   }
 
   &:active {
@@ -58,4 +70,172 @@ img {
 body {
   font-family: "Josefin Sans", sans-serif;
   min-height: 100vh;
+  position: relative;
+
+  background-image: url('./assets/images/background.png');
+  overflow: hidden;
+
+  @include flex-container;
+
+  .home-btn,
+  .sound-btn {
+    @include button(32px, 32px, 80%, #00000011, 70%);
+
+    position: absolute;
+    top: 8px;
+
+    border: 0;
+    outline: 0;
+    filter: invert(1);
+  }
+
+  .home-btn {
+    left: 8px;
+  }
+
+  .sound-btn {
+    right: 8px;
+
+    &__icon {
+      display: none;
+    }
+
+    &__icon--active {
+      display: block;
+    }
+  }
+}
+
+.home {
+  @include flex-container(column, center, center, 8px);
+
+  height: 500px;
+  width: 700px;
+
+  padding: 36px 24px;
+
+  @include box-shadow(#00000033);
+  background: rgb(56,134,199);
+  background: radial-gradient(circle, #3886c7cc 0%, #215b8bcc 100%);
+  border-radius: 24px;
+
+  .logo {
+    @include flex-container(row, center, center, 12px);
+
+    filter: invert(1);
+    opacity: 0.9;
+    user-select: none;
+
+    &__icon {
+      opacity: 0.85;
+
+      &--1 {
+        height: 72px;
+      }
+      
+      &--2 {
+        height: 56px;
+      }
+    }
+
+    &__title {
+      font-family: "Old Stamper", "Josefin Sans", sans-serif;
+      font-size: 48px;
+    }
+  }
+
+  .players {
+    @include flex-container(row, center, center, 16px);
+
+    &__vs {
+      opacity: 90%;
+      color: white;
+      font-size: 64px;
+      font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+      user-select: none;
+    }
+
+    .player {
+      @include flex-container(column, center, center, 8px);
+      @include box-shadow(#00000077, 0, 0, 2px, 0);
+
+      padding: 32px;
+      border-radius: 16px;
+
+      background: radial-gradient(circle, #8eb7f577 0%, #6c91c777 150%);
+
+      &__avatar {
+        height: 168px;
+        border-radius: 50%;
+
+        @include box-shadow(#000000ff, 0, 0, 2px);
+
+        &--human {
+          display: none;
+        }
+      }
+
+      &__name {
+        max-width: 150px;
+        border: none;
+        outline: none;
+        
+        font-size: 24px;
+        text-wrap: nowrap;
+        overflow: hidden;
+
+        margin-bottom: 8px;
+      }
+
+      &__options {
+        @include flex-container(row, center, center, 12px);
+
+        input[type=radio] {
+          display: none;
+        }
+
+        input[type=radio]:checked + label {
+          background-color: #202074;
+          opacity: 90%;
+        }
+
+        label {
+          @include button(min-content, 36px, 80%, #202074cc);
+
+          padding: 4px 8px;
+          border-radius: 8px;
+
+          opacity: 70%;
+          border: 2px #202074cc solid;
+
+          color: white;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .play-btn {
+    @include button(min-content, 36px, 80%, #202074);
+
+    padding: 8px 12px;
+    border-radius: 8px;
+
+    opacity: 90%;
+    background-color: #202074cc;
+    border: none;
+    outline: none;
+
+    color: white;
+    font-size: 1.8rem;
+    font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+  }
+}
+
+.place {
+  display: none;
+}
+
+.game {
+  display: none;
 }

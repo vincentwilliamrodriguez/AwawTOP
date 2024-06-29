@@ -8,51 +8,53 @@
 
 <body>
   <button class="home-btn">
-    <img src="<%=require("./assets/images/home.svg")%>" alt="" class="logo__icon">
+    <img src="<%=require("./assets/images/home.svg")%>" alt="">
   </button>
 
   <button class="sound-btn">
-    <img src="<%=require("./assets/images/sound-on.svg")%>" alt="" class="logo__icon">
-    <img src="<%=require("./assets/images/sound-off.svg")%>" alt="" class="logo__icon">
+    <img src="<%=require("./assets/images/sound-on.svg")%>" alt="" class="sound-btn__icon sound-btn__icon--active">
+    <img src="<%=require("./assets/images/sound-off.svg")%>" alt="" class="sound-btn__icon">
   </button>
 
 
   <div class="home">
     <div class="logo">
-      <img src="<%=require("./assets/images/icon1.svg")%>" alt="" class="logo__icon">
+      <img src="<%=require("./assets/images/icon1.svg")%>" alt="" class="logo__icon logo__icon--1">
       <h1 class="logo__title">BATTLESHIP</h1>
-      <img src="<%=require("./assets/images/icon2.svg")%>" alt="" class="logo__icon">
+      <img src="<%=require("./assets/images/icon2.svg")%>" alt="" class="logo__icon logo__icon--2">
     </div>
 
     <div class="players">
       <div class="player player--0">
-        <img class="player__avatar" src="<%=require("./assets/images/human.png")%>">
-        <h1 class="player__name" contenteditable></h1>
+        <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
+        <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
+        <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
         <div class="player__options">
-          <input type="radio" checked name="isAI" value="false" id="isAI-false">
-          <label for="isAI-false">Human</label>
+          <input type="radio" checked name="isAI-0" value="false" id="isAI-0-false">
+          <label for="isAI-0-false"">Human</label>
 
-          <input type="radio" name="isAI" value="true" id="isAI-true">
-          <label for="isAI-true">AI</label>
+          <input type="radio" name="isAI-0" value="true" id="isAI-0-true">
+          <label for="isAI-0-true">AI</label>
         </div>
       </div>
 
       <p class="players__vs">VS</p>
         
       <div class="player player--1">
-        <img class="player__avatar" src="<%=require("./assets/images/human.png")%>">
-        <h1 class="player__name" contenteditable></h1>
+        <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
+        <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
+        <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
         <div class="player__options">
-          <input type="radio" checked name="isAI" value="false" id="isAI-false">
-          <label for="isAI-false">Human</label>
+          <input type="radio" checked name="isAI-1" value="false" id="isAI-1-false">
+          <label for="isAI-1-false">Human</label>
 
-          <input type="radio" name="isAI" value="true" id="isAI-true">
-          <label for="isAI-true">AI</label>
+          <input type="radio" name="isAI-1" value="true" id="isAI-1-true">
+          <label for="isAI-1-true">AI</label>
         </div>
       </div>
     </div>
 
-    <button class="menu__btn">Play</button>
+    <button class="play-btn">Play</button>
   </div>
 
   <div class="place">
