@@ -48,6 +48,14 @@
   }
 }
 
+@keyframes animatedBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1000px 0;
+  }
+}
 
 * {
   margin: 0;
@@ -73,6 +81,7 @@ body {
   position: relative;
 
   background-image: url('./assets/images/background.png');
+  object-fit: cover;
   overflow: hidden;
 
   @include flex-container;
@@ -104,20 +113,64 @@ body {
       display: block;
     }
   }
+
+  .fog {
+    $directions: 'top', 'left', 'bottom', 'right';
+
+    @each $direction in $directions {
+      --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 0%, #000000ff 100%);
+
+      &--#{$direction} {
+        --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 60%, #00000000 100%);
+      }
+    }
+
+    height: 50px;
+    width: 50px;
+    background-image: url(./assets/images/fog-small.png);
+    
+    position: absolute;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 40%;
+    mask-image: var(--mask-top), var(--mask-left), var(--mask-bottom), var(--mask-right);
+    mask-composite: intersect;
+  }
+}
+
+.modal {
+  overflow: hidden;
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  @include box-shadow(#00000033);
+  background: rgb(56,134,199);
+  background: radial-gradient(circle, #276ca5dd 30%, #215b8bdd 100%);
+  border-radius: 24px;
+  border: none;
+  outline: none;
+
+  &::backdrop {
+    background: url('./assets/images/fog.png'), #000000dd;
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    animation: animatedBackground 16s linear infinite;
+
+    opacity: 10%;
+  }
 }
 
 .home {
   @include flex-container(column, center, center, 12px);
+  // display: none;
 
   height: 500px;
   width: 650px;
 
   padding: 16px 24px;
-
-  @include box-shadow(#00000033);
-  background: rgb(56,134,199);
-  background: radial-gradient(circle, #3886c7cc 0%, #215b8bcc 100%);
-  border-radius: 24px;
 
   .logo {
     @include flex-container(row, center, center, 12px);

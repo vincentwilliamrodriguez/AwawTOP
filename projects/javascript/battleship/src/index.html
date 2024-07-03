@@ -7,6 +7,9 @@
 </head>
 
 <body>
+  <div class="fog fog--top fog--left fog--bottom"></div>
+  <div class="fog fog--top fog--right fog--bottom"></div>
+
   <button class="home-btn">
     <img src="<%=require("./assets/images/home.svg")%>" alt="">
   </button>
@@ -16,92 +19,93 @@
     <img src="<%=require("./assets/images/sound-off.svg")%>" alt="" class="sound-btn__icon">
   </button>
 
-
-  <div class="home">
-    <div class="logo">
-      <img src="<%=require("./assets/images/icon1.svg")%>" alt="" class="logo__icon logo__icon--1">
-      <h1 class="logo__title">BATTLESHIP</h1>
-      <img src="<%=require("./assets/images/icon2.svg")%>" alt="" class="logo__icon logo__icon--2">
-    </div>
-
-    <div class="players">
-      <div class="player player--0">
-        <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
-        <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
-        <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
-        <div class="player__options">
-          <input type="radio" checked name="isAI-0" value="false" id="isAI-0-false">
-          <label for="isAI-0-false"">Human</label>
-
-          <input type="radio" name="isAI-0" value="true" id="isAI-0-true">
-          <label for="isAI-0-true">AI</label>
+  <dialog class="modal">
+    <div class="home">
+      <div class="logo">
+        <img src="<%=require("./assets/images/icon1.svg")%>" alt="" class="logo__icon logo__icon--1">
+        <h1 class="logo__title">BATTLESHIP</h1>
+        <img src="<%=require("./assets/images/icon2.svg")%>" alt="" class="logo__icon logo__icon--2">
+      </div>
+  
+      <div class="players">
+        <div class="player player--0">
+          <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
+          <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
+          <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
+          <div class="player__options">
+            <input type="radio" checked name="isAI-0" value="false" id="isAI-0-false">
+            <label for="isAI-0-false"">Human</label>
+  
+            <input type="radio" name="isAI-0" value="true" id="isAI-0-true">
+            <label for="isAI-0-true">AI</label>
+          </div>
+        </div>
+  
+        <p class="players__vs">VS</p>
+          
+        <div class="player player--1">
+          <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
+          <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
+          <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
+          <div class="player__options">
+            <input type="radio" checked name="isAI-1" value="false" id="isAI-1-false">
+            <label for="isAI-1-false">Human</label>
+  
+            <input type="radio" name="isAI-1" value="true" id="isAI-1-true">
+            <label for="isAI-1-true">AI</label>
+          </div>
         </div>
       </div>
-
-      <p class="players__vs">VS</p>
-        
-      <div class="player player--1">
-        <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
-        <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
-        <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
-        <div class="player__options">
-          <input type="radio" checked name="isAI-1" value="false" id="isAI-1-false">
-          <label for="isAI-1-false">Human</label>
-
-          <input type="radio" name="isAI-1" value="true" id="isAI-1-true">
-          <label for="isAI-1-true">AI</label>
+  
+      <button class="play-btn">PLAY</button>
+    </div>
+  
+    <div class="place">
+      <h1 class="place__heading">Place Your Ships</h1>
+  
+      <div class="place__btns">
+        <button class="shuffle-btn">
+          <img src="<%=require("./assets/images/shuffle.svg")%>" alt="">
+          <p>Shuffle</p>
+        </button>
+  
+        <button class="rotate-btn">
+          <img src="<%=require("./assets/images/horizontal.svg")%>" alt="">
+          <img src="<%=require("./assets/images/vertical.svg")%>" alt="">
+          <p>Rotate</p>
+        </button>
+      </div>
+  
+      <div class="panel-ships">
+        <div class="panel-ships__header">Ships</div>
+        <div class="panel-ship">
+          <h3>Carrier</h3>
+          <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>" alt="">
+        </div>
+        <div class="panel-ship">
+          <h3>Battleship</h3>
+          <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>" alt="">
+        </div>
+        <div class="panel-ship">
+          <h3>Destroyer</h3>
+          <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>" alt="">
+        </div>
+        <div class="panel-ship">
+          <h3>Submarine</h3>
+          <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>" alt="">
+        </div>
+        <div class="panel-ship">
+          <h3>Patrol Boat</h3>
+          <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>" alt="">
         </div>
       </div>
+  
+      <div class="board"></div>
+  
+      <button class="place-btn">Begin the Battle!</button>
+      <!-- TODO: Dynamically change button text for pvp -->
     </div>
-
-    <button class="play-btn">PLAY</button>
-  </div>
-
-  <div class="place">
-    <h1 class="place__heading">Place Your Ships</h1>
-
-    <div class="place__btns">
-      <button class="shuffle-btn">
-        <img src="<%=require("./assets/images/shuffle.svg")%>" alt="">
-        <p>Shuffle</p>
-      </button>
-
-      <button class="rotate-btn">
-        <img src="<%=require("./assets/images/horizontal.svg")%>" alt="">
-        <img src="<%=require("./assets/images/vertical.svg")%>" alt="">
-        <p>Rotate</p>
-      </button>
-    </div>
-
-    <div class="panel-ships">
-      <div class="panel-ships__header">Ships</div>
-      <div class="panel-ship">
-        <h3>Carrier</h3>
-        <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>" alt="">
-      </div>
-      <div class="panel-ship">
-        <h3>Battleship</h3>
-        <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>" alt="">
-      </div>
-      <div class="panel-ship">
-        <h3>Destroyer</h3>
-        <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>" alt="">
-      </div>
-      <div class="panel-ship">
-        <h3>Submarine</h3>
-        <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>" alt="">
-      </div>
-      <div class="panel-ship">
-        <h3>Patrol Boat</h3>
-        <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>" alt="">
-      </div>
-    </div>
-
-    <div class="board"></div>
-
-    <button class="place-btn">Begin the Battle!</button>
-    <!-- TODO: Dynamically change button text for pvp -->
-  </div>
+  </dialog>
 
   <div class="game">
     <div class="message-box">
