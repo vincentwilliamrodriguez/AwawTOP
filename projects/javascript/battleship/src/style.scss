@@ -29,8 +29,11 @@
 
   border-radius: 8px;
   background-color: transparent;
+  border: none;
+  outline: none;
   opacity: $start-opacity;
   scale: 1;
+
   transition: background-color 0.3s ease, scale 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
 
@@ -56,6 +59,15 @@
     background-position: 1000px 0;
   }
 }
+
+
+$ship-relative-sizes: (
+  'Carrier': 5,
+  'Battleship': 4,
+  'Destroyer': 3,
+  'Submarine': 3,
+  'Patrol Boat': 2,
+);
 
 * {
   margin: 0;
@@ -83,15 +95,18 @@ body {
   background-image: url('./assets/images/background.png');
   object-fit: cover;
   overflow: hidden;
+  user-select: none;
 
   @include flex-container;
 
   .home-btn,
   .sound-btn {
     @include button(32px, 32px, 80%, #00000011, 70%);
+    display: none;
 
     position: absolute;
     top: 8px;
+    z-index: 3;
 
     border: 0;
     outline: 0;
@@ -145,8 +160,11 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  user-select: none;
 
-  @include box-shadow(#00000033);
+  padding: 16px 24px;
+
+  @include box-shadow(#00000022, 0, 0, 5px, 3px);
   background: rgb(56,134,199);
   background: radial-gradient(circle, #276ca5dd 30%, #215b8bdd 100%);
   border-radius: 24px;
@@ -165,12 +183,10 @@ body {
 
 .home {
   @include flex-container(column, center, center, 12px);
-  // display: none;
+  display: none;
 
   height: 500px;
   width: 650px;
-
-  padding: 16px 24px;
 
   .logo {
     @include flex-container(row, center, center, 12px);
@@ -269,17 +285,16 @@ body {
   }
 
   .play-btn {
-    @include button(min-content, 36px, 80%, #0d0d75);
+    @include button(min-content, 36px, 80%, #61381d, 0.9);
 
     margin-top: 12px;
     padding: 18px 16px;
     border-radius: 8px;
     
     @include box-shadow(#000000aa, 0, 0, 3px);
-    background-color: #0d0d75;
+    background-color: #61381d;
     border: none;
     outline: none;
-    opacity: 80%;
 
     color: white;
     font-size: 1.8rem;
@@ -288,9 +303,170 @@ body {
 }
 
 .place {
-  display: none;
+  display: grid;
+  // display: none;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  grid-template: 
+            "top top" 50px
+            "btns ships" 50px 
+            "board ships" 1fr
+            "bottom bottom" 70px / 1fr 250px;
+
+
+  height: 510px;
+  width: 570px;
+  padding-left: 32px;
+  margin-bottom: -12px;
+
+  &__heading {
+    grid-area: top;
+
+    color: #eee;
+    font-size: 2.4rem;
+    letter-spacing: 3px;
+    font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+    text-shadow: 0 0 5px #000000cc;
+  }
+
+  &__btns {
+    grid-area: btns;
+
+    @include flex-container(row, start, center, 12px);
+    padding-top: 8px;
+
+    & > * {
+      @include button(fit-content, 32px, 100%, #3f3381, 85%);
+      @include box-shadow(#000000dd, 0, 0, 2px);
+      background-color: #2d2261;
+      padding: 6px 8px;
+      gap: 6px;
+
+      color: white;
+      font-weight: bold;
+
+      img {
+        height: 24px;
+        filter: invert(0.9);
+      }
+
+      p {
+        padding-top: 2px;
+      }
+    }
+
+    .shuffle-btn__icon {
+      height: 18px;
+    }
+
+    .rotate-btn__icon {
+      display: none;
+
+      &--active {
+        display: block;
+      }
+    }
+  }
+
+  .panel-ships {
+    grid-area: ships;
+
+    background-color: #48aae2;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .board {
+    grid-area: board;
+
+    $cell-size: 32px;
+    width: $cell-size * 10;
+    height: $cell-size * 10;
+
+    
+    background-color: #9c9ce9;
+    @include box-shadow(#00000077, 0, 0, 5px);
+  }
+
+  .place-btn {
+    grid-area: bottom;
+
+    @include button(max-content, min-content, 0%, #6e3a17, 0.8);
+
+    padding: 8px 12px;
+    border-radius: 8px;
+    
+    @include box-shadow(#000000aa, 0, 0, 3px);
+    background-color: #6e3a17;
+    border: none;
+    outline: none;
+
+    color: white;
+    font-size: 1.6rem;
+    font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+  }
 }
 
 .game {
   display: none;
+}
+
+.panel-ships {
+  @include box-shadow(#00000077, 0, 0, 5px);
+  @include flex-container(column, start, stretch);
+
+  .panel-ship {
+    @include flex-container(column, center, center, 4px);
+
+    position: relative;
+    height: 72px;
+    padding: 8px 12px;
+    $ship-size: 30px;
+
+    @each $ship, $relative-size in $ship-relative-sizes {
+      img[src*="#{$ship}"] {
+        width: $relative-size * $ship-size;
+      }
+    }
+
+    h3 {
+      align-self: start;
+      font-size: 0.9rem;
+      letter-spacing: -0.3px;
+      color: #020231;
+    }
+
+    img {
+      align-self: end;
+      transition: scale 0.3s ease, filter 0.3s ease;
+      filter: auto;
+      cursor: pointer;
+
+      &:hover {
+        scale: 1.05;
+        filter: brightness(0) saturate(100%) invert(5%) sepia(43%) saturate(7462%) hue-rotate(230deg) brightness(76%) contrast(111%);
+      }
+    }
+
+    &:not(:last-child)::after {
+      content: '';
+      grid-column: 1 / -1;
+
+      position: absolute;
+      bottom: -2px;
+
+      background-color: #00083555;
+      height: 2px;
+      width: 85%;
+    }
+  }
+}
+
+.board {
+  $cell-size: 50px;
+
+  width: $cell-size * 10;
+  height: $cell-size * 10;
 }
