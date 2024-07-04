@@ -8,6 +8,7 @@ window.globals = {};
 const $ = document.querySelector.bind(document);
 
 $('.modal').showModal();
+$('.modal').close();
 
 window.globals.Game = DisplayManager.Game
 window.globals.DisplayManager = DisplayManager

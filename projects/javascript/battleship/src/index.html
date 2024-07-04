@@ -107,32 +107,59 @@
 
   <div class="game">
     <div class="message-box">
-      <p class="message-box__text">Awaw</p>
+      <p class="message-box__text">Awawawawawawawawawaawaawawa</p>
     </div>
 
-    <div class="board board--0">
-      <div class="board__title">Awaw's Board</div>
-      <div class="board"></div>
+    <div class="area area--0">
+      <div class="area__name area__name--active">Awaw 1</div>
+      <div class="board">
+        <div class="board__fog"></div>
+      </div>
       <div class="panel-ships">
-        <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>">
+        <div class="panel-ships">
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>">
+          </div>
+          <div class="panel-ship panel-ship--active">
+            <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>">
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="board board--1">
-      <div class="board__title">Awaw's Board</div>
-      <div class="board"></div>
-      <div class="panel-ships">
-        <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>">
-        <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>">
+    <div class="area area--1">
+      <div class="area__name">Awaw 2</div>
+      <div class="board">
+        <div class="board__fog"></div>
       </div>
-    </div>
+      <div class="panel-ships">
+        <div class="panel-ships">
+          <div class="panel-ship panel-ship--sunk">
+            <img src="<%=require("./assets/images/ships-silhouette/Carrier.png")%>">
+          </div>
+          <div class="panel-ship panel-ship--active">
+            <img src="<%=require("./assets/images/ships-silhouette/Battleship.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Destroyer.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Submarine.png")%>">
+          </div>
+          <div class="panel-ship">
+            <img src="<%=require("./assets/images/ships-silhouette/Patrol Boat.png")%>">
+          </div>
+        </div>
+      </div>
   </div>
 </body>
 </html>

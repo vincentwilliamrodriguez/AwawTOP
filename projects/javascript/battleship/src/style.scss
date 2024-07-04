@@ -60,6 +60,11 @@
   }
 }
 
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
 
 $ship-relative-sizes: (
   'Carrier': 5,
@@ -89,7 +94,8 @@ img {
 
 body {
   font-family: "Josefin Sans", sans-serif;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   position: relative;
 
   background-image: url('./assets/images/background.png');
@@ -328,7 +334,7 @@ body {
     font-size: 2.4rem;
     letter-spacing: 3px;
     font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
-    text-shadow: 0 0 5px #000000cc;
+    text-shadow: 0 0 7px #00000099;
   }
 
   &__btns {
@@ -372,10 +378,23 @@ body {
 
   .panel-ships {
     grid-area: ships;
-
+    
     background-color: #48aae2;
     border-radius: 12px;
     overflow: hidden;
+    @include box-shadow(#00000077, 0, 0, 5px);
+
+    .panel-ship:not(:last-child)::after {
+      content: '';
+      grid-column: 1 / -1;
+
+      position: absolute;
+      bottom: -2px;
+
+      background-color: #00083555;
+      height: 2px;
+      width: 85%;
+    }
   }
 
   .board {
@@ -410,11 +429,135 @@ body {
 }
 
 .game {
-  display: none;
+  display: grid;
+  // display: none;
+  grid-template: 
+    "message message" 60px
+    "area0 area1" 1fr / 1fr 1fr;
+
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+  padding: 0 24px;
+
+  .message-box {
+    grid-area: message;
+
+    height: 50px;
+    width: 500px;
+    margin-top: 24px;
+    padding: 16px;
+
+    background: #aebfeecc;
+    background: radial-gradient(circle, #aebfeecc 0%, #98a6cfcc 100%);
+    border: 2px solid #020231;
+    border-radius: 16px;
+    @include box-shadow(#000000aa, 0, 0, 3px);
+
+    p {
+      color: #020231;
+      overflow: hidden;
+      font-weight: bold;
+      animation: typing 5s forwards;
+    }
+  }
+
+  .area {
+    display: grid;
+    justify-items: center;
+    justify-self: stretch;
+
+    &--0 {
+      grid-area: area0;
+      grid-template: 
+        "name ." 50px
+        "board ships" 1fr / 1fr 150px;
+      
+      .panel-ships {
+        margin-right: 24px;
+      }
+    }
+
+    &--1 {
+      grid-area: area1;
+      grid-template: 
+        ". name" 50px
+        "ships board" 1fr / 150px 1fr;
+
+      .panel-ships {
+        margin-left: 24px;
+      }
+      
+      .panel-ship {
+        transform: scaleX(-1);
+      }
+    }
+
+    &__name {
+      grid-area: name;
+
+      justify-self: center;
+      align-self: end;
+      padding: 2px 6px;
+      margin-bottom: 8px;
+      width: max-content;
+
+      color: #ccc;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+      text-shadow: 0 0 7px #00000099;
+
+      &--active {
+        color: #081f4e;
+        text-shadow: none;
+        background-color: #ccc;
+        border-radius: 12px;
+        @include box-shadow(#000000aa, 0, 0, 3px);
+      }
+    }
+
+    .board {
+      grid-area: board;
+
+      border: 2px solid #ffffff77;
+
+      $cell-size: 45px;
+      width: $cell-size * 10;
+      height: $cell-size * 10;
+    }
+
+    .panel-ships {
+      @include flex-container(column, center, stretch);
+      grid-area: ships;
+
+      .panel-ship {
+        height: 48px;
+        $ship-size: 24px;
+    
+        @each $ship, $relative-size in $ship-relative-sizes {
+          img[src*="#{$ship}"] {
+            width: $relative-size * $ship-size;
+          }
+        }
+
+        img {
+          filter: invert(0.8) drop-shadow(2px 2px 3px #222);
+        }
+
+        &--sunk {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
 }
 
 .panel-ships {
-  @include box-shadow(#00000077, 0, 0, 5px);
   @include flex-container(column, start, stretch);
 
   .panel-ship {
@@ -448,18 +591,6 @@ body {
         scale: 1.05;
         filter: brightness(0) saturate(100%) invert(5%) sepia(43%) saturate(7462%) hue-rotate(230deg) brightness(76%) contrast(111%);
       }
-    }
-
-    &:not(:last-child)::after {
-      content: '';
-      grid-column: 1 / -1;
-
-      position: absolute;
-      bottom: -2px;
-
-      background-color: #00083555;
-      height: 2px;
-      width: 85%;
     }
   }
 }
