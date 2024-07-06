@@ -96,9 +96,10 @@ body {
   font-family: "Josefin Sans", sans-serif;
   height: 100vh;
   width: 100vw;
-  position: relative;
 
   background-image: url('./assets/images/background.png');
+  background-repeat: no-repeat;
+  background-position: fixed;
   object-fit: cover;
   overflow: hidden;
   user-select: none;
@@ -133,29 +134,6 @@ body {
     &__icon--active {
       display: block;
     }
-  }
-
-  .fog {
-    $directions: 'top', 'left', 'bottom', 'right';
-
-    @each $direction in $directions {
-      --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 0%, #000000ff 100%);
-
-      &--#{$direction} {
-        --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 60%, #00000000 100%);
-      }
-    }
-
-    height: 50px;
-    width: 50px;
-    background-image: url(./assets/images/fog-small.png);
-    
-    position: absolute;
-    overflow: hidden;
-    pointer-events: none;
-    opacity: 40%;
-    mask-image: var(--mask-top), var(--mask-left), var(--mask-bottom), var(--mask-right);
-    mask-composite: intersect;
   }
 }
 
@@ -400,10 +378,7 @@ body {
   .board {
     grid-area: board;
 
-    $cell-size: 32px;
-    width: $cell-size * 10;
-    height: $cell-size * 10;
-
+    --cell-size: 32px;
     
     background-color: #9c9ce9;
     @include box-shadow(#00000077, 0, 0, 5px);
@@ -449,17 +424,18 @@ body {
 
     height: 50px;
     width: 500px;
-    margin-top: 24px;
+    margin-top: 48px;
     padding: 16px;
 
-    background: #aebfeecc;
-    background: radial-gradient(circle, #aebfeecc 0%, #98a6cfcc 100%);
+    opacity: 0.9;
+    background: #0b2879;
+    background: radial-gradient(circle, #3d579cbb 0%, #33477ebb 100%);
     border: 2px solid #020231;
     border-radius: 16px;
     @include box-shadow(#000000aa, 0, 0, 3px);
 
     p {
-      color: #020231;
+      color: #ddd;
       overflow: hidden;
       font-weight: bold;
       animation: typing 5s forwards;
@@ -478,7 +454,7 @@ body {
         "board ships" 1fr / 1fr 150px;
       
       .panel-ships {
-        margin-right: 24px;
+        margin-right: 8px;
       }
     }
 
@@ -489,11 +465,39 @@ body {
         "ships board" 1fr / 150px 1fr;
 
       .panel-ships {
-        margin-left: 24px;
+        margin-left: 8px;
       }
       
       .panel-ship {
         transform: scaleX(-1);
+      }
+    }
+
+    &--turn { 
+      .board__coor-lines {
+        display: none !important;
+      }
+
+      .board:hover {
+        cursor: default !important;
+      }
+
+      .area__name {
+        color: #081f4e;
+        text-shadow: none;
+        background-color: #ccc;
+        border-radius: 12px;
+        @include box-shadow(#000000aa, 0, 0, 3px);
+      }
+
+      .fog {
+        opacity: 0 !important;
+      }
+    }
+
+    &:not(&--turn) {
+      .ship:not(.ship--sunk) {
+        opacity: 0 !important;
       }
     }
 
@@ -511,24 +515,14 @@ body {
       letter-spacing: 2px;
       font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
       text-shadow: 0 0 7px #00000099;
-
-      &--active {
-        color: #081f4e;
-        text-shadow: none;
-        background-color: #ccc;
-        border-radius: 12px;
-        @include box-shadow(#000000aa, 0, 0, 3px);
-      }
     }
 
     .board {
       grid-area: board;
 
-      border: 2px solid #ffffff77;
+      border: 1px solid #ffffff44;
 
-      $cell-size: 45px;
-      width: $cell-size * 10;
-      height: $cell-size * 10;
+      --cell-size: 45px;
     }
 
     .panel-ships {
@@ -547,6 +541,7 @@ body {
 
         img {
           filter: invert(0.8) drop-shadow(2px 2px 3px #222);
+          cursor: default;
         }
 
         &--sunk {
@@ -596,8 +591,203 @@ body {
 }
 
 .board {
-  $cell-size: 50px;
+  position: relative;
+  box-sizing: content-box;
 
-  width: $cell-size * 10;
-  height: $cell-size * 10;
+  --cell-size: 50px;
+
+  width: calc(var(--cell-size) * 10);
+  height: calc(var(--cell-size) * 10);
+
+  &:hover {
+    cursor: url('./assets/images/target-small.svg') 16 16, pointer;
+
+    .board__coor-lines {
+      display: block;
+    }
+  }
+  
+  &__map {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template: repeat(10, 1fr) / repeat(10, 1fr);
+
+    .cell {
+      position: relative;
+      border: 1px solid #ffffff44;
+
+      &__state {
+        z-index: 2;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+
+      &__state[src *= cross] {
+        filter: invert(1);
+        opacity: 0.4;
+        height: calc(0.8 * var(--cell-size));
+      }
+
+      &__state[src *= hit],
+      &__state[src *= sunk] {
+        height: calc(0.4 * var(--cell-size));
+      }
+
+      &__state[src *= hit] {
+        opacity: 0.8;
+        filter: drop-shadow(0 0 3px #ffffff77);
+      }
+
+      &__state[src *= sunk] {
+        opacity: 0.5;
+      }
+
+
+      .fog {
+        $directions: 'top', 'left', 'bottom', 'right';
+    
+        @each $direction in $directions {
+          --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 0%, #000000ff 100%);
+    
+          &--#{$direction} {
+            --mask-#{$direction}: linear-gradient(to #{$direction}, #000000ff 60%, #00000000 100%);
+          }
+        }
+    
+        height: var(--cell-size);
+        width: var(--cell-size);
+        background-image: url(./assets/images/fog-small.png);
+        
+        position: absolute;
+        overflow: hidden;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 20%;
+        mask-image: var(--mask-top), var(--mask-left), var(--mask-bottom), var(--mask-right);
+        mask-composite: intersect;
+
+
+        &--hidden {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &__ships {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+
+    .ship {
+      --row: 0;
+      --col: 0;
+      --length: 2;
+      --isVertical: true;
+
+      --occupied-size: calc(var(--cell-size) * var(--length));
+      --ship-size: calc(0.95 * var(--occupied-size));
+
+      position: absolute;
+      top: calc(var(--cell-size) * var(--row));
+      left: calc(var(--cell-size) * var(--col));
+      height: var(--ship-size);
+      
+      opacity: 0.85;
+      overflow: hidden;
+      filter: brightness(0.9) contrast(1.1) drop-shadow(0 0 2px #31acffcc);
+
+      transition: opacity 20s ease, filter 1s ease;
+
+      &::after {
+        content: '';
+        width: 100%;
+        height: 100%;
+      }
+
+      &--vertical {
+        transform: translateX(calc(var(--cell-size) / 2 - 50%))
+                   translateY(calc(var(--occupied-size) / 2 - 50%));
+
+      }
+      
+      &--horizontal {
+        transform: translateY(calc(var(--cell-size) / 2 - 50%))
+                   translateX(calc(var(--occupied-size) / 2 - 50%))
+                   rotate(90deg);
+      }
+
+      &--sunk {
+        opacity: 0.2;
+        filter: contrast(1.1) drop-shadow(0 0 0px #31acffcc)
+      }
+
+      &--hover {
+        --ship-size: calc(1.03 * var(--occupied-size));
+      }
+    }
+  }
+
+  &__coor-lines {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+
+    --row: 0;
+    --col: 0;
+    --dist-row: calc(var(--row) * var(--cell-size));
+    --dist-col: calc(var(--col) * var(--cell-size));
+    --length: calc(var(--cell-size) * 10);
+
+    &__row,
+    &__col,
+    &__target {
+      position: absolute;
+      background-color: #18a4e6;
+      transition: top 0.05s ease, left 0.05s ease;
+    }
+
+    &__row {
+      opacity: 30%;
+
+      top: var(--dist-row);
+      left: 0;
+
+      width: var(--length);
+      height: var(--cell-size);
+    }
+
+    &__col {
+      opacity: 30%;
+
+      top: 0;
+      left: var(--dist-col);
+
+      width: var(--cell-size);
+      height: var(--length);
+    }
+
+    &__target {
+      opacity: 40%;
+
+      top: var(--dist-row);
+      left: var(--dist-col);
+
+      width: var(--cell-size);
+      height: var(--cell-size);
+    }
+  }
 }

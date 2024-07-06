@@ -122,3 +122,7 @@ export function runGeneralTests(func, tests) {
     })
   }
 }
+
+export function generate2DArray(rows, cols, val) {
+  return Array.from({ length: rows }, (e) => Array(cols).fill(val));
+}

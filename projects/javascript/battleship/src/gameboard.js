@@ -23,6 +23,8 @@ export default class Gameboard {
     const newShip = new Ship({
       name: shipName,
       length: shipCoords.length,
+      firstCoord: shipCoords[0],
+      isVertical,
     });
 
     for (const [row, col] of shipCoords) {
