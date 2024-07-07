@@ -16,8 +16,8 @@ class Game {
       this.players.push(new Player(playerData));
     }
 
-    // If both players are AI, the first AI makes a move
-    if (autoStart && this.players.every((player) => player.isAI)) {
+    // If first player is AI, the first AI makes a move
+    if (autoStart && this.players[0].isAI) {
       this.makeMove(1, this.players[0].getAImove());
     }
 

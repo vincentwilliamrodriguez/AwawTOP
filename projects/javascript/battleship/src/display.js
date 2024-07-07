@@ -29,6 +29,14 @@ const shipNames = [
   'Patrol Boat',
 ];
 
+const shipLengths = {
+  Carrier: 5,
+  Battleship: 4,
+  Destroyer: 3,
+  Submarine: 3,
+  'Patrol Boat': 2,
+};
+
 class DisplayManager {
   constructor() {
     this.Game = Game;
@@ -43,7 +51,7 @@ class DisplayManager {
   }
 
   init() {
-    // Home screen
+    // Home Screen
     $('.modal').showModal();
     $('.home').classList.add('home--active');
 
@@ -58,29 +66,93 @@ class DisplayManager {
         this.playersData[playerID] = { isAI, name };
       }
 
-      const humanCount = this.playersData.filter((player) => !player.isAI).length
+
+      // Place Screen progression
+      const switchToPlaceElem = (playerID, buttonText, next) => {
+        const placeElem = $(`.place--${playerID}`)
+        placeElem.classList.add('place--active')
+
+        const placeBtnElem = placeElem.querySelector('.place-btn');
+        placeBtnElem.textContent = buttonText;
+
+        placeBtnElem.onclick = () => {
+          placeElem.classList.remove('place--active')
+          next();
+        }
+      }
+
+      const humanCount = this.playersData.filter((player) => !player.isAI).length;
 
       switch (humanCount) {
+        // Two AIs: straight to Game Screen
         case 0:
           this.restart();
+          break;
+        
+        // Singleplayer: Only one Place Screen
+        case 1:
+          for (let playerID = 0; playerID < 2; playerID++) {
+            if (!this.playersData[playerID].isAI) {
+              switchToPlaceElem(playerID, 'Begin The Battle!', this.restart.bind(this));
+            }
+          }
+          break;
+        
+        // 1v1: Two Place Screens
+        case 2:
+          switchToPlaceElem(0, 'Next Player', () => {
+            switchToPlaceElem(1, 'Begin The Battle!', this.restart.bind(this))
+          });
           break;
       }
     });
 
-    // Place screen
+    // Place Screen clones
     const placeScreenElem = $('.place');
 
-    for (let playerID = 0; playerID < 2; playerID++) {
+    for (const playerID of [1, 0]) {
       const placeCloneElem = placeScreenElem.cloneNode(true);
       placeCloneElem.classList.add(`place--${playerID}`);
       placeScreenElem.after(placeCloneElem);
+
+      const placeShips = placeCloneElem.querySelector('.board__ships');
+
+      for (const name of shipNames) {
+        const shipElem = Helper.makeElement('img', 'ship', '', {
+          src: SHIP_IMAGES[name],
+          'data-ship-name': name,
+          'data-row': 0,
+          'data-col': 0,
+        });
+
+        shipElem.style.setProperty('--row', 0);
+        shipElem.style.setProperty('--col', 0);
+        shipElem.style.setProperty('--length', shipLengths[name]);
+
+        shipElem.classList.add(false ? 'ship--vertical' : 'ship--horizontal');
+        shipElem.classList.add('ship--selected');
+        shipElem.classList.add('ship--allowed');
+
+        placeCloneElem.querySelector('.panel-ship:has(img[src*=Carrier])').classList.add('panel-ship--selected')
+
+        if (name !== 'Carrier') {
+          shipElem.classList.add('ship--hidden');
+
+        }
+
+        placeShips.appendChild(shipElem);
+      }
     }
 
-    // Game screen
+
+    // Game Screen & Place Screen boards
     for (let playerID = 0; playerID < 2; playerID++) {
       // Board initialization
       const boardMapElem = $(`.area--${playerID} .board__map`);
       const coorLinesElem = $(`.area--${playerID} .board__coor-lines`);
+
+      const placeBoardMapElem = $(`.place--${playerID} .board__map`);
+
 
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
@@ -108,14 +180,14 @@ class DisplayManager {
           });
 
           boardMapElem.appendChild(cellElem);
+          placeBoardMapElem.appendChild(cellElem.cloneNode(true));
         }
       }
     }
 
     // Subscriptions
     Game.PubSub.subscribe('move made', (data) => {
-      this.update()
-      console.log('awp', data.targetInd, `${data.coor}`, Game.players[0].legalMoves.length, Game.players[1].legalMoves.length);
+      this.update();
     })
 
     Game.PubSub.subscribe('gameover', (winner) => {

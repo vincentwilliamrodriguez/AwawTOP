@@ -65,6 +65,12 @@
   to { width: 100% }
 }
 
+@keyframes flicker {
+  0%   { opacity:0.5; }
+  50%  { opacity:0.25; }
+  100% { opacity:0.5; }
+}
+
 
 $ship-relative-sizes: (
   'Carrier': 5,
@@ -381,6 +387,11 @@ body {
       height: 2px;
       width: 85%;
     }
+    
+    .panel-ship--selected img {
+      opacity: 0;
+      cursor: default;
+    }
   }
 
   .board {
@@ -388,8 +399,51 @@ body {
 
     --cell-size: 32px;
     
-    background-color: #9c9ce9;
+    background-color: #3f82da;
     @include box-shadow(#00000077, 0, 0, 5px);
+
+
+    &__map {
+      cursor: default;
+
+      .cell {
+        opacity: 0.6;
+
+        .state {
+          display: none;
+        }
+
+        .fog {
+          display: none;
+        }
+      }
+
+    }
+
+    &__ships {
+      pointer-events: all;
+      cursor: default;
+
+      .ship {
+        filter: brightness(0.95) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
+        cursor: pointer !important;
+        
+        &--hidden {
+          display: none;
+        }
+
+        &--selected {
+          animation: 1.5s flicker infinite;
+          animation-timing-function: ease;
+          color: gree;
+          filter: brightness(0) saturate(100%) invert(5%) sepia(80%) saturate(7407%) hue-rotate(360deg) brightness(82%) contrast(96%);
+        }
+
+        &--allowed {
+          filter: brightness(0) saturate(100%) invert(22%) sepia(58%) saturate(1597%) hue-rotate(95deg) brightness(97%) contrast(107%);
+        }
+      }
+    }
   }
 
   .place-btn {
@@ -408,6 +462,18 @@ body {
     color: white;
     font-size: 1.6rem;
     font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+  
+    &:disabled {
+      &:hover {
+        background-color: #6e3a17;
+        opacity: 0.8;
+        cursor: default;
+      }
+
+      &:active {
+        scale: 1;
+      }
+    }
   }
 }
 
