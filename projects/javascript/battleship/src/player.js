@@ -31,7 +31,10 @@ export default class Player {
     }
 
     const randomInd = parseInt(Math.random() * this.legalMoves.length)
+    const randomMove = this.legalMoves[randomInd];
 
-    return this.legalMoves[randomInd];
+    this.legalMoves = this.legalMoves.filter(move => move !== randomMove);
+
+    return randomMove;
   }
 }

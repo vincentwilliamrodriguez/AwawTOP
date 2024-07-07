@@ -1,6 +1,11 @@
 import Player from './player.js';
+import PubSub from './pubsub.js';
 
 class Game {
+  constructor () {
+    this.PubSub = PubSub;
+  }
+
   init({playersData, autoStart = true, thinkingAI = false}) {
     this.turn = 0;
     this.status = -1;
@@ -27,7 +32,10 @@ class Game {
     const isTargetWrong = this.turn !== 1 - targetInd
     const isAttackDuplicate = enemyGameboard.shots[row][col]
 
+    PubSub.publish('move made', {targetInd, coor});
+
     if (isGameOver || isTargetWrong || isAttackDuplicate) {
+      console.log(this.status, isGameOver, isTargetWrong, isAttackDuplicate)
       return Promise.resolve(false);
     }
 
@@ -37,7 +45,10 @@ class Game {
     if (!attackRes) {
       this.turn ^= 1;
     } else if (enemyGameboard.haveAllShipsSunk()) {
+
       this.status = this.turn;
+      PubSub.publish('gameover', this.turn);
+
       return Promise.resolve(true);
     }
 

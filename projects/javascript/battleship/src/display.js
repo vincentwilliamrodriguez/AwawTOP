@@ -32,16 +32,52 @@ const shipNames = [
 class DisplayManager {
   constructor() {
     this.Game = Game;
+    this.playersData = [
+      { isAI: false, name: 'Awp1' },
+      { isAI: false, name: 'Awp2' },
+    ];
     this.fogList = [
       Helper.generate2DArray(10, 10, null),
       Helper.generate2DArray(10, 10, null),
     ];
-    this.init();
   }
 
   init() {
-    for (let playerID = 0; playerID < 2; playerID++) {
+    // Home screen
+    $('.modal').showModal();
+    $('.home').classList.add('home--active');
 
+    $('.play-btn').addEventListener('click', () => {
+      $('.home').classList.remove('home--active');
+
+      for (let playerID = 0; playerID < 2; playerID++) {
+        const isAI =
+          $(`input[name="isAI-${playerID}"]:checked`).value === 'true';
+        const name = $(`.player--${playerID} .player__name`).textContent;
+
+        this.playersData[playerID] = { isAI, name };
+      }
+
+      const humanCount = this.playersData.filter((player) => !player.isAI).length
+
+      switch (humanCount) {
+        case 0:
+          this.restart();
+          break;
+      }
+    });
+
+    // Place screen
+    const placeScreenElem = $('.place');
+
+    for (let playerID = 0; playerID < 2; playerID++) {
+      const placeCloneElem = placeScreenElem.cloneNode(true);
+      placeCloneElem.classList.add(`place--${playerID}`);
+      placeScreenElem.after(placeCloneElem);
+    }
+
+    // Game screen
+    for (let playerID = 0; playerID < 2; playerID++) {
       // Board initialization
       const boardMapElem = $(`.area--${playerID} .board__map`);
       const coorLinesElem = $(`.area--${playerID} .board__coor-lines`);
@@ -76,18 +112,29 @@ class DisplayManager {
       }
     }
 
-    this.restart();
+    // Subscriptions
+    Game.PubSub.subscribe('move made', (data) => {
+      this.update()
+      console.log('awp', data.targetInd, `${data.coor}`, Game.players[0].legalMoves.length, Game.players[1].legalMoves.length);
+    })
+
+    Game.PubSub.subscribe('gameover', (winner) => {
+      this.update();
+    })
   }
 
   restart() {
+    // Switches active screen to game screen
+    $('.modal').close();
+    $('.game').classList.add('game--active');
+
     // Restarts game
     Game.init({
-      playersData: [
-        { isAI: false, name: 'Awp1' },
-        { isAI: false, name: 'Awp2' },
-      ],
+      playersData: this.playersData,
       thinkingAI: true,
     });
+
+    this.printBoardStates();
 
     for (let playerID = 0; playerID < 2; playerID++) {
 
