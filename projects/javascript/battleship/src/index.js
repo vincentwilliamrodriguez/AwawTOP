@@ -12,4 +12,6 @@ window.globals.Game = DisplayManager.Game;
 window.globals.DisplayManager = DisplayManager;
 
 DisplayManager.init();
-// $('.play-btn').click()
+$('.play-btn').click()
+$('.place--active .place-btn').click();
+

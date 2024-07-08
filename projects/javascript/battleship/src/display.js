@@ -12,6 +12,7 @@ import submarineBoard from './assets/images/ships-board/Submarine-board.png';
 import patrolBoatBoard from './assets/images/ships-board/Patrol Boat-board.png';
 
 const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
 
 const SHIP_IMAGES = {
   Carrier: carrierBoard,
@@ -50,6 +51,10 @@ class DisplayManager {
     ];
   }
 
+  get humanCount() {
+    return this.playersData.filter((player) => !player.isAI).length;
+  }
+
   init() {
     // Home Screen
     $('.modal').showModal();
@@ -68,8 +73,8 @@ class DisplayManager {
     };
 
     for (let playerID = 0; playerID < 2; playerID++) {
+      // Regulates names to proper character length
       const nameElem = $(`.player--${playerID} .player__name`);
-
       nameElem.onkeyup = nameEditHandler;
       nameElem.onkeydown = nameEditHandler;
       nameElem.addEventListener('blur', () => {
@@ -84,6 +89,7 @@ class DisplayManager {
         this.playersData[playerID].name = nameElem.textContent;
       });
 
+      // Sets name to default when user presses an isAI option
       for (let isAI = 0; isAI < 2; isAI++) {
         const boolString = isAI === 1 ? 'true' : 'false';
         const choiceElem = document.getElementById(
@@ -107,42 +113,43 @@ class DisplayManager {
         this.playersData[playerID] = { isAI, name };
       }
 
-
       // Place Screen progression
       const switchToPlaceElem = (playerID, buttonText, next) => {
-        const placeElem = $(`.place--${playerID}`)
-        placeElem.classList.add('place--active')
+        const placeElem = $(`.place--${playerID}`);
+        placeElem.classList.add('place--active');
 
         const placeBtnElem = placeElem.querySelector('.place-btn');
         placeBtnElem.textContent = buttonText;
 
         placeBtnElem.onclick = () => {
-          placeElem.classList.remove('place--active')
+          placeElem.classList.remove('place--active');
           next();
-        }
-      }
+        };
+      };
 
-      const humanCount = this.playersData.filter((player) => !player.isAI).length;
-
-      switch (humanCount) {
+      switch (this.humanCount) {
         // Two AIs: straight to Game Screen
         case 0:
           this.restart();
           break;
-        
+
         // Singleplayer: Only one Place Screen
         case 1:
           for (let playerID = 0; playerID < 2; playerID++) {
             if (!this.playersData[playerID].isAI) {
-              switchToPlaceElem(playerID, 'Begin The Battle!', this.restart.bind(this));
+              switchToPlaceElem(
+                playerID,
+                'Begin The Battle!',
+                this.restart.bind(this)
+              );
             }
           }
           break;
-        
+
         // 1v1: Two Place Screens
         case 2:
           switchToPlaceElem(0, 'Next Player', () => {
-            switchToPlaceElem(1, 'Begin The Battle!', this.restart.bind(this))
+            switchToPlaceElem(1, 'Begin The Battle!', this.restart.bind(this));
           });
           break;
       }
@@ -174,17 +181,17 @@ class DisplayManager {
         shipElem.classList.add('ship--selected');
         shipElem.classList.add('ship--allowed');
 
-        placeCloneElem.querySelector('.panel-ship:has(img[src*=Carrier])').classList.add('panel-ship--selected')
+        placeCloneElem
+          .querySelector('.panel-ship:has(img[src*=Carrier])')
+          .classList.add('panel-ship--selected');
 
         if (name !== 'Carrier') {
           shipElem.classList.add('ship--hidden');
-
         }
 
         placeShips.appendChild(shipElem);
       }
     }
-
 
     // Game Screen & Place Screen boards
     for (let playerID = 0; playerID < 2; playerID++) {
@@ -193,7 +200,6 @@ class DisplayManager {
       const coorLinesElem = $(`.area--${playerID} .board__coor-lines`);
 
       const placeBoardMapElem = $(`.place--${playerID} .board__map`);
-
 
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
@@ -214,25 +220,55 @@ class DisplayManager {
           this.fogList[playerID][row][col] = fogElem;
           cellElem.appendChild(fogElem);
 
-          // Coordinate lines
+          // Coordinate lines (only applies if opposing side is not AI)
           cellElem.addEventListener('mouseover', () => {
-            coorLinesElem.style.setProperty('--row', row);
-            coorLinesElem.style.setProperty('--col', col);
+            if (!Game.players[1 - playerID].isAI) {
+              coorLinesElem.style.setProperty('--row', row);
+              coorLinesElem.style.setProperty('--col', col);
+            }
           });
 
           boardMapElem.appendChild(cellElem);
           placeBoardMapElem.appendChild(cellElem.cloneNode(true));
+
+          // Attack mechanism
+          cellElem.addEventListener('click', () => {
+            Game.makeMove(playerID, [row, col]);
+          });
         }
       }
     }
 
     // Subscriptions
+    Game.PubSub.subscribe('move attempted', (data) => {
+      this.update();
+    });
+
     Game.PubSub.subscribe('move made', (data) => {
       this.update();
-    })
+    });
 
     Game.PubSub.subscribe('gameover', (winner) => {
       this.update();
+    });
+
+    Game.PubSub.subscribe('message changed', (value) => {
+      const messageElem = $('.message-box__text');
+      messageElem.style.animation = 'none'
+        messageElem.textContent = value;
+        messageElem.style.animation = 'none';
+        messageElem.offsetHeight;
+        messageElem.style.animation = null;
+      
+    });
+
+    Game.PubSub.subscribe('AI about to move', ({targetID, AImove: [row, col]}) => {
+      const coorLinesElem = $(`.area--${targetID} .board__coor-lines`);
+
+      setTimeout(() => {
+        coorLinesElem.style.setProperty('--row', row);
+        coorLinesElem.style.setProperty('--col', col);
+      }, 0);
     })
   }
 
@@ -251,11 +287,46 @@ class DisplayManager {
 
     for (let playerID = 0; playerID < 2; playerID++) {
 
+      // Resets Game Screen elements
+      $(`.area--${playerID} .board__ships`).textContent = '';
+      $(`.area--${playerID} .area__name`).textContent = Game.players[playerID].name;
+
+      const areaElem = $(`.area--${playerID}`)
+      const isAItext = Game.players[playerID].isAI ? 'human' : 'ai';
+      areaElem.className = `area area--${playerID} area--vs-${isAItext}`;
+
+      if (playerID === 0) {
+        areaElem.classList.add('area--turn');
+      }
+
+      switch (this.humanCount) {
+        case 1:
+          if (!Game.players[playerID].isAI) {
+            areaElem.classList.add('area--pov');
+          }
+          break;
+        
+        case 0:
+        case 2:
+          if (playerID === 0) {
+            areaElem.classList.add('area--pov');
+          }
+          break;
+      }
+
+
+      $$(`.area--${playerID} .fog`).forEach((fogElem) => {
+        fogElem.className = 'fog';
+      });
+
+      $$(`.game .panel-ship`).forEach((panelShipElem) => {
+        panelShipElem.className = 'panel-ship';
+      });
+
       // Places ships in the beginning
       const boardShipsElem = $(`.area--${playerID} .board__ships`);
 
       for (const ship of Game.players[playerID].gameboard.ships) {
-
         const shipElem = Helper.makeElement('img', 'ship', '', {
           src: SHIP_IMAGES[ship.name],
           'data-ship-name': ship.name,
@@ -267,24 +338,29 @@ class DisplayManager {
         shipElem.style.setProperty('--col', ship.firstCoord[1]);
         shipElem.style.setProperty('--length', ship.length);
 
-        shipElem.classList.add(ship.isVertical ? 'ship--vertical' : 'ship--horizontal');
+        shipElem.classList.add(
+          ship.isVertical ? 'ship--vertical' : 'ship--horizontal'
+        );
 
         boardShipsElem.appendChild(shipElem);
       }
 
-      
       // Game panel ships hover effect
       for (const shipName of shipNames) {
-        const panelShipImg = $(`.area--${playerID} .panel-ships img[src*="${shipName}"]`);
-        const targetShipImg = $(`.area--${playerID} .ship[data-ship-name="${shipName}"]`);
+        const panelShipImg = $(
+          `.area--${playerID} .panel-ships img[src*="${shipName}"]`
+        );
+        const targetShipImg = $(
+          `.area--${playerID} .ship[data-ship-name="${shipName}"]`
+        );
 
         panelShipImg.addEventListener('mouseover', () => {
           targetShipImg.classList.add('ship--hover');
-        })
+        });
 
         panelShipImg.addEventListener('mouseleave', () => {
           targetShipImg.classList.remove('ship--hover');
-        })
+        });
       }
 
       // Fog in the beginning
@@ -293,10 +369,10 @@ class DisplayManager {
           const fogElem = this.fogList[playerID][row][col];
           fogElem.className = 'fog';
 
-          if (row === 0)  fogElem.classList.add('fog--top');
-          if (row === 9)  fogElem.classList.add('fog--bottom');
-          if (col === 0)  fogElem.classList.add('fog--left');
-          if (col === 9)  fogElem.classList.add('fog--right');
+          if (row === 0) fogElem.classList.add('fog--top');
+          if (row === 9) fogElem.classList.add('fog--bottom');
+          if (col === 0) fogElem.classList.add('fog--left');
+          if (col === 9) fogElem.classList.add('fog--right');
         }
       }
     }
@@ -308,6 +384,27 @@ class DisplayManager {
     for (let playerID = 0; playerID < 2; playerID++) {
       const boardData = this.Game.players[playerID].gameboard;
       const cellsList = $(`.area--${playerID} .board__map`).children;
+
+      // Turn indicator
+      $('.area--turn').classList.remove('area--turn');
+      $$('.area')[Game.turn].classList.add('area--turn');
+
+      if (this.humanCount !== 1) {
+        $('.area--pov').classList.remove('area--pov');
+        $$('.area')[Game.turn].classList.add('area--pov');
+      }
+
+      // Sunk
+      for (const ship of Game.players[playerID].gameboard.ships) {
+        if (ship.isSunk()) {
+          const boardShipElem = $(`.area--${playerID} .ship[data-ship-name="${ship.name}"]`);
+          const panelShipElem = $(`.area--${playerID} .panel-ship:has(img[src*="${ship.name}"])`);
+          
+          boardShipElem.classList.add('ship--sunk');
+          panelShipElem.classList.add('panel-ship--sunk');
+        }
+      }
+
 
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
@@ -327,22 +424,20 @@ class DisplayManager {
             this.fogList[playerID][row][col].classList.add('fog--hidden');
 
             const fogDirections = {
-              'fog--top': [1, 0], 
-              'fog--left': [0, 1], 
-              'fog--bottom': [-1, 0], 
-              'fog--right': [0, -1]
-            }
+              'fog--top': [1, 0],
+              'fog--left': [0, 1],
+              'fog--bottom': [-1, 0],
+              'fog--right': [0, -1],
+            };
 
             for (const [dirName, dir] of Object.entries(fogDirections)) {
               const rowNew = row + dir[0];
               const colNew = col + dir[1];
 
-
               if (!(rowNew < 0 || rowNew >= 10 || colNew < 0 || colNew >= 10)) {
                 this.fogList[playerID][rowNew][colNew].classList.add(dirName);
               }
             }
-
           } else {
             cellElem.querySelector('.cell__state').setAttribute('src', '');
           }

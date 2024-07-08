@@ -525,6 +525,7 @@ body {
     p {
       color: #ddd;
       overflow: hidden;
+      white-space: nowrap;
       font-weight: bold;
       animation: typing 5s forwards;
     }
@@ -562,10 +563,6 @@ body {
     }
 
     &--turn { 
-      .board__coor-lines {
-        display: none !important;
-      }
-
       .board:hover {
         cursor: default !important;
       }
@@ -577,15 +574,34 @@ body {
         border-radius: 12px;
         @include box-shadow(#000000aa, 0, 0, 3px);
       }
+    }
 
+    &--pov {
       .fog {
         opacity: 0 !important;
       }
+
+      .board:hover {
+        cursor: default !important;
+      }
     }
 
-    &:not(&--turn) {
+    &:not(&--pov) {
       .ship:not(.ship--sunk) {
-        opacity: 0 !important;
+        display: none !important;
+      }
+    }
+
+    &--vs-ai:not(.area--turn) .board__coor-lines, 
+    &--vs-human:not(.area--turn) .board:hover .board__coor-lines {
+      display: block;
+    }
+
+    &--vs-ai .board__coor-lines {
+      &__row,
+      &__col,
+      &__target {
+        transition: top 1.8s ease-out, left 1.8s ease-out;
       }
     }
 
@@ -620,6 +636,9 @@ body {
       .panel-ship {
         height: 48px;
         $ship-size: 24px;
+
+        opacity: 1;
+        transition: opacity 0.3s ease;
     
         @each $ship, $relative-size in $ship-relative-sizes {
           img[src*="#{$ship}"] {
@@ -689,10 +708,6 @@ body {
 
   &:hover {
     cursor: url('./assets/images/target-small.svg') 16 16, pointer;
-
-    .board__coor-lines {
-      display: block;
-    }
   }
   
   &__map {
@@ -758,6 +773,7 @@ body {
         mask-image: var(--mask-top), var(--mask-left), var(--mask-bottom), var(--mask-right);
         mask-composite: intersect;
 
+        transition: opacity 0.1s ease;
 
         &--hidden {
           opacity: 0;
@@ -793,8 +809,6 @@ body {
       overflow: hidden;
       filter: brightness(0.8) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
 
-      transition: opacity 20s ease, filter 1s ease;
-
       &::after {
         content: '';
         width: 100%;
@@ -814,12 +828,14 @@ body {
       }
 
       &--sunk {
-        opacity: 0.2;
-        filter: contrast(1.1) drop-shadow(0 0 0px #31acffcc)
+        opacity: 0.3;
+        filter: contrast(1.1) drop-shadow(0 0 0px #31acffcc);
+        transition: opacity 20s ease, filter 1s ease;
       }
 
       &--hover {
         --ship-size: calc(1.03 * var(--occupied-size));
+        filter: brightness(0.9) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
       }
     }
   }
@@ -836,8 +852,9 @@ body {
 
     --row: 0;
     --col: 0;
-    --dist-row: calc(var(--row) * var(--cell-size));
-    --dist-col: calc(var(--col) * var(--cell-size));
+    --thickness: calc(1 * var(--cell-size));
+    --dist-row: calc((var(--row) + 0.5) * var(--cell-size) - 0.5 * var(--thickness));
+    --dist-col: calc((var(--col) + 0.5) * var(--cell-size) - 0.5 * var(--thickness));
     --length: calc(var(--cell-size) * 10);
 
     &__row,
@@ -849,33 +866,33 @@ body {
     }
 
     &__row {
-      opacity: 30%;
+      opacity: 20%;
 
       top: var(--dist-row);
       left: 0;
 
       width: var(--length);
-      height: var(--cell-size);
+      height: var(--thickness);
     }
 
     &__col {
-      opacity: 30%;
+      opacity: 20%;
 
       top: 0;
       left: var(--dist-col);
 
-      width: var(--cell-size);
+      width: var(--thickness);
       height: var(--length);
     }
 
     &__target {
-      opacity: 40%;
+      opacity: 20%;
 
       top: var(--dist-row);
       left: var(--dist-col);
 
-      width: var(--cell-size);
-      height: var(--cell-size);
+      width: var(--thickness);
+      height: var(--thickness);
     }
   }
 }
