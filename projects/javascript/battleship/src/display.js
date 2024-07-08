@@ -41,8 +41,8 @@ class DisplayManager {
   constructor() {
     this.Game = Game;
     this.playersData = [
-      { isAI: false, name: 'Awp1' },
-      { isAI: false, name: 'Awp2' },
+      { isAI: false, name: 'Chester' },
+      { isAI: false, name: 'Wally' },
     ];
     this.fogList = [
       Helper.generate2DArray(10, 10, null),
@@ -54,6 +54,47 @@ class DisplayManager {
     // Home Screen
     $('.modal').showModal();
     $('.home').classList.add('home--active');
+
+    const defaultNames = [
+      ['Chester', 'Bobby'],
+      ['Paul', 'Wally'],
+    ];
+
+    const nameEditHandler = (e) => {
+      if (e.which === 13) {
+        e.preventDefault();
+        document.activeElement.blur();
+      }
+    };
+
+    for (let playerID = 0; playerID < 2; playerID++) {
+      const nameElem = $(`.player--${playerID} .player__name`);
+
+      nameElem.onkeyup = nameEditHandler;
+      nameElem.onkeydown = nameEditHandler;
+      nameElem.addEventListener('blur', () => {
+        if (nameElem.textContent.length === 0) {
+          nameElem.textContent = this.playersData[playerID].name;
+        }
+
+        if (nameElem.textContent.length > 12) {
+          nameElem.textContent = nameElem.textContent.substring(0, 12);
+        }
+
+        this.playersData[playerID].name = nameElem.textContent;
+      });
+
+      for (let isAI = 0; isAI < 2; isAI++) {
+        const boolString = isAI === 1 ? 'true' : 'false';
+        const choiceElem = document.getElementById(
+          `isAI-${playerID}-${boolString}`
+        );
+
+        choiceElem.addEventListener('click', () => {
+          nameElem.textContent = defaultNames[playerID][isAI];
+        });
+      }
+    }
 
     $('.play-btn').addEventListener('click', () => {
       $('.home').classList.remove('home--active');

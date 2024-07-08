@@ -189,7 +189,7 @@ body {
   .logo {
     @include flex-container(row, center, center, 12px);
 
-    filter: invert(1);
+    filter: invert(1) drop-shadow(0px 0px 3px #00000077);;
     opacity: 0.9;
     user-select: none;
 
@@ -208,6 +208,7 @@ body {
     &__title {
       font-family: "Old Stamper", "Josefin Sans", sans-serif;
       font-size: 48px;
+
     }
   }
 
@@ -219,7 +220,7 @@ body {
       color: white;
       font-size: 64px;
       font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
-      text-shadow: 0 0 3px #00000099;
+      text-shadow: 0 0 3px #000000bb;
       user-select: none;
     }
 
@@ -236,23 +237,30 @@ body {
         height: 168px;
         border-radius: 50%;
 
-        @include box-shadow(#000000ff, 0, 0, 2px);
-
-        &--human {
-          display: none;
-        }
+        @include box-shadow(#00000077, 0, 0, 2px, 1px);
+        margin-bottom: 4px;
       }
 
       &__name {
-        max-width: 150px;
+        max-width: 160px;
         border: none;
         outline: none;
         
-        font-size: 24px;
+        font-size: 20px;
         text-wrap: nowrap;
         overflow: hidden;
 
+        padding: 4px 6px 2px 6px;
+        border-radius: 4px;
         margin-bottom: 8px;
+
+        background-color: transparent;
+        transition: background-color 0.1s ease;
+
+        &:focus {
+          background-color: #ffffffcc;
+          @include box-shadow(#00000044, 0, 0, 2px, 1px);
+        }
       }
 
       &__options {
@@ -279,6 +287,12 @@ body {
           color: white;
           font-size: 0.9rem;
         }
+      }
+
+      // If one option in human or AI is checked, hide the other avatar
+      &:has(.player__options input[value=true]:checked) .player__avatar--human,
+      &:has(.player__options input[value=false]:checked) .player__avatar--ai {
+        display: none;
       }
     }
   }

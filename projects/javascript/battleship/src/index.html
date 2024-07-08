@@ -30,7 +30,7 @@
         <div class="player player--0">
           <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
           <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
-          <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
+          <h1 class="player__name" contenteditable spellcheck="false">Chester</h1>
           <div class="player__options">
             <input type="radio" checked name="isAI-0" value="false" id="isAI-0-false">
             <label for="isAI-0-false"">Human</label>
@@ -45,12 +45,12 @@
         <div class="player player--1">
           <img class="player__avatar player__avatar--human" src="<%=require("./assets/images/human.png")%>">
           <img class="player__avatar player__avatar--ai" src="<%=require("./assets/images/robot.png")%>">
-          <h1 class="player__name" contenteditable spellcheck="false">Awaw</h1>
+          <h1 class="player__name" contenteditable spellcheck="false">Wally</h1>
           <div class="player__options">
-            <input type="radio" checked name="isAI-1" value="false" id="isAI-1-false">
+            <input type="radio" name="isAI-1" value="false" id="isAI-1-false">
             <label for="isAI-1-false">Human</label>
   
-            <input type="radio" name="isAI-1" value="true" id="isAI-1-true">
+            <input type="radio" checked name="isAI-1" value="true" id="isAI-1-true">
             <label for="isAI-1-true">AI</label>
           </div>
         </div>
@@ -103,7 +103,7 @@
         <div class="board__ships"></div>
       </div>
   
-      <button disabled class="place-btn">Begin the Battle!</button>
+      <button class="place-btn">Begin the Battle!</button>
     </div>
   </dialog>
 
