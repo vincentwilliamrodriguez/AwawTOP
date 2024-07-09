@@ -250,6 +250,7 @@ class DisplayManager {
 
     Game.PubSub.subscribe('gameover', (winner) => {
       this.update();
+      $('.game').classList.add('game--over')
     });
 
     Game.PubSub.subscribe('message changed', (value) => {
@@ -262,13 +263,14 @@ class DisplayManager {
       
     });
 
-    Game.PubSub.subscribe('AI about to move', ({targetID, AImove: [row, col]}) => {
-      const coorLinesElem = $(`.area--${targetID} .board__coor-lines`);
+    Game.PubSub.subscribe('AI about to move', ({newTarget, AImove: [row, col], time}) => {
+      const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
+      coorLinesElem.style.setProperty('--speed', `${0.9 * time / 1000}s`);
 
       setTimeout(() => {
         coorLinesElem.style.setProperty('--row', row);
         coorLinesElem.style.setProperty('--col', col);
-      }, 0);
+      }, 100);
     })
   }
 
@@ -288,11 +290,13 @@ class DisplayManager {
     for (let playerID = 0; playerID < 2; playerID++) {
 
       // Resets Game Screen elements
+      $(`.game`).className = 'game game--active';
+
       $(`.area--${playerID} .board__ships`).textContent = '';
       $(`.area--${playerID} .area__name`).textContent = Game.players[playerID].name;
 
       const areaElem = $(`.area--${playerID}`)
-      const isAItext = Game.players[playerID].isAI ? 'human' : 'ai';
+      const isAItext = Game.players[1 - playerID].isAI ? 'ai' : 'human';
       areaElem.className = `area area--${playerID} area--vs-${isAItext}`;
 
       if (playerID === 0) {

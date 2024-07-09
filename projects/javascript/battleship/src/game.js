@@ -6,7 +6,7 @@ class Game {
     this.PubSub = PubSub;
   }
 
-  init({playersData, autoStart = true, thinkingAI = false}) {
+  init({playersData, autoStart = true, thinkingAI = false, thinkingTime = 2000}) {
     this.turn = 0;
     this.status = -1;
     this._message = '';
@@ -22,6 +22,7 @@ class Game {
     }
 
     this.thinkingAI = thinkingAI;
+    this.thinkingTime = thinkingTime;
     this.message = `Welcome to the battle! Your move, Captain ${this.players[0].name}.`;
   }
 
@@ -82,19 +83,23 @@ class Game {
 
 
     if (this.curPlayer.isAI) {
-      const targetID = 1 - this.turn;
+      const newTarget = 1 - this.turn;
       const AImove = mockAImove
         ? mockAImove(enemyGameboard)
         : this.curPlayer.getAImove();
 
-      PubSub.publish('AI about to move', {targetID, AImove});
-
       // Wait for amount of time before AI makes a move
-      const time = this.thinkingAI ? 2000 : 0
+      const time = !this.thinkingAI 
+                    ? 0 
+                    : targetInd === this.turn 
+                      ? this.thinkingTime 
+                      : this.thinkingTime / 2;
+
+      PubSub.publish('AI about to move', { newTarget, AImove, time });
 
       return new Promise((resolve) => {
         setTimeout(() => {
-          this.makeMove(targetID, AImove, mockAImove).then(resolve);
+          this.makeMove(newTarget, AImove, mockAImove).then(resolve);
         }, time);
       });
     } else {

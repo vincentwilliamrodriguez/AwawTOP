@@ -507,6 +507,24 @@ body {
   height: 100%;
   padding: 0 24px;
 
+  &--over {
+    .board {
+      cursor: default !important;
+
+      .board__coor-lines {
+        display: none !important;
+      }
+
+      .fog {
+        opacity: 0 !important;
+      }
+
+      .ship {
+        display: block !important;
+      }
+    }
+  }
+
   .message-box {
     grid-area: message;
 
@@ -527,7 +545,7 @@ body {
       overflow: hidden;
       white-space: nowrap;
       font-weight: bold;
-      animation: typing 5s forwards;
+      animation: typing 3s forwards;
     }
   }
 
@@ -598,10 +616,12 @@ body {
     }
 
     &--vs-ai .board__coor-lines {
+      --speed: 2.0s;
+
       &__row,
       &__col,
       &__target {
-        transition: top 1.8s ease-out, left 1.8s ease-out;
+        transition: top var(--speed) ease, left var(--speed) ease;
       }
     }
 
@@ -773,7 +793,7 @@ body {
         mask-image: var(--mask-top), var(--mask-left), var(--mask-bottom), var(--mask-right);
         mask-composite: intersect;
 
-        transition: opacity 0.1s ease;
+        // transition: opacity 0.1s ease;
 
         &--hidden {
           opacity: 0;
