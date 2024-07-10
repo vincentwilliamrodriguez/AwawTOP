@@ -73,6 +73,7 @@
           <img class="rotate-btn__icon" src="<%=require("./assets/images/vertical.svg")%>">
           <p>Rotate</p>
         </button>
+        <input type="radio" name="rotate-radio" id="rotate-radio">
       </div>
   
       <div class="panel-ships">
@@ -100,10 +101,11 @@
   
       <div class="board">
         <div class="board__map"></div>
-        <div class="board__ships"></div>
+        <div class="board__ships">
+        </div>
       </div>
   
-      <button class="place-btn">Begin the Battle!</button>
+      <button disabled class="place-btn">Begin the Battle!</button>
     </div>
   </dialog>
 

@@ -2,7 +2,7 @@ import Gameboard from './gameboard';
 import * as Helper from './helper.mjs';
 
 describe('Gameboard', () => {
-  const gameboard = new Gameboard();
+  let gameboard = new Gameboard();
 
   describe('getShipLocations()', () => {
     Helper.runEqualityTests(gameboard.getShipLocations.bind(gameboard), [
@@ -209,4 +209,14 @@ describe('Gameboard', () => {
     });
   });
   
+  describe('removeShipByCoor()', () => {
+    it('should remove a ship properly', () => {
+      gameboard = new Gameboard();
+      gameboard.placeShip('Patrol Boat', [0, 1], false);
+      gameboard.removeShipByCoor([0, 2]);
+      expect(gameboard.ships.length).toBe(0);
+      expect(gameboard.shipMap[0][0]).toStrictEqual(null);
+      expect(gameboard.shipMap[0][1]).toStrictEqual(null);
+    })
+  })
 });

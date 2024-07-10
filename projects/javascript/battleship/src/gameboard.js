@@ -24,6 +24,7 @@ export default class Gameboard {
       name: shipName,
       length: shipCoords.length,
       firstCoord: shipCoords[0],
+      shipCoords,
       isVertical,
     });
 
@@ -148,6 +149,16 @@ export default class Gameboard {
         const randDir = Math.random() > 0.5;
         placeRes = this.placeShip(shipName, [randRow, randCol], randDir);
       }
+    }
+  }
+
+  removeShipByCoor([row, col]) {
+    const chosenShip = this.shipMap[row][col];
+
+    this.ships = this.ships.filter((ship) => ship !== chosenShip)
+
+    for (const [shipRow, shipCol] of chosenShip.shipCoords) {
+      this.shipMap[shipRow][shipCol] = null;
     }
   }
 }

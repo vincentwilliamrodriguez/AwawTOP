@@ -10,6 +10,7 @@ import battleshipBoard from './assets/images/ships-board/Battleship-board.png';
 import destroyerBoard from './assets/images/ships-board/Destroyer-board.png';
 import submarineBoard from './assets/images/ships-board/Submarine-board.png';
 import patrolBoatBoard from './assets/images/ships-board/Patrol Boat-board.png';
+import Gameboard from './gameboard.js';
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -42,8 +43,8 @@ class DisplayManager {
   constructor() {
     this.Game = Game;
     this.playersData = [
-      { isAI: false, name: 'Chester' },
-      { isAI: false, name: 'Wally' },
+      { isAI: false, name: 'Chester', gameboard: new Gameboard() },
+      { isAI: false, name: 'Wally', gameboard: new Gameboard() },
     ];
     this.fogList = [
       Helper.generate2DArray(10, 10, null),
@@ -110,7 +111,14 @@ class DisplayManager {
           $(`input[name="isAI-${playerID}"]:checked`).value === 'true';
         const name = $(`.player--${playerID} .player__name`).textContent;
 
-        this.playersData[playerID] = { isAI, name };
+        this.playersData[playerID] = {...this.playersData[playerID], isAI, name };
+
+        if (isAI) {
+          const gameboard = new Gameboard();
+          gameboard.randomlyPlaceShips();
+
+          this.playersData[playerID].gameboard = gameboard;
+        }
       }
 
       // Place Screen progression
@@ -160,36 +168,268 @@ class DisplayManager {
 
     for (const playerID of [1, 0]) {
       const placeCloneElem = placeScreenElem.cloneNode(true);
+      const place$ = placeCloneElem.querySelector.bind(placeCloneElem);
       placeCloneElem.classList.add(`place--${playerID}`);
       placeScreenElem.after(placeCloneElem);
+      
+      const placeShips = place$('.board__ships');
+      const playerGameboard = this.playersData[playerID].gameboard;
 
-      const placeShips = placeCloneElem.querySelector('.board__ships');
+      const rotateRadio = place$('#rotate-radio');
+
+      // Checks if user is allowed to proceed
+      function checkPlacementValidity() {
+        place$('.place-btn').disabled = (playerGameboard.ships.length !== 5);
+      }
+
+      // Functionality for shuffle button
+      function shuffleShips() {
+        playerGameboard.randomlyPlaceShips();
+
+        for (const randomShip of playerGameboard.ships) {
+          const randomShipElem = place$(`.ship[data-ship-name="${randomShip.name}"]`);
+          const randomPanelShipElem = place$(`.panel-ship:has(img[src*="${randomShip.name}"])`);
+
+          randomShipElem.style.setProperty('--row', randomShip.firstCoord[0]);
+          randomShipElem.style.setProperty('--col', randomShip.firstCoord[1]);
+          randomShipElem.style.setProperty('--isVertical', randomShip.isVertical);
+          randomShipElem.style.setProperty('--length', randomShip.length);
+          
+          randomShipElem.classList.remove('ship--vertical');
+          randomShipElem.classList.remove('ship--horizontal');
+          randomShipElem.classList.add(`ship--${randomShip.isVertical ? 'vertical' : 'horizontal'}`);
+          randomPanelShipElem.classList.add('panel-ship--placed')
+
+          randomShipElem.classList.remove('ship--hidden');
+        }
+
+        checkPlacementValidity();
+      }
+
+      place$('.shuffle-btn').onclick = shuffleShips;
+
+
+      // Functionality for rotate button
+      const getVerticalString = (isVertical) => {
+        return isVertical ? 'vertical' : 'horizontal';
+      };
+
+      place$('.rotate-btn').addEventListener('click', () => {
+        rotateRadio.checked = !rotateRadio.checked;
+
+        place$('.rotate-btn__icon--active').classList.remove(
+          'rotate-btn__icon--active'
+        );
+        place$(`.rotate-btn__icon[src*=${getVerticalString(rotateRadio.checked)}]`).classList.add(
+          'rotate-btn__icon--active'
+        );
+      });
+
 
       for (const name of shipNames) {
         const shipElem = Helper.makeElement('img', 'ship', '', {
           src: SHIP_IMAGES[name],
           'data-ship-name': name,
-          'data-row': 0,
-          'data-col': 0,
         });
 
+        shipElem.setAttribute('data-ship-name', name);
         shipElem.style.setProperty('--row', 0);
         shipElem.style.setProperty('--col', 0);
         shipElem.style.setProperty('--length', shipLengths[name]);
 
-        shipElem.classList.add(false ? 'ship--vertical' : 'ship--horizontal');
-        shipElem.classList.add('ship--selected');
-        shipElem.classList.add('ship--allowed');
-
-        placeCloneElem
-          .querySelector('.panel-ship:has(img[src*=Carrier])')
-          .classList.add('panel-ship--selected');
-
-        if (name !== 'Carrier') {
-          shipElem.classList.add('ship--hidden');
-        }
-
+        shipElem.classList.add('ship--hidden');
         placeShips.appendChild(shipElem);
+
+        const panelShipElem = place$(`.panel-ship:has(img[src*="${name}"])`);
+
+
+        // Helper methods and properties
+        const boardElem = place$(`.board`);
+        let offsetX, offsetY, boardRight, boardBottom;
+
+        const getMouseCoords = (mouse) => {
+          updateOffsets();
+          return [
+            Math.floor((mouse.clientY - offsetY) / 32),
+            Math.floor((mouse.clientX - offsetX) / 32),
+          ];
+        };
+        
+        const updateOffsets = () => {
+          ({
+            left: offsetX,
+            top: offsetY,
+            right: boardRight,
+            bottom: boardBottom,
+          } = boardElem.getBoundingClientRect());
+        };
+
+        // Handles visuals and behaviors when ship is selected
+        const shipSelected = (mouse) => {
+          mouse.stopPropagation();
+          
+          // Auxiliary methods
+          updateOffsets();
+          window.addEventListener('resize', updateOffsets);
+          console.log(offsetX, offsetY)
+
+
+          const isShipInbounds = ({ clientX: x, clientY: y }) => {
+            updateOffsets();
+            return (
+              offsetX < x && x < boardRight && offsetY < y && y < boardBottom
+            );
+          };
+
+          // Updates position and validates the selected ship
+          const validateSelectedShip = (mouse) => {
+            if (!shipElem.classList.contains('ship--selected')) {
+              return;
+            }
+
+            shipElem.classList.remove('ship--allowed');
+            shipElem.classList.remove('ship--vertical');
+            shipElem.classList.remove('ship--horizontal');
+            shipElem.classList.remove('ship--locked');
+
+            let { width, height } = shipElem.getBoundingClientRect();
+
+            // Width and height are flipped when ship is horizontal
+            if (!rotateRadio.checked) {
+              [width, height] = [height, width];
+            }
+
+            
+            updateOffsets();
+            let shipCol = (mouse.clientX - offsetX - width / 2) / 32;
+            let shipRow = (mouse.clientY - offsetY - height / 2) / 32;
+
+            if (isShipInbounds(mouse)) {
+              shipElem.classList.add('ship--locked');
+
+              const [mouseRow, mouseCol] = getMouseCoords(mouse);
+
+              const shipCoords = playerGameboard.getShipLocations(
+                name,
+                [mouseRow, mouseCol],
+                rotateRadio.checked
+              );
+
+              [shipRow, shipCol] = shipCoords[0];
+
+              if (playerGameboard.areShipCoordsLegal(shipCoords)) {
+                shipElem.classList.add('ship--allowed');
+              }
+            }
+
+            shipElem.style.setProperty('--row', shipRow);
+            shipElem.style.setProperty('--col', shipCol);
+            shipElem.style.setProperty('--isVertical', rotateRadio.checked);
+            shipElem.style.setProperty('--length', shipLengths[name]);
+
+            shipElem.classList.add(`ship--${getVerticalString(rotateRadio.checked)}`);
+          };
+
+          // Successful placement of ship
+          boardElem.onclick = (mouse) => {
+            if (shipElem.classList.contains('ship--allowed')) {
+              shipElem.classList.remove('ship--selected');
+              shipElem.classList.remove('ship--locked');
+              shipElem.classList.remove('ship--allowed');
+
+              window.removeEventListener('mousemove', validateSelectedShip);
+              place$('.rotate-btn').removeEventListener(
+                'click',
+                validateSelectedShip
+              );
+              boardElem.onclick = null;
+
+              const [[mouseRow, mouseCol], isVertical] = [
+                getMouseCoords(mouse),
+                shipElem.style.getPropertyValue('--isVertical') === 'true',
+              ];
+
+              playerGameboard.placeShip(name, [mouseRow, mouseCol], isVertical);
+            }
+
+            checkPlacementValidity();
+            mouse.stopPropagation();
+          };
+
+          // Clicking outside of the board
+          function deselectCurShip() {
+            const curSelectedShip = place$('.ship--selected');
+
+            if (curSelectedShip === null) {
+              return;
+            }
+
+            const curSelectedName =
+              curSelectedShip.getAttribute('data-ship-name');
+            const curPanelShip = place$(
+              `.panel-ship:has(img[src*="${curSelectedName}"])`
+            );
+
+            curPanelShip.classList.remove('panel-ship--placed');
+            curSelectedShip.classList.remove('ship--selected');
+            curSelectedShip.classList.remove('ship--allowed');
+            curSelectedShip.classList.remove('ship--locked');
+            curSelectedShip.classList.add('ship--hidden');
+
+            window.removeEventListener('mousemove', validateSelectedShip);
+            place$('.rotate-btn').removeEventListener(
+              'click',
+              validateSelectedShip
+            );
+
+            panelShipElem.onclick = (mouse) => {
+              if (!panelShipElem.classList.contains('panel-ship--placed')) {
+                shipSelected(mouse);
+              }
+            };
+          }
+
+          deselectCurShip();
+          window.addEventListener('click', deselectCurShip);
+
+          // Adds flags to newly selected ship
+          panelShipElem.classList.add('panel-ship--placed');
+          shipElem.classList.add('ship--selected');
+          shipElem.classList.remove('ship--hidden');
+
+          // Attaches validateSelectedShip function to mouse move
+          validateSelectedShip(mouse);
+          window.addEventListener('mousemove', validateSelectedShip);
+
+          // Updates ship when rotate button is pressed
+          place$('.rotate-btn').addEventListener('click', (mouse) => {
+            mouse.stopPropagation();
+            validateSelectedShip(mouse);
+          });
+
+          // Shuffle button
+          place$('.shuffle-btn').addEventListener('click', () => {
+            deselectCurShip();
+            shuffleShips();
+          })
+        };
+
+        // Attaches shipSelected() to panel ships and already placed ones
+        panelShipElem.onclick = (mouse) => {
+          if (!panelShipElem.classList.contains('panel-ship--placed')) {
+            shipSelected(mouse);
+          }
+        };
+
+        shipElem.onclick = (mouse) => {
+          if (place$('.ship--selected') === null) {
+            mouse.stopPropagation();
+            console.log(getMouseCoords(mouse));
+            playerGameboard.removeShipByCoor(getMouseCoords(mouse));
+            shipSelected(mouse);
+            checkPlacementValidity();
+          }
+        };
       }
     }
 
@@ -206,8 +446,6 @@ class DisplayManager {
           // Board map cells
           const cellData = {
             'data-id': playerID,
-            'data-row': row,
-            'data-col': col,
           };
           const cellElem = Helper.makeElement('div', 'cell', '', cellData);
 
@@ -250,28 +488,30 @@ class DisplayManager {
 
     Game.PubSub.subscribe('gameover', (winner) => {
       this.update();
-      $('.game').classList.add('game--over')
+      $('.game').classList.add('game--over');
     });
 
     Game.PubSub.subscribe('message changed', (value) => {
       const messageElem = $('.message-box__text');
-      messageElem.style.animation = 'none'
-        messageElem.textContent = value;
-        messageElem.style.animation = 'none';
-        messageElem.offsetHeight;
-        messageElem.style.animation = null;
-      
+      messageElem.style.animation = 'none';
+      messageElem.textContent = value;
+      messageElem.style.animation = 'none';
+      messageElem.offsetHeight;
+      messageElem.style.animation = null;
     });
 
-    Game.PubSub.subscribe('AI about to move', ({newTarget, AImove: [row, col], time}) => {
-      const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
-      coorLinesElem.style.setProperty('--speed', `${0.9 * time / 1000}s`);
+    Game.PubSub.subscribe(
+      'AI about to move',
+      ({ newTarget, AImove: [row, col], time }) => {
+        const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
+        coorLinesElem.style.setProperty('--speed', `${(0.9 * time) / 1000}s`);
 
-      setTimeout(() => {
-        coorLinesElem.style.setProperty('--row', row);
-        coorLinesElem.style.setProperty('--col', col);
-      }, 100);
-    })
+        setTimeout(() => {
+          coorLinesElem.style.setProperty('--row', row);
+          coorLinesElem.style.setProperty('--col', col);
+        }, 100);
+      }
+    );
   }
 
   restart() {
@@ -285,17 +525,17 @@ class DisplayManager {
       thinkingAI: true,
     });
 
-    this.printBoardStates();
+    // this.printBoardStates();
 
     for (let playerID = 0; playerID < 2; playerID++) {
-
       // Resets Game Screen elements
       $(`.game`).className = 'game game--active';
 
       $(`.area--${playerID} .board__ships`).textContent = '';
-      $(`.area--${playerID} .area__name`).textContent = Game.players[playerID].name;
+      $(`.area--${playerID} .area__name`).textContent =
+        Game.players[playerID].name;
 
-      const areaElem = $(`.area--${playerID}`)
+      const areaElem = $(`.area--${playerID}`);
       const isAItext = Game.players[1 - playerID].isAI ? 'ai' : 'human';
       areaElem.className = `area area--${playerID} area--vs-${isAItext}`;
 
@@ -309,7 +549,7 @@ class DisplayManager {
             areaElem.classList.add('area--pov');
           }
           break;
-        
+
         case 0:
         case 2:
           if (playerID === 0) {
@@ -317,7 +557,6 @@ class DisplayManager {
           }
           break;
       }
-
 
       $$(`.area--${playerID} .fog`).forEach((fogElem) => {
         fogElem.className = 'fog';
@@ -334,8 +573,6 @@ class DisplayManager {
         const shipElem = Helper.makeElement('img', 'ship', '', {
           src: SHIP_IMAGES[ship.name],
           'data-ship-name': ship.name,
-          'data-row': ship.firstCoord[0],
-          'data-col': ship.firstCoord[1],
         });
 
         shipElem.style.setProperty('--row', ship.firstCoord[0]);
@@ -401,14 +638,17 @@ class DisplayManager {
       // Sunk
       for (const ship of Game.players[playerID].gameboard.ships) {
         if (ship.isSunk()) {
-          const boardShipElem = $(`.area--${playerID} .ship[data-ship-name="${ship.name}"]`);
-          const panelShipElem = $(`.area--${playerID} .panel-ship:has(img[src*="${ship.name}"])`);
-          
+          const boardShipElem = $(
+            `.area--${playerID} .ship[data-ship-name="${ship.name}"]`
+          );
+          const panelShipElem = $(
+            `.area--${playerID} .panel-ship:has(img[src*="${ship.name}"])`
+          );
+
           boardShipElem.classList.add('ship--sunk');
           panelShipElem.classList.add('panel-ship--sunk');
         }
       }
-
 
       for (let row = 0; row < 10; row++) {
         for (let col = 0; col < 10; col++) {
