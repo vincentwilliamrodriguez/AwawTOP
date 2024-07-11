@@ -50,6 +50,7 @@ class DisplayManager {
       Helper.generate2DArray(10, 10, null),
       Helper.generate2DArray(10, 10, null),
     ];
+    this.intermediateTime = 1000;
   }
 
   get humanCount() {
@@ -156,8 +157,8 @@ class DisplayManager {
 
         // 1v1: Two Place Screens
         case 2:
-          switchToPlaceElem(0, 'Next Player', () => {
-            switchToPlaceElem(1, 'Begin The Battle!', this.restart.bind(this));
+          switchToPlaceElem(0, `Captain ${this.playersData[0].name} - Done!`, () => {
+            switchToPlaceElem(1, `Captain ${this.playersData[1].name} - Done!`, this.restart.bind(this));
           });
           break;
       }
@@ -529,6 +530,54 @@ class DisplayManager {
 
     Game.PubSub.subscribe('move made', (data) => {
       this.update();
+      
+      // Changes turn indicator after a delay
+      if (data.hasTurnChanged) {
+        for (const areaElem of $$('.area')) {
+          areaElem.classList.add('area--intermediate');
+        }
+
+        setTimeout(() => {
+          $('.area--turn').classList.remove('area--turn');
+          $$('.area')[Game.turn].classList.add('area--turn');
+
+          if (this.humanCount !== 1) {
+            $('.area--pov').classList.remove('area--pov');
+
+            if (this.humanCount !== 2) {
+              $$('.area')[Game.turn].classList.add('area--pov');
+            }
+          }
+
+          if (this.humanCount === 2) {
+            const readyButton = $('.area:not(.area--turn) .board__ready-btn');
+            readyButton.classList.add('board__ready-btn--shown');
+
+            readyButton.onclick = () => {
+              readyButton.classList.remove('board__ready-btn--shown');
+              $$('.area')[Game.turn].classList.add('area--pov');
+
+              for (const areaElem of $$('.area')) {
+                areaElem.classList.remove('area--intermediate');
+              }
+
+              const coorLinesElem = $(`.area:not(.area--turn) .board__coor-lines`);
+              for (const coorLine of coorLinesElem.children) {
+                coorLine.style.setProperty('transition', 'none');
+
+                setTimeout(() => {
+                  coorLine.style.setProperty('transition', 'top 0.05s ease, left 0.05s ease');
+                }, 0);
+              }
+            }
+
+          } else {
+            for (const areaElem of $$('.area')) {
+              areaElem.classList.remove('area--intermediate');
+            }
+          } 
+        }, this.intermediateTime);
+      }
     });
 
     Game.PubSub.subscribe('gameover', (winner) => {
@@ -547,14 +596,17 @@ class DisplayManager {
 
     Game.PubSub.subscribe(
       'AI about to move',
-      ({ newTarget, AImove: [row, col], time }) => {
+      ({ newTarget, AImove: [row, col], time, hasTurnChanged }) => {
         const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
-        coorLinesElem.style.setProperty('--speed', `${(0.9 * time) / 1000}s`);
+        coorLinesElem.style.setProperty('--speed', `${(0.6 * time) / 1000}s`);
+
+        const delay = hasTurnChanged ? this.intermediateTime + 30 : 5;
+        console.log('awaw',hasTurnChanged, delay)
 
         setTimeout(() => {
           coorLinesElem.style.setProperty('--row', row);
           coorLinesElem.style.setProperty('--col', col);
-        }, 100);
+        }, delay);
       }
     );
   }
@@ -568,6 +620,7 @@ class DisplayManager {
     Game.init({
       playersData: this.playersData,
       thinkingAI: true,
+      thinkingTime: 2000 + this.intermediateTime,
     });
 
     // this.printBoardStates();
@@ -671,14 +724,6 @@ class DisplayManager {
       const boardData = this.Game.players[playerID].gameboard;
       const cellsList = $(`.area--${playerID} .board__map`).children;
 
-      // Turn indicator
-      $('.area--turn').classList.remove('area--turn');
-      $$('.area')[Game.turn].classList.add('area--turn');
-
-      if (this.humanCount !== 1) {
-        $('.area--pov').classList.remove('area--pov');
-        $$('.area')[Game.turn].classList.add('area--pov');
-      }
 
       // Sunk
       for (const ship of Game.players[playerID].gameboard.ships) {

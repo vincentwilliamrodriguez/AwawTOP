@@ -83,17 +83,17 @@ class Game {
                       : `It's a hit! Keep going...`;
     }
 
-    PubSub.publish('move made', {targetInd, coor});
+    PubSub.publish('move made', {targetInd, coor, hasTurnChanged: !attackRes});
 
 
     if (this.curPlayer.isAI) {
-      return this.makeAImove({targetInd, mockAImove});
+      return this.makeAImove({targetInd, mockAImove, hasTurnChanged: !attackRes});
     } else {
       return Promise.resolve(true);
     }
   }
 
-  makeAImove({targetInd, mockAImove = null}) {
+  makeAImove({targetInd, mockAImove = null, hasTurnChanged = false}) {
     const newTarget = 1 - this.turn;
     const AImove = mockAImove
       ? mockAImove(this.oppPlayer.gameboard)
@@ -104,9 +104,9 @@ class Game {
                   ? 0 
                   : targetInd === this.turn 
                     ? this.thinkingTime 
-                    : this.thinkingTime / 2;
+                    : 0.5 * this.thinkingTime;
 
-    PubSub.publish('AI about to move', { newTarget, AImove, time });
+    PubSub.publish('AI about to move', { newTarget, AImove, time, hasTurnChanged });
 
     return new Promise((resolve) => {
       setTimeout(() => {

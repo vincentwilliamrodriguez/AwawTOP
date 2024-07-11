@@ -12,6 +12,12 @@ window.globals.Game = DisplayManager.Game;
 window.globals.DisplayManager = DisplayManager;
 
 DisplayManager.init();
-// $('.play-btn').click()
+// $('#isAI-1-false').click();
+// $('.play-btn').click();
+
+// $('.place--active .shuffle-btn').click();
+// $('.place--active .place-btn').click();
+
+// $('.place--active .shuffle-btn').click();
 // $('.place--active .place-btn').click();
 

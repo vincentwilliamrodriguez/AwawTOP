@@ -652,9 +652,23 @@ body {
     }
 
     &--vs-ai .board {
-      cursor: pointer !important;
+      cursor: default !important;
     }
 
+    &--intermediate .board {
+      pointer-events: none;
+
+      .board__ready-btn.board__ready-btn--shown {
+        pointer-events: all;
+        opacity: 1;
+
+        cursor: pointer;
+      }      
+    }
+
+    &--intermediate .board__coor-lines {
+      display: none !important;
+    }
 
     &__name {
       grid-area: name;
@@ -664,6 +678,7 @@ body {
       padding: 2px 6px;
       margin-bottom: 8px;
       width: max-content;
+      transition: background-color 0.2s ease, color 0.2s ease;
 
       color: #ccc;
       font-size: 1.3rem;
@@ -827,7 +842,7 @@ body {
         // transition: opacity 0.1s ease;
 
         &--hidden {
-          opacity: 0;
+          display: none;
         }
       }
     }
@@ -858,6 +873,7 @@ body {
       
       opacity: 0.85;
       overflow: hidden;
+      transition: height 0.3s ease, filter 0.3s ease;
       filter: brightness(0.8) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
 
       &--vertical {
@@ -942,6 +958,35 @@ body {
 
       width: var(--thickness);
       height: var(--thickness);
+    }
+  }
+
+  &__ready-btn {
+    @include button(min-content, min-content, 80%, #ffffffbb, 0.8);
+
+    position: absolute;
+    z-index: 5;
+    top: 50%;
+    left: 50%;
+    
+    opacity: 0;
+    pointer-events: none;
+    
+    transform: translate(-50%, -50%);
+    transition: opacity 0.5s ease, background-color 0.5s ease, transform 0.2s ease;
+
+    background-color: #ffffffaa;
+    padding: 6px 10px;
+    
+    color: #081f4e;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    font-family: 'D Day Stencil', "Josefin Sans", sans-serif;
+    @include box-shadow(#081f4eee, 0, 0, 8px);
+
+    &:active {
+      scale: 1;
+      transform: translate(-50%, -50%) scale(0.9);
     }
   }
 }
