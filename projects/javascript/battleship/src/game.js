@@ -18,12 +18,16 @@ class Game {
 
     // If first player is AI, the first AI makes a move
     if (autoStart && this.players[0].isAI) {
-      this.makeMove(1, this.players[0].getAImove());
+      setTimeout(() => {
+        this.makeAImove({ targetInd: 1 });
+      }, 2000);
     }
 
     this.thinkingAI = thinkingAI;
     this.thinkingTime = thinkingTime;
-    this.message = `Welcome to the battle! Your move, Captain ${this.players[0].name}.`;
+    this.message = this.players[0].isAI
+                    ? `Welcome to the battle! It is Captain ${this.players[0].name}'s turn.`
+                    : `Welcome to the battle! Your move, Captain ${this.players[0].name}.`;
   }
 
   get message() {
@@ -83,28 +87,32 @@ class Game {
 
 
     if (this.curPlayer.isAI) {
-      const newTarget = 1 - this.turn;
-      const AImove = mockAImove
-        ? mockAImove(enemyGameboard)
-        : this.curPlayer.getAImove();
-
-      // Wait for amount of time before AI makes a move
-      const time = !this.thinkingAI 
-                    ? 0 
-                    : targetInd === this.turn 
-                      ? this.thinkingTime 
-                      : this.thinkingTime / 2;
-
-      PubSub.publish('AI about to move', { newTarget, AImove, time });
-
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          this.makeMove(newTarget, AImove, mockAImove).then(resolve);
-        }, time);
-      });
+      return this.makeAImove({targetInd, mockAImove});
     } else {
       return Promise.resolve(true);
     }
+  }
+
+  makeAImove({targetInd, mockAImove = null}) {
+    const newTarget = 1 - this.turn;
+    const AImove = mockAImove
+      ? mockAImove(this.oppPlayer.gameboard)
+      : this.curPlayer.getAImove();
+
+    // Wait for amount of time before AI makes a move
+    const time = !this.thinkingAI 
+                  ? 0 
+                  : targetInd === this.turn 
+                    ? this.thinkingTime 
+                    : this.thinkingTime / 2;
+
+    PubSub.publish('AI about to move', { newTarget, AImove, time });
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.makeMove(newTarget, AImove, mockAImove).then(resolve);
+      }, time);
+    });
   }
 
   get curPlayer() {

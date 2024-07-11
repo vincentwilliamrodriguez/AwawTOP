@@ -210,6 +210,8 @@ class DisplayManager {
 
 
       // Functionality for rotate button
+      let isVerticalPreferred = rotateRadio.checked;
+
       const getVerticalString = (isVertical) => {
         return isVertical ? 'vertical' : 'horizontal';
       };
@@ -223,9 +225,29 @@ class DisplayManager {
         place$(`.rotate-btn__icon[src*=${getVerticalString(rotateRadio.checked)}]`).classList.add(
           'rotate-btn__icon--active'
         );
+
+        isVerticalPreferred = rotateRadio.checked;
       });
 
+      // Handlers for drag-and-drop
+      let mouseTimer = null;
 
+      function mouseDown(mouseDownHandler) {
+        mouseUp();
+        mouseTimer = setTimeout(mouseDownHandler, 100);
+      }
+
+      function mouseUp(releaseHandler = null) {
+        if (mouseTimer !== null) {
+          clearTimeout(mouseTimer);
+
+          if (releaseHandler !== null) {
+            releaseHandler();
+          }
+        }
+      }
+
+      // Loop for board and panel ships
       for (const name of shipNames) {
         const shipElem = Helper.makeElement('img', 'ship', '', {
           src: SHIP_IMAGES[name],
@@ -271,7 +293,6 @@ class DisplayManager {
           // Auxiliary methods
           updateOffsets();
           window.addEventListener('resize', updateOffsets);
-          console.log(offsetX, offsetY)
 
 
           const isShipInbounds = ({ clientX: x, clientY: y }) => {
@@ -295,7 +316,7 @@ class DisplayManager {
             let { width, height } = shipElem.getBoundingClientRect();
 
             // Width and height are flipped when ship is horizontal
-            if (!rotateRadio.checked) {
+            if (!isVerticalPreferred) {
               [width, height] = [height, width];
             }
 
@@ -312,7 +333,7 @@ class DisplayManager {
               const shipCoords = playerGameboard.getShipLocations(
                 name,
                 [mouseRow, mouseCol],
-                rotateRadio.checked
+                isVerticalPreferred
               );
 
               [shipRow, shipCol] = shipCoords[0];
@@ -324,14 +345,19 @@ class DisplayManager {
 
             shipElem.style.setProperty('--row', shipRow);
             shipElem.style.setProperty('--col', shipCol);
-            shipElem.style.setProperty('--isVertical', rotateRadio.checked);
+            shipElem.style.setProperty('--isVertical', isVerticalPreferred);
             shipElem.style.setProperty('--length', shipLengths[name]);
 
-            shipElem.classList.add(`ship--${getVerticalString(rotateRadio.checked)}`);
+            shipElem.classList.add(`ship--${getVerticalString(isVerticalPreferred)}`);
           };
 
           // Successful placement of ship
-          boardElem.onclick = (mouse) => {
+          boardElem.onmouseup = attemptToPlaceShip;
+          boardElem.onclick = (mouse) => mouse.stopPropagation();
+
+          function attemptToPlaceShip(mouse) {
+            mouse.stopPropagation();
+
             if (shipElem.classList.contains('ship--allowed')) {
               shipElem.classList.remove('ship--selected');
               shipElem.classList.remove('ship--locked');
@@ -353,7 +379,6 @@ class DisplayManager {
             }
 
             checkPlacementValidity();
-            mouse.stopPropagation();
           };
 
           // Clicking outside of the board
@@ -414,18 +439,36 @@ class DisplayManager {
           })
         };
 
-        // Attaches shipSelected() to panel ships and already placed ones
-        panelShipElem.onclick = (mouse) => {
+        // Attaches shipSelected() to panel ships
+        const panelShipHandler = (mouse) => {
           if (!panelShipElem.classList.contains('panel-ship--placed')) {
             shipSelected(mouse);
           }
         };
 
-        shipElem.onclick = (mouse) => {
+        panelShipElem.onclick = panelShipHandler;
+        panelShipElem.addEventListener('mousedown', (mouse) => {
+          if (!panelShipElem.classList.contains('panel-ship--placed')) {
+            mouseDown( shipSelected.bind(this, mouse) );
+          }
+        });
+
+        // Allows already placed ships to be picked up
+        shipElem.onclick = movePlacedShip;
+        shipElem.addEventListener('mousedown', (mouse) => {
+          mouseDown( movePlacedShip.bind(this, mouse) );
+        })
+        
+        function movePlacedShip(mouse) {
           if (place$('.ship--selected') === null) {
             mouse.stopPropagation();
-            console.log(getMouseCoords(mouse));
             playerGameboard.removeShipByCoor(getMouseCoords(mouse));
+
+            isVerticalPreferred = shipElem.classList.contains('ship--vertical');
+            if (isVerticalPreferred !== rotateRadio.checked) {
+              place$('.rotate-btn').click();
+            }
+
             shipSelected(mouse);
             checkPlacementValidity();
           }
@@ -471,7 +514,9 @@ class DisplayManager {
 
           // Attack mechanism
           cellElem.addEventListener('click', () => {
-            Game.makeMove(playerID, [row, col]);
+            if (!Game.players[1 - playerID].isAI) {
+              Game.makeMove(playerID, [row, col]);
+            }
           });
         }
       }

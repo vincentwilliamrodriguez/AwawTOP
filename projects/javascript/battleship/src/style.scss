@@ -651,6 +651,11 @@ body {
       }
     }
 
+    &--vs-ai .board {
+      cursor: pointer !important;
+    }
+
+
     &__name {
       grid-area: name;
 
@@ -875,7 +880,11 @@ body {
 
       &--hover {
         --ship-size: calc(1.03 * var(--occupied-size));
-        filter: brightness(0.9) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
+        filter: brightness(0.9) contrast(1.1);
+
+        &.ship--sunk {
+          filter: brightness(1.1);
+        }
       }
     }
   }
