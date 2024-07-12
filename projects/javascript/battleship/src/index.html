@@ -7,18 +7,13 @@
 </head>
 
 <body>
-  <!-- <div class="fog fog--top fog--left fog--bottom"></div> -->
-
-  <button class="home-btn">
-    <img src="<%=require("./assets/images/home.svg")%>">
-  </button>
-
-  <button class="sound-btn">
-    <img src="<%=require("./assets/images/sound-on.svg")%>" class="sound-btn__icon sound-btn__icon--active">
-    <img src="<%=require("./assets/images/sound-off.svg")%>" class="sound-btn__icon">
-  </button>
-
   <dialog class="modal">
+    <input checked type="checkbox" name="sound-toggle" id="sound-toggle">
+    <button class="sound-btn">
+      <img src="<%=require("./assets/images/sound-off.svg")%>" class="sound-btn__icon">
+      <img src="<%=require("./assets/images/sound-on.svg")%>" class="sound-btn__icon sound-btn__icon--active">
+    </button>
+
     <div class="home">
       <div class="logo">
         <img src="<%=require("./assets/images/icon1.svg")%>" class="logo__icon logo__icon--1">
@@ -110,6 +105,11 @@
   </dialog>
 
   <div class="game">
+    <button class="sound-btn">
+      <img src="<%=require("./assets/images/sound-off.svg")%>" class="sound-btn__icon">
+      <img src="<%=require("./assets/images/sound-on.svg")%>" class="sound-btn__icon sound-btn__icon--active">
+    </button>
+
     <div class="message-box">
       <p class="message-box__text">Awawawawawawawawawaawaawawa</p>
     </div>

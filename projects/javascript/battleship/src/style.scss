@@ -115,19 +115,15 @@ body {
   .home-btn,
   .sound-btn {
     @include button(32px, 32px, 80%, #00000011, 70%);
-    display: none;
+    // display: none;
 
-    position: absolute;
+    position: fixed;
     top: 8px;
     z-index: 3;
 
     border: 0;
     outline: 0;
     filter: invert(1);
-  }
-
-  .home-btn {
-    left: 8px;
   }
 
   .sound-btn {
@@ -140,6 +136,15 @@ body {
     &__icon--active {
       display: block;
     }
+  }
+
+  #sound-toggle {
+    display: none;
+  }
+
+  .game .sound-btn {
+    left: 8px;
+    right: auto;
   }
 }
 
@@ -168,6 +173,10 @@ body {
     animation: animatedBackground 16s linear infinite;
 
     opacity: 10%;
+  }
+
+  &:has(.home--active) {
+    padding-bottom: 0px;
   }
 }
 
@@ -298,14 +307,14 @@ body {
   }
 
   .play-btn {
-    @include button(min-content, 36px, 80%, #61381d, 0.9);
+    @include button(min-content, 36px, 80%, #80441c, 0.9);
 
     margin-top: 12px;
     padding: 18px 16px;
     border-radius: 8px;
     
     @include box-shadow(#000000aa, 0, 0, 3px);
-    background-color: #61381d;
+    background-color: #80441cee;
     border: none;
     outline: none;
 
@@ -445,6 +454,7 @@ body {
       .ship {
         filter: brightness(0.95) contrast(1.1) drop-shadow(0px 0px 2px #00000077);
         cursor: pointer;
+        transition: none !important;
 
         &--hidden,
         &--selected {

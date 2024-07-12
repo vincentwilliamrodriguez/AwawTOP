@@ -42,10 +42,6 @@ const shipLengths = {
 class DisplayManager {
   constructor() {
     this.Game = Game;
-    this.playersData = [
-      { isAI: false, name: 'Chester', gameboard: new Gameboard() },
-      { isAI: false, name: 'Wally', gameboard: new Gameboard() },
-    ];
     this.fogList = [
       Helper.generate2DArray(10, 10, null),
       Helper.generate2DArray(10, 10, null),
@@ -59,6 +55,11 @@ class DisplayManager {
 
   init() {
     // Home Screen
+    this.playersData = [
+      { isAI: false, name: 'Chester', gameboard: new Gameboard() },
+      { isAI: true, name: 'Wally', gameboard: new Gameboard() },
+    ];
+
     $('.modal').showModal();
     $('.home').classList.add('home--active');
 
@@ -111,14 +112,12 @@ class DisplayManager {
         const isAI =
           $(`input[name="isAI-${playerID}"]:checked`).value === 'true';
         const name = $(`.player--${playerID} .player__name`).textContent;
+        const gameboard = new Gameboard();
 
-        this.playersData[playerID] = {...this.playersData[playerID], isAI, name };
+        this.playersData[playerID] = {isAI, name, gameboard};
 
         if (isAI) {
-          const gameboard = new Gameboard();
           gameboard.randomlyPlaceShips();
-
-          this.playersData[playerID].gameboard = gameboard;
         }
       }
 
@@ -174,20 +173,20 @@ class DisplayManager {
       placeScreenElem.after(placeCloneElem);
       
       const placeShips = place$('.board__ships');
-      const playerGameboard = this.playersData[playerID].gameboard;
+      const getPlayerGameboard = () => this.playersData[playerID].gameboard;
 
       const rotateRadio = place$('#rotate-radio');
 
       // Checks if user is allowed to proceed
       function checkPlacementValidity() {
-        place$('.place-btn').disabled = (playerGameboard.ships.length !== 5);
+        place$('.place-btn').disabled = (getPlayerGameboard().ships.length !== 5);
       }
 
       // Functionality for shuffle button
       function shuffleShips() {
-        playerGameboard.randomlyPlaceShips();
+        getPlayerGameboard().randomlyPlaceShips();
 
-        for (const randomShip of playerGameboard.ships) {
+        for (const randomShip of getPlayerGameboard().ships) {
           const randomShipElem = place$(`.ship[data-ship-name="${randomShip.name}"]`);
           const randomPanelShipElem = place$(`.panel-ship:has(img[src*="${randomShip.name}"])`);
 
@@ -331,7 +330,7 @@ class DisplayManager {
 
               const [mouseRow, mouseCol] = getMouseCoords(mouse);
 
-              const shipCoords = playerGameboard.getShipLocations(
+              const shipCoords = getPlayerGameboard().getShipLocations(
                 name,
                 [mouseRow, mouseCol],
                 isVerticalPreferred
@@ -339,7 +338,7 @@ class DisplayManager {
 
               [shipRow, shipCol] = shipCoords[0];
 
-              if (playerGameboard.areShipCoordsLegal(shipCoords)) {
+              if (getPlayerGameboard().areShipCoordsLegal(shipCoords)) {
                 shipElem.classList.add('ship--allowed');
               }
             }
@@ -376,7 +375,7 @@ class DisplayManager {
                 shipElem.style.getPropertyValue('--isVertical') === 'true',
               ];
 
-              playerGameboard.placeShip(name, [mouseRow, mouseCol], isVertical);
+              getPlayerGameboard().placeShip(name, [mouseRow, mouseCol], isVertical);
             }
 
             checkPlacementValidity();
@@ -463,7 +462,7 @@ class DisplayManager {
         function movePlacedShip(mouse) {
           if (place$('.ship--selected') === null) {
             mouse.stopPropagation();
-            playerGameboard.removeShipByCoor(getMouseCoords(mouse));
+            getPlayerGameboard().removeShipByCoor(getMouseCoords(mouse));
 
             isVerticalPreferred = shipElem.classList.contains('ship--vertical');
             if (isVerticalPreferred !== rotateRadio.checked) {
@@ -523,12 +522,37 @@ class DisplayManager {
       }
     }
 
+    // Sound toggle buttons
+    for (const soundBtn of $$('.sound-btn')) {
+      soundBtn.onclick = () => {
+        $('#sound-toggle').checked ^= 1;
+
+        for (const eachBtn of $$('.sound-btn')) {
+          const curIcon = eachBtn.querySelector('.sound-btn__icon--active');
+          const nextIcon = eachBtn.querySelectorAll('.sound-btn__icon')[+$('#sound-toggle').checked];
+          
+          curIcon.classList.remove('sound-btn__icon--active');
+          nextIcon.classList.add('sound-btn__icon--active');
+        }
+      }
+    }
+
     // Subscriptions
+    const isGameOngoing = () => $('.game--active') !== null;
+
     Game.PubSub.subscribe('move attempted', (data) => {
+      if (!isGameOngoing()) {
+        return;
+      }
+
       this.update();
     });
 
     Game.PubSub.subscribe('move made', (data) => {
+      if (!isGameOngoing()) {
+        return;
+      }
+
       this.update();
       
       // Changes turn indicator after a delay
@@ -581,14 +605,23 @@ class DisplayManager {
     });
 
     Game.PubSub.subscribe('gameover', (winner) => {
+      if (!isGameOngoing()) {
+        return;
+      }
+
       this.update();
       $('.game').classList.add('game--over');
     });
 
     Game.PubSub.subscribe('message changed', (value) => {
+      if (!isGameOngoing()) {
+        return;
+      }
+
       const messageElem = $('.message-box__text');
-      messageElem.style.animation = 'none';
       messageElem.textContent = value;
+
+      // Resets typewriter animation
       messageElem.style.animation = 'none';
       messageElem.offsetHeight;
       messageElem.style.animation = null;
@@ -597,11 +630,15 @@ class DisplayManager {
     Game.PubSub.subscribe(
       'AI about to move',
       ({ newTarget, AImove: [row, col], time, hasTurnChanged }) => {
+        
+        if (!isGameOngoing()) {
+          return;
+        }
+
         const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
         coorLinesElem.style.setProperty('--speed', `${(0.6 * time) / 1000}s`);
 
         const delay = hasTurnChanged ? this.intermediateTime + 30 : 5;
-        console.log('awaw',hasTurnChanged, delay)
 
         setTimeout(() => {
           coorLinesElem.style.setProperty('--row', row);
@@ -615,6 +652,7 @@ class DisplayManager {
     // Switches active screen to game screen
     $('.modal').close();
     $('.game').classList.add('game--active');
+    Game.status = -1;
 
     // Restarts game
     Game.init({
