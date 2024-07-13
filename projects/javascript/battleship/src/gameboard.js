@@ -1,4 +1,5 @@
 import Ship from './ship.js';
+import { generate2DArray  } from './helper.mjs';
 
 export default class Gameboard {
   constructor() {
@@ -7,8 +8,8 @@ export default class Gameboard {
 
   init() {
     // Initializes 10x10 arrays
-    this.shots = Array.from({ length: 10 }, (e) => Array(10).fill(false));
-    this.shipMap = Array.from({ length: 10 }, (e) => Array(10).fill(null));
+    this.shots = generate2DArray(10, 10, false);
+    this.shipMap = generate2DArray(10, 10, null);
 
     this.ships = [];
   }

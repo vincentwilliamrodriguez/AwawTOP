@@ -543,7 +543,7 @@ body {
   height: 100%;
   padding: 0 24px;
 
-  &--over {
+  &--over.game--over {
     .board {
       cursor: default !important;
 
@@ -555,7 +555,7 @@ body {
         opacity: 0 !important;
       }
 
-      .ship {
+      .ship.ship.ship.ship.ship {
         display: block !important;
       }
     }

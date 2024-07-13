@@ -12,8 +12,26 @@ class Game {
     this._message = '';
     this.players = [];
 
-    for (const playerData of playersData) {
-      this.players.push(new Player(playerData));
+    for (let i = 0; i < 2; i++) {
+      const playerData = playersData[i];
+      const playerObject = new Player(playerData);
+
+      if (playerData.isAI) {
+        
+        PubSub.subscribe('AI hit', (data) => {
+          if (data.turn === i) {
+            playerObject.addToTargetStack(data);
+          }
+        });
+
+        PubSub.subscribe('AI sinks ship', (data) => {
+          if (data.turn === i) {
+            playerObject.cleanTargetStack(data);
+          }
+        });
+      }
+
+      this.players.push(playerObject);
     }
 
     // If first player is AI, the first AI makes a move
@@ -22,6 +40,7 @@ class Game {
         this.makeAImove({ targetInd: 1 });
       }, 2000);
     }
+
 
     this.thinkingAI = thinkingAI;
     this.thinkingTime = thinkingTime;
@@ -50,12 +69,16 @@ class Game {
     PubSub.publish('move attempted', {targetInd, coor});
 
     if (isGameOver || isTargetWrong || isAttackDuplicate) {
-      console.log(this.status, isGameOver, isTargetWrong, isAttackDuplicate)
+      console.log('Move blocked: ', isGameOver, isTargetWrong, isAttackDuplicate, coor)
       return Promise.resolve(false);
     }
 
 
     const attackRes = enemyGameboard.receiveAttack(coor);
+
+    if (this.curPlayer.isAI && attackRes) {
+      this.curPlayer.updateActiveHits(coor);
+    }
 
     if (!attackRes) {
       const enemy = this.players[1 - this.turn];
@@ -74,13 +97,27 @@ class Game {
 
     } else if (enemyGameboard.shipMap[row][col].isSunk()) {
       const shipName = enemyGameboard.shipMap[row][col].name;
+      const shipCoords = enemyGameboard.shipMap[row][col].shipCoords;
       this.message = this.players[this.turn].isAI 
                       ? `${shipName} down!`
                       : `${shipName} down! Keep going...`;
+      
+      PubSub.publish('AI sinks ship', {
+        hitCoor: coor,
+        shipCoords,
+        turn: this.turn
+      });
+
     } else {
       this.message = this.players[this.turn].isAI 
                       ? `It's a hit!`
                       : `It's a hit! Keep going...`;
+      
+      PubSub.publish('AI hit', {
+        hitCoor: coor,
+        shotsOnEnemy: enemyGameboard.shots,
+        turn: this.turn
+      });
     }
 
     PubSub.publish('move made', {targetInd, coor, hasTurnChanged: !attackRes});
@@ -96,7 +133,7 @@ class Game {
   makeAImove({targetInd, mockAImove = null, hasTurnChanged = false}) {
     const newTarget = 1 - this.turn;
     const AImove = mockAImove
-      ? mockAImove(this.oppPlayer.gameboard)
+      ? mockAImove(targetInd === this.turn)
       : this.curPlayer.getAImove();
 
     // Wait for amount of time before AI makes a move
