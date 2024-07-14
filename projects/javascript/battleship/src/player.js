@@ -37,17 +37,10 @@ export default class Player {
       return null;
     }
 
-    console.log(
-      'awaw',
-      this.randomMovesList,
-      this.targetStack.map((item) => item.coor)
-    );
-
     let move;
 
     if (this.targetStack.length === 0) {
       move = this.getRandomMove();
-      console.log('random');
     } else {
       const prioritizedTarget = this.targetStack.pop();
 
@@ -56,7 +49,6 @@ export default class Player {
 
       const [row, col] = move;
       this.targetMap[row][col] = false;
-      console.log('from targetStack');
     }
 
     this.randomMovesList = this.randomMovesList.filter((legal) => {
@@ -65,7 +57,6 @@ export default class Player {
       return !(row1 === row2 && col1 === col2);
     });
 
-    console.log(this.name, 'move', String(move), '\n');
     return move;
   }
 
@@ -120,13 +111,19 @@ export default class Player {
         break;
     }
 
-    for (const [rowDiff, colDiff] of neighborDiffs) {
+    for (const [i, [rowDiff, colDiff]] of neighborDiffs.entries()) {
       const newCoor = [row + rowDiff, col + colDiff];
+      const dir = (i === 3)
+                    ? 'front'
+                    : (i === 2)
+                      ? 'back'
+                      : 'side'
 
       if (this.isInBounds(newCoor)) {
         neighbors.push({
           coor: newCoor,
           priority: [rowDiff, colDiff],
+          dir
         });
       }
     }
@@ -147,15 +144,23 @@ export default class Player {
         this.targetMap[row][col] = true;
       }
     }
+    
+    const l = newTargets.length;
 
-    const firstPriority = newTargets.pop();
-    const secondPriority = this.targetStack.pop();
+    if (l !== 0) {
+      let firstPriority = undefined;
+      let secondPriority = this.targetStack.pop();
 
-    this.targetStack = [...this.targetStack, ...newTargets];
+      if (newTargets[l - 1].dir !== 'side') {
+        firstPriority = newTargets.pop();
+      }
+      
+      this.targetStack = [...this.targetStack, ...newTargets];
 
-    for (const target of [secondPriority, firstPriority]) {
-      if (target !== undefined) {
-        this.targetStack.push(target);
+      for (const target of [secondPriority, firstPriority]) {
+        if (target !== undefined) {
+          this.targetStack.push(target);
+        }
       }
     }
   }

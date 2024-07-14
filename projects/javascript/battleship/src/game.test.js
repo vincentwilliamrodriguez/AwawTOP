@@ -189,7 +189,11 @@ describe('AI algorithm', () => {
   });
 
   it('should prioritize old second priority moves', async () => {
-    await Game.makeMove(1, [0, 1]);
+    const mockAImove = jest.fn(() => {
+      return (AImoveHistory.length < 10) ? Game.curPlayer.getAImove() : [9, 9];
+    });
+
+    await Game.makeMove(1, [0, 1], mockAImove);
 
     expect(AImoveHistory.slice(4, 6)).toStrictEqual([
       [4, 1],
@@ -198,14 +202,8 @@ describe('AI algorithm', () => {
   })
 
   it('should update targets correctly when a ship sinks', async () => {
-    const mockAImove = jest.fn(() => {
-      return (AImoveHistory.length < 11) ? Game.curPlayer.getAImove() : [9, 9];
-    });
-
-
-    await Game.makeMove(1, [0, 2], mockAImove);
-
-    expect(AImoveHistory.slice(8, 11)).toStrictEqual([
+    expect(AImoveHistory.slice(6, 10)).toStrictEqual([
+      [1, 0],
       [1, 2],
       [1, 3],
       [1, 4],

@@ -112,7 +112,7 @@ body {
 
   @include flex-container;
 
-  .home-btn,
+  .music-btn,
   .sound-btn {
     @include button(32px, 32px, 80%, #00000011, 70%);
     // display: none;
@@ -126,7 +126,8 @@ body {
     filter: invert(1);
   }
 
-  .sound-btn {
+  .sound-btn,
+  .music-btn {
     right: 8px;
 
     &__icon {
@@ -138,12 +139,22 @@ body {
     }
   }
 
-  #sound-toggle {
+  .music-btn {
+    right: 48px;
+  }
+
+  #sound-toggle,
+  #music-toggle {
     display: none;
   }
 
-  .game .sound-btn {
+  .game .music-btn {
     left: 8px;
+    right: auto;
+  }
+
+  .game .sound-btn {
+    left: 48px;
     right: auto;
   }
 }

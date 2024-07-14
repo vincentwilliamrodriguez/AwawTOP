@@ -18,13 +18,13 @@ class Game {
 
       if (playerData.isAI) {
         
-        PubSub.subscribe('AI hit', (data) => {
+        PubSub.subscribe('hit', (data) => {
           if (data.turn === i) {
             playerObject.addToTargetStack(data);
           }
         });
 
-        PubSub.subscribe('AI sinks ship', (data) => {
+        PubSub.subscribe('ship sunk', (data) => {
           if (data.turn === i) {
             playerObject.cleanTargetStack(data);
           }
@@ -86,6 +86,7 @@ class Game {
                       ? `It's a miss. Captain ${enemy.name} will strike soon.`
                       : `It's a miss. Your move, Captain ${enemy.name}.`
       this.turn ^= 1;
+      PubSub.publish('miss');
 
     } else if (enemyGameboard.haveAllShipsSunk()) {
       this.status = this.turn;
@@ -102,7 +103,7 @@ class Game {
                       ? `${shipName} down!`
                       : `${shipName} down! Keep going...`;
       
-      PubSub.publish('AI sinks ship', {
+      PubSub.publish('ship sunk', {
         hitCoor: coor,
         shipCoords,
         turn: this.turn
@@ -113,7 +114,7 @@ class Game {
                       ? `It's a hit!`
                       : `It's a hit! Keep going...`;
       
-      PubSub.publish('AI hit', {
+      PubSub.publish('hit', {
         hitCoor: coor,
         shotsOnEnemy: enemyGameboard.shots,
         turn: this.turn

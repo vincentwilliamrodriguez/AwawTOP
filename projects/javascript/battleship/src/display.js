@@ -522,7 +522,25 @@ class DisplayManager {
       }
     }
 
-    // Sound toggle buttons
+    // Music and sound toggle buttons
+    for (const musicBtn of $$('.music-btn')) {
+      musicBtn.onclick = () => {
+        $('#music-toggle').checked ^= 1;
+
+        for (const eachBtn of $$('.music-btn')) {
+          const curIcon = eachBtn.querySelector('.music-btn__icon--active');
+          const nextIcon = eachBtn.querySelectorAll('.music-btn__icon')[+$('#music-toggle').checked];
+          
+          curIcon.classList.remove('music-btn__icon--active');
+          nextIcon.classList.add('music-btn__icon--active');
+        }
+
+        for (const musicElem of $$('.music')) {
+          musicElem.muted = !$('#music-toggle').checked;
+        }
+      }
+    }
+
     for (const soundBtn of $$('.sound-btn')) {
       soundBtn.onclick = () => {
         $('#sound-toggle').checked ^= 1;
@@ -533,6 +551,10 @@ class DisplayManager {
           
           curIcon.classList.remove('sound-btn__icon--active');
           nextIcon.classList.add('sound-btn__icon--active');
+        }
+
+        for (const audioElem of $$('.audio')) {
+          audioElem.muted = !$('#sound-toggle').checked;
         }
       }
     }
@@ -646,12 +668,72 @@ class DisplayManager {
         }, delay);
       }
     );
+
+    // Music and sound effects
+    const defaultVolumes = {
+      '.background-music': 0.7,
+      '.wind-audio': 0.05,
+      '.miss-audio': 0.2,
+      '.hit-audio': 0.2,
+      '.sink-audio': 0.5,
+      '.gameover-audio': 0.5,
+    }
+
+    const fadeOut = (audioClass) => {
+      const audioElem = $(audioClass);
+
+      if (audioElem.volume > 0) {
+        audioElem.volume = Math.max(0, audioElem.volume - 0.05);
+        setTimeout(fadeOut.bind(this, audioClass), 100);
+      }
+    }
+
+    const fadeIn = (audioClass) => {
+      const audioElem = $(audioClass);
+      const maxVolume = defaultVolumes[audioClass];
+
+      if (audioElem.volume < maxVolume) {
+        audioElem.volume = Math.min(maxVolume, audioElem.volume + 0.05);
+        setTimeout(fadeIn.bind(this, audioClass), 100);
+      }
+    }
+
+    const playSound = (audioClass) => {
+      const audioElem = $(audioClass);
+
+      const audioClone = audioElem.cloneNode(true);
+      $('.current-audio').appendChild(audioClone);
+      audioClone.volume = defaultVolumes[audioClass] || 1;
+      audioClone.muted = !$('#sound-toggle').checked;
+      audioClone.play();
+
+      audioClone.addEventListener('ended', () => {
+        audioClone.remove();
+      })
+    }
+
+    $('.background-music').volume = 0.7;
+
+    Game.PubSub.subscribe('game started', () => {
+      fadeOut('.background-music');
+
+      $('.wind-audio').play();
+      $('.wind-audio').volume = 0;
+      fadeIn('.wind-audio');
+    });
+
+    Game.PubSub.subscribe('miss', () => playSound('.miss-audio'));
+    Game.PubSub.subscribe('hit', () => playSound('.hit-audio'));
+    Game.PubSub.subscribe('ship sunk', () => playSound('.sink-audio'));
+    Game.PubSub.subscribe('gameover', () => playSound('.gameover-audio'));
   }
 
   restart() {
     // Switches active screen to game screen
     $('.modal').close();
     $('.game').classList.add('game--active');
+
+    Game.PubSub.publish('game started')
     Game.status = -1;
 
     // Restarts game
