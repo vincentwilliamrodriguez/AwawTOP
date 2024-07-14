@@ -536,6 +536,10 @@ class DisplayManager {
         }
 
         for (const musicElem of $$('.music')) {
+          if (musicElem.paused) {
+            musicElem.play();
+          }
+          
           musicElem.muted = !$('#music-toggle').checked;
         }
       }
