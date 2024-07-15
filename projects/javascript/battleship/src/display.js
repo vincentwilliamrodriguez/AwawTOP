@@ -54,14 +54,24 @@ class DisplayManager {
   }
 
   init() {
+    // Opening animation
+    window.addEventListener('load', () => {
+      $('body').className = 'loaded';
+      $('.home').classList.add('home--active');
+      $('.home').classList.add('home--fading-in');
+      $('.play-btn').onanimationend = () => {
+        $('.home').classList.remove('home--fading-in');
+      };
+    })
+
     // Home Screen
+    $('.modal').showModal();
+
     this.playersData = [
       { isAI: false, name: 'Chester', gameboard: new Gameboard() },
       { isAI: true, name: 'Wally', gameboard: new Gameboard() },
     ];
 
-    $('.modal').showModal();
-    $('.home').classList.add('home--active');
 
     const defaultNames = [
       ['Chester', 'Bobby'],
@@ -234,7 +244,7 @@ class DisplayManager {
 
       function mouseDown(mouseDownHandler) {
         mouseUp();
-        mouseTimer = setTimeout(mouseDownHandler, 100);
+        mouseTimer = setTimeout(mouseDownHandler, 200);
       }
 
       function mouseUp(releaseHandler = null) {
@@ -504,8 +514,7 @@ class DisplayManager {
           // Coordinate lines (only applies if opposing side is not AI)
           cellElem.addEventListener('mouseover', () => {
             if (!Game.players[1 - playerID].isAI) {
-              coorLinesElem.style.setProperty('--row', row);
-              coorLinesElem.style.setProperty('--col', col);
+              this.updateCoorLinesElem(coorLinesElem, [row, col])
             }
           });
 
@@ -660,35 +669,35 @@ class DisplayManager {
         if (!isGameOngoing()) {
           return;
         }
-
+        
+        const roundedOffTime = Math.round(0.6 * (time / 1000) * 10) / 10
         const coorLinesElem = $(`.area--${newTarget} .board__coor-lines`);
-        coorLinesElem.style.setProperty('--speed', `${(0.6 * time) / 1000}s`);
+        coorLinesElem.style.setProperty('--speed', `${roundedOffTime}s`);
 
         const delay = hasTurnChanged ? this.intermediateTime + 30 : 5;
 
         setTimeout(() => {
-          coorLinesElem.style.setProperty('--row', row);
-          coorLinesElem.style.setProperty('--col', col);
+          this.updateCoorLinesElem(coorLinesElem, [row, col])
         }, delay);
       }
     );
 
     // Music and sound effects
     const defaultVolumes = {
-      '.background-music': 0.7,
+      '.background-music': 0.6,
       '.wind-audio': 0.05,
       '.miss-audio': 0.2,
       '.hit-audio': 0.2,
       '.sink-audio': 0.5,
-      '.gameover-audio': 0.5,
+      '.gameover-audio': 0.2,
     }
 
-    const fadeOut = (audioClass) => {
+    const fadeOut = (audioClass, target) => {
       const audioElem = $(audioClass);
 
-      if (audioElem.volume > 0) {
-        audioElem.volume = Math.max(0, audioElem.volume - 0.05);
-        setTimeout(fadeOut.bind(this, audioClass), 100);
+      if (audioElem.volume > target) {
+        audioElem.volume = Math.max(target, audioElem.volume - 0.05);
+        setTimeout(fadeOut.bind(this, audioClass, target), 100);
       }
     }
 
@@ -719,7 +728,7 @@ class DisplayManager {
     $('.background-music').volume = 0.7;
 
     Game.PubSub.subscribe('game started', () => {
-      fadeOut('.background-music');
+      fadeOut('.background-music', 0.1);
 
       $('.wind-audio').play();
       $('.wind-audio').volume = 0;
@@ -910,6 +919,18 @@ class DisplayManager {
       console.log(player.gameboard.textDisplay());
       console.log(' ');
     }
+  }
+
+  updateCoorLinesElem(coorLinesElem, [row, col]) {
+    const cellSize = 45;
+    const thickness = 45;
+    const distRow = Math.round((row + 0.5) * cellSize - 0.5 * thickness);
+    const distCol = Math.round((col + 0.5) * cellSize - 0.5 * thickness);
+
+    const [rowElem, colElem, targetElem] = coorLinesElem.children
+    rowElem.style.transform = `translate(0, ${distRow}px)`;
+    colElem.style.transform = `translate(${distCol}px, 0)`;
+    targetElem.style.transform = `translate(${distCol}px, ${distRow}px)`;
   }
 }
 

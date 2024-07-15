@@ -51,25 +51,10 @@
   }
 }
 
-@keyframes animatedBackground {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 1000px 0;
-  }
-}
 
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
 
-@keyframes flicker {
-  0%   { opacity:0.5; }
-  50%  { opacity:0.25; }
-  100% { opacity:0.5; }
-}
+
+
 
 
 $ship-relative-sizes: (
@@ -148,9 +133,81 @@ body {
     display: none;
   }
 
-  .game .sound-btn {
+  .game .music-btn {
     left: 8px;
     right: auto;
+  }
+
+  .game .sound-btn {
+    left: 48px;
+    right: auto;
+  }
+}
+
+body.loaded {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes logoOpening {
+    0% {
+      opacity: 0;
+      transform: scale(5);
+    }
+    20% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    40% {
+      opacity: 1;
+      transform: scale(1.03);
+    }
+    60% {
+      transform: scale(1);
+    }
+    80% {
+      transform: scale(1.004);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: all;
+    }
+  }
+
+  .modal {
+    animation: fadeIn 1s forwards;
+  }
+
+  .home--active > *,
+  .modal .music-btn,
+  .modal .sound-btn {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 1.5s;
+  }
+
+  .home--active .logo {
+    animation: logoOpening 2s forwards ease-out;
+    animation-delay: 0.5s;
+  }
+
+  .home--fading-in {
+    pointer-events: none;
   }
 }
 
@@ -172,6 +229,8 @@ body {
   border: none;
   outline: none;
 
+  opacity: 0;
+
   &::backdrop {
     background: url('./assets/images/fog.png'), #000000dd;
     background-position: 0px 0px;
@@ -179,10 +238,30 @@ body {
     animation: animatedBackground 16s linear infinite;
 
     opacity: 10%;
+
+    
+    @keyframes animatedBackground {
+      from {
+        background-position: 0 0;
+      }
+      to {
+        background-position: 1000px 0;
+      }
+    }
   }
 
   &:has(.home--active) {
+    padding-top: 24px;
     padding-bottom: 0px;
+    
+    height: 500px;
+    width: 650px;
+  }
+
+  &:has(.place--active) {
+    padding: 12px 24px 12px 24px;
+    height: 510px;
+    width: 610px;
   }
 }
 
@@ -196,10 +275,9 @@ body {
 }
 
 .home {
-  display: none;
-
-  height: 500px;
-  width: 650px;
+  &:not(.home--active):not(.home--fading-out) {
+    display: none;
+  }
 
   .logo {
     @include flex-container(row, center, center, 12px);
@@ -207,6 +285,8 @@ body {
     filter: invert(1) drop-shadow(0px 0px 3px #00000077);;
     opacity: 0.9;
     user-select: none;
+
+    opacity: 0;
 
     &__icon {
       opacity: 0.85;
@@ -223,7 +303,6 @@ body {
     &__title {
       font-family: "Old Stamper", "Josefin Sans", sans-serif;
       font-size: 48px;
-
     }
   }
 
@@ -343,8 +422,6 @@ body {
             "bottom bottom" 70px / 1fr 250px;
 
 
-  height: 510px;
-  width: 570px;
   padding-left: 32px;
   margin-bottom: -12px;
 
@@ -363,6 +440,7 @@ body {
 
     @include flex-container(row, start, center, 12px);
     padding-top: 8px;
+    margin-bottom: 4px;
 
     & > * {
       @include button(fit-content, 32px, 100%, #3f3381, 85%);
@@ -477,6 +555,12 @@ body {
           animation-timing-function: ease;
 
           filter: brightness(0) saturate(100%) invert(5%) sepia(80%) saturate(7407%) hue-rotate(360deg) brightness(82%) contrast(96%);
+
+          @keyframes flicker {
+            0%   { opacity:0.5; }
+            50%  { opacity:0.25; }
+            100% { opacity:0.5; }
+          }
         }
 
         &--allowed {
@@ -506,6 +590,7 @@ body {
 
     padding: 8px 12px;
     border-radius: 8px;
+    margin-top: 8px;
     
     @include box-shadow(#000000aa, 0, 0, 3px);
     background-color: #6e3a17;
@@ -588,6 +673,11 @@ body {
       white-space: nowrap;
       font-weight: bold;
       animation: typing 3s forwards;
+
+      @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+      }
     }
   }
 
@@ -631,7 +721,6 @@ body {
         color: #081f4e;
         text-shadow: none;
         background-color: #ccc;
-        border-radius: 12px;
         @include box-shadow(#000000aa, 0, 0, 3px);
       }
     }
@@ -663,7 +752,7 @@ body {
       &__row,
       &__col,
       &__target {
-        transition: top var(--speed) ease, left var(--speed) ease;
+        transition: transform var(--speed) ease;
       }
     }
 
@@ -693,6 +782,7 @@ body {
       align-self: end;
       padding: 2px 6px;
       margin-bottom: 8px;
+      border-radius: 12px;
       width: max-content;
       transition: background-color 0.2s ease, color 0.2s ease;
 
@@ -934,8 +1024,6 @@ body {
     --row: 0;
     --col: 0;
     --thickness: calc(1 * var(--cell-size));
-    --dist-row: calc((var(--row) + 0.5) * var(--cell-size) - 0.5 * var(--thickness));
-    --dist-col: calc((var(--col) + 0.5) * var(--cell-size) - 0.5 * var(--thickness));
     --length: calc(var(--cell-size) * 10);
 
     &__row,
@@ -943,14 +1031,13 @@ body {
     &__target {
       position: absolute;
       background-color: #18a4e6;
-      transition: top 0.05s ease, left 0.05s ease;
+      transition: transform 0.05s ease;
     }
 
     &__row {
       opacity: 20%;
 
-      top: var(--dist-row);
-      left: 0;
+      transform: translate(0, 0);
 
       width: var(--length);
       height: var(--thickness);
@@ -959,8 +1046,7 @@ body {
     &__col {
       opacity: 20%;
 
-      top: 0;
-      left: var(--dist-col);
+      transform: translate(0, 0);
 
       width: var(--thickness);
       height: var(--length);
@@ -969,8 +1055,7 @@ body {
     &__target {
       opacity: 20%;
 
-      top: var(--dist-row);
-      left: var(--dist-col);
+      transform: translate(0, 0);
 
       width: var(--thickness);
       height: var(--thickness);

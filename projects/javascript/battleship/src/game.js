@@ -142,7 +142,7 @@ class Game {
                   ? 0 
                   : targetInd === this.turn 
                     ? this.thinkingTime 
-                    : 0.5 * this.thinkingTime;
+                    : 0.4 * this.thinkingTime;
 
     PubSub.publish('AI about to move', { newTarget, AImove, time, hasTurnChanged });
 
