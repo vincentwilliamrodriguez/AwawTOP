@@ -122,3 +122,15 @@ export function runGeneralTests(func, tests) {
     })
   }
 }
+
+export function generate2DArray(rows, cols, val) {
+  return Array.from({ length: rows }, (e) => Array(cols).fill(val));
+}
+
+export function loop2D(iLimit, jLimit, callback) {
+  for (let i = 0; i < iLimit; i++) {
+    for (let j = 0; j < jLimit; j++) {
+      callback(i, j);
+    }
+  }
+}
