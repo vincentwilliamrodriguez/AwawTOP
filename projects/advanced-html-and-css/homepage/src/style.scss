@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Dancing+Script:wght@400..700&display=swap');
+
+@font-face {
+  font-family: "Carnevalee Freakshow";
+  src: url("assets/fonts/Carnevalee Freakshow.ttf");
+}
+
 
 @mixin flex-container($direction: row, $justify: center, $align: center, $gap: 0px) {
   display: flex;
@@ -12,23 +19,30 @@
   box-shadow: $top $left $blur $spread $color;
 }
 
-@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033) {
+@mixin button($width: 24px, $height: 24px, $image-size: 80%, $hover-bg: #00000033, $start-opacity: 100%) {
   @include flex-container;
   width: $width;
   height: $height;
 
   border-radius: 8px;
   background-color: transparent;
+  border: none;
+  outline: none;
+  opacity: $start-opacity;
   scale: 1;
-  transition: background-color 0.3s ease, scale 0.3s ease;
+
+  transition: background-color 0.3s ease, scale 0.3s ease, opacity 0.3s ease;
   cursor: pointer;
 
-  img {
+  & > * {
+    display: block;
     height: $image-size;
+    font-size: calc($height * ($image-size / 100%));
   }
 
   &:hover {
     background-color: $hover-bg;
+    opacity: 100%;
   }
 
   &:active {
@@ -41,6 +55,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+  text-rendering: optimizeLegibility;
 }
 
 img {
@@ -51,7 +69,150 @@ img {
   -ms-user-select: none;
 }
 
-body {
-  font-family: "Josefin Sans", sans-serif;
-  min-height: 100vh;
+button {
+  -webkit-tap-highlight-color: transparent;
 }
+
+body {
+  font-family: "Crimson Text", sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #fefefe;
+}
+
+.heading {
+  font-family: "Carnevalee Freakshow", serif;
+  font-size: 64px;
+  line-height: 74px;
+  font-style: normal;
+  font-weight: 400;
+  font-weight: normal;
+  color: #542851;
+
+  flex: none;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+
+  flex: none;
+
+  &__icon {
+    @include button(40px, 40px, 70%, rgba(black, 0.1));
+
+    flex: none;
+  }
+}
+
+.about {
+  @include flex-container(column, start, center);
+  padding: 32px 24px;
+  gap: 12px;
+
+  .about__bg {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 588.5px;
+    filter: drop-shadow(0 4px 4px rgba(black, 0.5));
+
+    &__overlay,
+    &__img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(0% 0%, 0% 100%, 100% 69%, 100% 0%);
+    }
+
+    &__overlay {
+      background-color: #5A064B;
+      opacity: 0.6;
+    }
+
+    &__img {
+      opacity: 0.3;
+      object-fit: cover;
+      object-position: top left;
+    }
+  }
+
+  .about__box {
+    @include flex-container(column, start, center);
+    gap: 32px;
+
+    .about__avatar {
+      position: relative;
+      width: 354px;
+      height: 499px;
+
+      background: radial-gradient(50% 50% at 50% 50%, #3D558A 0%, #1C2C50 100%);
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+      border-radius: 16px;
+
+
+      img {
+        width: 284.62px;
+        height: 437px;
+
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        
+        filter: drop-shadow(0px 0px 45.6px rgba(245, 239, 168, 0.3));
+
+      }
+
+      h1 {
+        position: absolute;
+        width: 300px;
+        height: 168px;
+        top: 326px;
+        left: 18px;
+
+        font-family: 'Dancing Script';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 72px;
+        line-height: 117%;
+
+        color: #FFFFFF;
+
+        filter: drop-shadow(0 0 2px rgba(black, 1)) ;
+        text-shadow: 0px 0px 12px rgba(0, 0, 0, 1);
+
+      }
+    }
+
+    .about__text-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0px;
+      gap: 16px;
+
+      flex: none;
+      align-self: stretch;
+
+      .about__text {
+        font-family: 'Crimson Text';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 28px;
+        line-height: 129%;
+        color: #777777;
+
+        flex: none;
+        align-self: stretch;
+      }
+    }
+  }
+}
+
