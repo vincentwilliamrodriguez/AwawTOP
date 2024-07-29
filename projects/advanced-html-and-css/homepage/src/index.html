@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
   <title>Awaw Homepage</title>
   <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
           
 </head>
 
@@ -33,7 +34,94 @@
     </div>
   </header>
 
-  <main class="participants-section"></main>
+  <main class="participants-section">
+    <h1 class="heading">Participants</h1>
+    <section class="participants">
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant1.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Johnny Joestar</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“It's truly, truly been … a very long roundabout path …”</p>
+      </div>
+
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant2.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Gyro Zeppeli</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“The shortest route was a detour. It was the detour that was our shortest path.”</p>
+      </div>
+
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant3.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Diego Brando</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“I reject my humanity, JOHNNY! I am now a DINOSAUR!”</p>
+      </div>
+
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant4.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Hot Pants</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“The only thing that can soothe and cleanse my 'sin' is that corpse...”</p>
+      </div>
+
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant5.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Pocoloco</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“Pocoloco is the lucky guy after all!”</p>
+      </div>
+
+      <div class="participant">
+        <div class="participant__picture"><img src="<%=require("./assets/images/participants/participant6.png")%>" alt=""></img></div>
+        <h2 class="participant__name">Sandman</h2>
+        <div class="social-links">
+          <button class="social-links__icon">
+            <i class="devicon-github-original"></i>
+          </button>
+          <button class="social-links__icon">
+            <span class="material-symbols-outlined">captive_portal</span>
+          </button>
+        </div>
+        <p class="participant__description">“I'm going to cross the continent and win this race with nothing but my own two legs.”</p>
+      </div>
+    </section>
+  </main>
 
   <footer class="contact"></footer>
 </body>

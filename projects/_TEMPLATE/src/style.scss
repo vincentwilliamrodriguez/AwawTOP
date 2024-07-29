@@ -28,7 +28,9 @@
   cursor: pointer;
 
   & > * {
+    display: block;
     height: $image-size;
+    font-size: calc($height * ($image-size / 100%));
   }
 
   &:hover {
@@ -54,6 +56,10 @@ img {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
