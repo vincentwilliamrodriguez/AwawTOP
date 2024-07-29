@@ -322,6 +322,8 @@ body {
       .social-links {
         grid-area: social-links;
         margin-top: 16px;
+        margin-right: 24px;
+        justify-self: end;
 
         &__icon {
           @include button(48px, 48px, 70%, rgba(black, 0.1));
@@ -417,5 +419,85 @@ body {
         }
       }
     }
+  }
+}
+
+.contact {
+  @include flex-container(column, start, center);
+  padding: 24px 0px 0px;
+  gap: 24px;
+
+  background: radial-gradient(50% 50% at 50% 50%, #83487B 0%, #733E6C 100%);
+  box-shadow: 0px -4px 12px 1px rgba(0, 0, 0, 0.1);
+
+  &__contents {
+    @include flex-container(column, start, center);
+    padding: 10px 36px 48px;
+    gap: 24px;
+    max-width: 550px;
+
+    color: #EEEEEE;
+
+    .heading {
+      color: #EEEEEE;
+    }
+
+    .contact__text {
+      /* contact__text */
+
+      font-family: 'Crimson Text';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 36px;
+
+      color: #CCCCCC;
+
+      flex: none;
+    }
+
+    .contact__pairs {
+      @include flex-container(column, start, start);
+      padding: 0px 16px;
+      margin: 8px 0;
+      gap: 16px;
+
+      flex: none;
+
+      .contact__pair {
+        @include flex-container(row, start, center);
+        gap: 10px;
+
+        .contact__icon {
+          display: none;
+          font-size: 32px;
+          color: #FFFFFF;
+        }
+
+        .contact__info {
+          font-family: 'Crimson Text';
+          font-style: normal;
+          font-weight: 700;
+          font-size: 22px;
+          line-height: 31px;
+          color: #DDDDDD;
+        }
+      }
+    }
+
+    .social-links {
+      gap: 16px;
+
+      &__icon {
+        @include button(64px, 64px, 70%, rgba(black, 0.1));
+        color: #EEEEEE;
+      }
+    }
+  }
+
+  &__avatar {
+    display: block;
+    width: 100%;
+    box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
 }

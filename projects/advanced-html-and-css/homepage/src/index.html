@@ -123,6 +123,34 @@
     </section>
   </main>
 
-  <footer class="contact"></footer>
+  <footer class="contact">
+    <div class="contact__contents">
+      <h1 class="heading">Contact Me</h1>
+      <p class="contact__text">My heart and actions are utterly unclouded. They are all those of 'Justice'.</p>
+      <div class="contact__pairs">
+        <div class="contact__pair">
+          <span class="contact__icon material-symbols-outlined">distance</span>
+          <p class="contact__info">1600 Pennsylvania Avenue, N.W.<br/>Washington, DC 20500</p>
+        </div>
+        <div class="contact__pair">
+          <span class="contact__icon material-symbols-outlined">call</span>
+          <p class="contact__info">0925-420-1890</p>
+        </div>
+        <div class="contact__pair">
+          <span class="contact__icon material-symbols-outlined">mail</span>
+          <p class="contact__info">part.seven.never@gmail.com</p>
+        </div>
+      </div>
+      <div class="social-links">
+        <button class="social-links__icon"><i class="devicon-github-original"></i></button>
+        <button class="social-links__icon"><i class="devicon-linkedin-plain"></i></button>
+        <button class="social-links__icon"><i class="devicon-twitter-original"></i></button>
+      </div>
+    </div>
+    <picture>
+      <source media="(min-width: 600px)" srcset="<%=require("./assets/images/avatar2-wide.png")%>">
+      <img class="contact__avatar" src="<%=require("./assets/images/avatar2-thin.png")%>" alt="">
+    </picture>
+  </footer>
 </body>
 </html>

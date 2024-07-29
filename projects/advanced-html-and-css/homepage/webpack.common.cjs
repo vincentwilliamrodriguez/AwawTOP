@@ -50,7 +50,7 @@ const path = require('path');
    output: {
      filename: '[name].bundle.js',
      path: path.resolve(__dirname, 'dist'),
-     assetModuleFilename: 'src/assets/images/[name].[ext]',
+     assetModuleFilename: 'src/assets/[name].[ext]',
      clean: true,
    },
  };
