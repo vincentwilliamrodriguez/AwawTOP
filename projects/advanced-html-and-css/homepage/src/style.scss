@@ -94,6 +94,7 @@ button {
 body {
   font-family: 'Crimson Text', sans-serif;
   min-height: 100vh;
+  width: 100vw;
   overflow-x: hidden;
   background-color: #fefefe;
 
@@ -109,6 +110,9 @@ body {
   font-weight: 400;
   font-weight: normal;
   color: #542851;
+
+  word-wrap: break-word;
+  word-break: break-all;
 
   flex: none;
 }
@@ -171,7 +175,7 @@ body {
 
     .about__avatar {
       position: relative;
-      width: 354px;
+      width: clamp(285px, calc(100vw - 2 * 24px), 354px);
       height: 499px;
 
       background: radial-gradient(50% 50% at 50% 50%, #3d558a 0%, #1c2c50 100%);
@@ -180,7 +184,9 @@ body {
 
       img {
         width: 284.62px;
-        height: 437px;
+        max-width: 90%;
+        height: auto;
+        object-fit: contain;
 
         position: absolute;
         bottom: 0;
@@ -271,7 +277,7 @@ body {
 
       isolation: isolate;
 
-      width: 382px;
+      width: clamp(250px, calc(100vw - 2 * 24px), 382px);
       height: 537px;
 
       background: #fafafa;
@@ -291,7 +297,7 @@ body {
         @include flex-container(column, end, center);
 
         img {
-          max-width: 100%;
+          max-width: 90%;
           object-fit: contain;
           filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.25));
         }
