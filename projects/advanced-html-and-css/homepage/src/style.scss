@@ -199,8 +199,8 @@ body {
         object-fit: contain;
 
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: -3px;
+        right: -3px;
 
         filter: drop-shadow(0px 0px 45.6px rgba(245, 239, 168, 0.3));
       }
@@ -258,17 +258,10 @@ body {
   padding: 36px 24px 192px;
   gap: 24px;
 
-  flex: none;
+  flex: 1 0;
   align-self: stretch;
 
   .participants {
-    // display: flex;
-    // flex-wrap: wrap;
-
-    // justify-content: start;
-    // align-items: flex-start;
-    // align-content: center;
-
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(382px, max-content));
     justify-content: center;
@@ -301,7 +294,7 @@ body {
       height: var(--height);
 
       background: #fafafa;
-      box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
       overflow: hidden;
 
@@ -454,7 +447,6 @@ body {
     @include flex-container(column, start, center);
     padding: 10px 36px 48px;
     gap: 24px;
-    max-width: 400px;
     flex: 1 1 auto;
 
     color: #EEEEEE;
@@ -492,7 +484,7 @@ body {
         .contact__icon {
           display: none;
           font-size: 32px;
-          color: #FFFFFF;
+          color: #DDDDDD;
         }
 
         .contact__info {
@@ -511,12 +503,13 @@ body {
 
       &__icon {
         @include button(64px, 64px, 70%, rgba(black, 0.1));
-        color: #EEEEEE;
+        color: #FFFFFF;
       }
     }
   }
 
   &__avatar {
+    object-position: center center;
     display: block;
     width: 100%;
     box-shadow: inset 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -541,7 +534,7 @@ body {
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
       border-radius: 8px;
       padding: 30px 36px 48px;
-      display: block !important;
+      display: block;
       position: relative;
 
       
@@ -561,6 +554,9 @@ body {
 
           font-size: 48px;
           line-height: 1.75;
+
+          width: max-content;
+          height: min-content;
         }
 
         img {
@@ -577,13 +573,14 @@ body {
       }
 
       .about__text-box {
-        display: contents !important;
+        display: contents;
         align-items: center;
 
         .heading {
           text-align: center;
           white-space: nowrap;
           word-wrap: nowrap;
+          margin-bottom: 8px;
         }
         
         .about__text {
@@ -595,6 +592,10 @@ body {
       .social-links {
         display: none;
       }
+    }
+
+    .participants-section {
+      gap: 32px;
     }
 
     .participants {
@@ -621,6 +622,7 @@ body {
 
       &__contents {
         padding: 0;
+        max-width: 400px;
       }
 
       &__text,
@@ -634,6 +636,10 @@ body {
 
       .social-links {
         align-self: start;
+
+        &__icon {
+          @include button(48px, 48px, 70%, rgba(black, 0.1));
+        }
       }
 
       &__avatar {
@@ -645,6 +651,79 @@ body {
         border-radius: 8px;
 
         flex: none;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  #body#body {
+    .about {
+      padding-left: 0;
+      padding-right: 0;
+
+      .about__avatar {
+        width: 400px;
+        height: 440px;
+        position: absolute;
+        left: 12px;
+        top: 50%;
+
+        translate: -100% -50%;
+
+        &--ghost {
+          display: none;
+        }
+
+        h1 {
+          bottom: 0;
+          left: 24px;
+          top: auto;
+
+          font-size: 56px;
+        }
+
+        img {
+          width: 267px;
+          height: 409px;
+        }
+      }
+
+      .about__box {
+        align-self: start;
+
+        display: flex;
+        justify-content: space-between;
+
+        padding: 18px 36px 24px 48px;
+        height: 364.62px;
+        width: 50%;
+        max-width: 600px;
+
+        position: relative;
+        left: 50%;
+        translate: calc(-50% + ((400px - 12px) / 2));
+      }
+
+      .about__text-box {
+        display: flex;
+        gap: 12px;
+
+        .heading {
+          margin-bottom: 0;
+          align-self: start;
+        }
+
+        .about__text {
+          font-size: 18px;
+        }
+      }
+
+      .social-links {
+        display: flex;
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
       }
     }
   }
