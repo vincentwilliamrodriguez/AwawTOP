@@ -89,6 +89,11 @@ img,
 
 button {
   -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    // background-color: rgba(#ebd832, 0.3);
+    outline: 2px solid rgba(#d3c726, 0.7) !important;
+  }
 }
 
 body {
@@ -96,7 +101,7 @@ body {
   min-height: 100vh;
   min-width: 350px;
   overflow-x: hidden;
-  background-color: #fefefe;
+  background-color: #f9f9f9;
 
   @include flex-container(column, start, stretch);
   position: relative;
@@ -293,7 +298,7 @@ body {
       width: var(--width);
       height: var(--height);
 
-      background: #fafafa;
+      background: #ffffff;
       box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
       overflow: hidden;
@@ -555,7 +560,7 @@ body {
       width: min(calc(100% - 2 * 24px), 588px);
       height: auto;
 
-      background: #FAFAFA;
+      background: #ffffff;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
       border-radius: 8px;
       padding: 30px 36px 48px;
