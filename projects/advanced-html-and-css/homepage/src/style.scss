@@ -285,8 +285,8 @@ body {
       align-items: center;
       grid-template:
         'picture picture' 4fr
-        'name social-links' 1fr
-        'desc desc' 2fr / 2fr 1fr;
+        'name social-links' max-content
+        'desc desc' 150px / 2fr 1fr;
 
       isolation: isolate;
 
@@ -322,12 +322,15 @@ body {
         justify-self: start;
         margin-left: 29px;
         margin-top: 16px;
+        margin-bottom: 8px;
 
         font-family: 'Crimson Text';
         font-style: normal;
         font-weight: 600;
         font-size: 32px;
-        line-height: 1.31;
+        line-height: 1;
+
+        // white-space: nowrap;
 
         color: #333333;
       }
@@ -356,6 +359,8 @@ body {
         line-height: 1.29;
 
         color: #777777;
+
+        flex: 0 0 auto;
       }
     }
 
@@ -418,7 +423,27 @@ body {
             rgba(170, 128, 175, 0.9) 0%,
             rgba(122, 59, 131, 0.9) 100%
           ),
-      );
+      ),
+      (
+        'width': auto,
+        'height': 100%,
+        'background':
+          radial-gradient(
+            50% 50% at 50% 50%,
+            rgba(160, 155, 216, 0.9) 0%,
+            rgba(101, 97, 150, 0.9) 100%
+          ),
+      ),
+      (
+        'width': auto,
+        'height': 250px,
+        'background':
+          radial-gradient(
+            50% 50% at 50% 50%,
+            rgba(125, 187, 103, 0.9) 0%,
+            rgba(85, 129, 70, 0.9) 100%
+          ),
+      ),;
 
     @for $i from 1 through length($participant-picture-info) {
       $info: nth($participant-picture-info, $i);
@@ -601,7 +626,7 @@ body {
     .participants {
       padding: 0px;
       gap: 56px 40px;
-      grid-template-columns: repeat(auto-fit, minmax(calc(0.65 * 382px), max-content));
+      grid-template-columns: repeat(auto-fit, minmax(calc(0.64 * 382px), max-content));
     }
   
     .participant {
